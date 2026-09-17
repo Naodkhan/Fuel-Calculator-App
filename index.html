@@ -1,39 +1,41 @@
 <!DOCTYPE html>
-<html lang="am">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>15-Day Fuel & KM Manager</title>
 
 <style>
-
 *{
 box-sizing:border-box;
 }
 
 body{
 margin:0;
-font-family:Arial,"Noto Sans Ethiopic",sans-serif;
-background:#eef2f7;
+font-family:Arial,sans-serif;
+background:#f1f5f9;
 color:#172033;
 }
 
 header{
-background:#0866d6;
+background:#0f4c81;
 color:white;
-padding:22px 15px;
+padding:18px;
 text-align:center;
+position:sticky;
+top:0;
+z-index:10;
 }
 
 header h1{
 margin:0;
-font-size:25px;
+font-size:23px;
 }
 
 header p{
-margin:7px 0 0;
-font-size:14px;
+margin:6px 0 0;
+font-size:13px;
+opacity:.9;
 }
 
 .container{
@@ -44,350 +46,252 @@ padding:15px;
 
 .card{
 background:white;
-border-radius:16px;
+border-radius:14px;
 padding:18px;
 margin-bottom:16px;
 box-shadow:0 3px 12px rgba(0,0,0,.08);
 }
 
 .card h2{
-margin:0 0 15px;
-color:#0866d6;
-font-size:21px;
+margin-top:0;
+font-size:19px;
+color:#0f4c81;
 }
 
-label{
-display:block;
-font-weight:bold;
-margin:12px 0 6px;
-}
-
-input{
-width:100%;
-padding:14px;
-border:1px solid #ccd4df;
-border-radius:10px;
-font-size:16px;
-background:white;
-}
-
-button{
-width:100%;
-padding:14px;
-border:0;
-border-radius:10px;
-margin-top:12px;
-font-size:16px;
-font-weight:bold;
-cursor:pointer;
-}
-
-.blue{
-background:#0866d6;
-color:white;
-}
-
-.green{
-background:#159447;
-color:white;
-}
-
-.orange{
-background:#e89100;
-color:white;
-}
-
-.purple{
-background:#6845c5;
-color:white;
-}
-
-.red{
-background:#d93636;
-color:white;
-}
-
-.gray{
-background:#667085;
-color:white;
-}
-
-/* DASHBOARD */
-
-.dashboard{
+.grid{
 display:grid;
 grid-template-columns:repeat(2,1fr);
 gap:12px;
 }
 
+.dashboard{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:10px;
+}
+
 .stat{
-padding:18px 10px;
-border-radius:13px;
+background:#eef6ff;
+border-radius:12px;
+padding:14px;
 text-align:center;
-background:#edf5ff;
-min-height:95px;
 }
 
 .stat span{
 display:block;
-font-size:14px;
+font-size:12px;
+color:#555;
+margin-bottom:5px;
 }
 
-.stat strong{
+.stat b{
+font-size:19px;
+color:#0f4c81;
+}
+
+label{
 display:block;
+font-weight:bold;
+font-size:13px;
+margin-bottom:5px;
+}
+
+input,select{
+width:100%;
+padding:12px;
+border:1px solid #ccd5df;
+border-radius:9px;
+font-size:15px;
+background:white;
+}
+
+button{
+border:0;
+border-radius:9px;
+padding:11px 15px;
+font-weight:bold;
+cursor:pointer;
 margin-top:8px;
-font-size:20px;
-color:#0866d6;
 }
 
-.stat.expense{
-background:#fff0f0;
+.btn{
+background:#0f4c81;
+color:white;
 }
 
-.stat.expense strong{
-color:#d93636;
+.btn-green{
+background:#16803c;
+color:white;
 }
 
-.stat.remaining{
-background:#eaf8ee;
+.btn-red{
+background:#c62828;
+color:white;
 }
 
-.stat.remaining strong{
-color:#159447;
+.btn-orange{
+background:#d97706;
+color:white;
 }
 
-.stat.km{
-background:#f1edff;
+.btn-gray{
+background:#64748b;
+color:white;
 }
-
-.stat.km strong{
-color:#6845c5;
-}
-
-.stat.fuel{
-background:#fff7e5;
-}
-
-.stat.fuel strong{
-color:#e89100;
-}
-
-/* VEHICLE */
 
 .vehicle{
-border:1px solid #d9dee7;
-border-radius:13px;
+border:1px solid #d9e1e8;
+border-radius:12px;
 padding:15px;
 margin-bottom:12px;
 }
 
 .vehicle h3{
-margin:0 0 12px;
-color:#0866d6;
+margin:0 0 10px;
+color:#0f4c81;
 }
 
 .vehicle-grid{
 display:grid;
-grid-template-columns:repeat(2,1fr);
+grid-template-columns:repeat(3,1fr);
 gap:8px;
 }
 
 .vehicle-box{
-background:#f5f7fa;
-padding:11px;
+background:#f8fafc;
+padding:10px;
 border-radius:9px;
-text-align:center;
-font-size:13px;
+font-size:12px;
 }
 
 .vehicle-box b{
 display:block;
-margin-top:5px;
 font-size:15px;
-}
-
-/* HISTORY */
-
-.history-item{
-border-bottom:1px solid #ddd;
-padding:14px 0;
-line-height:1.8;
-}
-
-.history-item:last-child{
-border-bottom:0;
-}
-
-.plate{
-font-size:18px;
-font-weight:bold;
-color:#0866d6;
-}
-
-/* PROGRESS */
-
-.progress-area{
-margin-top:18px;
+margin-top:5px;
 }
 
 .progress{
-height:16px;
-background:#e1e5ea;
+height:10px;
+background:#e2e8f0;
 border-radius:20px;
 overflow:hidden;
-margin-top:8px;
+margin-top:7px;
 }
 
 .progress-bar{
 height:100%;
-width:0%;
-background:#0866d6;
-transition:.3s;
-}
-
-/* REPORT */
-
-.report-row{
-display:flex;
-justify-content:space-between;
-padding:10px 0;
-border-bottom:1px solid #eee;
-}
-
-.report-row:last-child{
-border-bottom:0;
-}
-
-.report-row b{
-color:#0866d6;
-}
-
-.remaining-text{
-color:#159447!important;
-}
-
-/* ARCHIVE */
-
-.archive{
-background:#f4efff;
-border-left:5px solid #6845c5;
-border-radius:10px;
-padding:14px;
-margin-bottom:10px;
-line-height:1.8;
-}
-
-.empty{
-text-align:center;
-color:#777;
-padding:15px;
-}
-
-.small{
-font-size:13px;
-color:#687386;
+background:#0f4c81;
 }
 
 .warning{
-background:#fff3cd;
-color:#856404;
-padding:12px;
-border-radius:10px;
-margin-top:12px;
+color:#d97706;
 font-weight:bold;
 }
 
 .danger{
-background:#f8d7da;
-color:#842029;
-padding:12px;
-border-radius:10px;
-margin-top:12px;
+color:#c62828;
 font-weight:bold;
 }
 
-footer{
-text-align:center;
-padding:25px;
-color:#777;
+.success{
+color:#16803c;
+font-weight:bold;
+}
+
+.small{
+font-size:12px;
+color:#64748b;
+}
+
+.history{
+overflow-x:auto;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+min-width:750px;
+}
+
+th,td{
+padding:9px;
+border-bottom:1px solid #e2e8f0;
+text-align:left;
 font-size:12px;
 }
 
-/* MOBILE */
+th{
+background:#eef6ff;
+color:#0f4c81;
+}
 
-@media(max-width:600px){
+.empty{
+text-align:center;
+padding:20px;
+color:#64748b;
+}
+
+.actions{
+display:flex;
+flex-wrap:wrap;
+gap:7px;
+}
+
+.actions button{
+margin:0;
+}
+
+hr{
+border:0;
+border-top:1px solid #e2e8f0;
+margin:18px 0;
+}
+
+.report-box{
+background:#f8fafc;
+border-radius:10px;
+padding:12px;
+margin-top:10px;
+}
+
+@media(max-width:650px){
 
 .container{
-padding:10px;
+padding:9px;
 }
 
-.card{
-padding:15px;
-}
-
-header h1{
-font-size:22px;
+.grid{
+grid-template-columns:1fr;
 }
 
 .dashboard{
-grid-template-columns:1fr 1fr;
-gap:9px;
-}
-
-.stat{
-min-height:88px;
-padding:14px 5px;
-}
-
-.stat strong{
-font-size:17px;
+grid-template-columns:repeat(2,1fr);
 }
 
 .vehicle-grid{
-grid-template-columns:1fr 1fr;
+grid-template-columns:repeat(2,1fr);
 }
 
-}
-
-/* PRINT */
-
-@media print{
-
-header{
-background:white;
-color:black;
-}
-
-button{
-display:none!important;
+header h1{
+font-size:19px;
 }
 
 .card{
-box-shadow:none;
-border:1px solid #ddd;
+padding:14px;
 }
 
 }
-
 </style>
 </head>
-
 
 <body>
 
 <header>
-
-<h1>⛽ Fuel & KM Manager</h1>
-
-<p>
-15-Day Fuel • Budget • Kilometer Management
-</p>
-
+<h1>⛽ 15-Day Fuel & KM Manager</h1>
+<p>Fuel • Budget • Kilometer • Vehicle Management</p>
 </header>
 
-
 <div class="container">
-
 
 <!-- PERIOD -->
 
@@ -395,36 +299,31 @@ border:1px solid #ddd;
 
 <h2>📅 15-Day Period</h2>
 
-<label>መጀመሪያ ቀን</label>
+<div class="grid">
 
-<input
-type="date"
-id="startDate"
->
+<div>
+<label>Start Date</label>
+<input type="date" id="periodStart">
+</div>
 
-<label>መጨረሻ ቀን</label>
-
-<input
-type="date"
-id="endDate"
->
-
-<button
-class="blue"
-onclick="savePeriod()"
->
-💾 Period አስቀምጥ
-</button>
-
-<p
-id="periodText"
-class="small"
->
-Period አልተመዘገበም።
-</p>
+<div>
+<label>End Date</label>
+<input type="date" id="periodEnd">
+</div>
 
 </div>
 
+<button class="btn" onclick="savePeriod()">
+💾 Save Period
+</button>
+
+<button class="btn-orange" onclick="newPeriod()">
+📦 Close & Archive Period
+</button>
+
+<p id="periodStatus" class="small"></p>
+
+</div>
 
 
 <!-- DASHBOARD -->
@@ -435,135 +334,97 @@ Period አልተመዘገበም።
 
 <div class="dashboard">
 
-
 <div class="stat">
-
-<span>🚗 መኪና</span>
-
-<strong id="totalCars">
-0
-</strong>
-
+<span>🚗 Vehicles</span>
+<b id="dashCars">0</b>
 </div>
 
-
 <div class="stat">
-
-<span>💰 በጀት</span>
-
-<strong id="totalBudget">
-0 ETB
-</strong>
-
+<span>💰 Budget</span>
+<b id="dashBudget">0.00</b>
 </div>
 
-
-<div class="stat fuel">
-
+<div class="stat">
 <span>⛽ Fuel</span>
-
-<strong id="totalLiters">
-0 L
-</strong>
-
+<b id="dashFuel">0.00 L</b>
 </div>
 
-
-<div class="stat expense">
-
-<span>💵 ወጪ</span>
-
-<strong id="totalExpense">
-0 ETB
-</strong>
-
+<div class="stat">
+<span>💵 Expense</span>
+<b id="dashExpense">0.00</b>
 </div>
 
-
-<div class="stat km">
-
+<div class="stat">
 <span>🛣️ KM</span>
-
-<strong id="totalKM">
-0 KM
-</strong>
-
+<b id="dashKM">0.00</b>
 </div>
 
-
-<div class="stat remaining">
-
-<span>💳 ቀሪ ሂሳብ</span>
-
-<strong id="totalRemaining">
-0 ETB
-</strong>
-
+<div class="stat">
+<span>💳 Remaining</span>
+<b id="dashRemaining">0.00</b>
 </div>
-
-
-</div>
-
-
-<div class="progress-area">
-
-<b>📈 Budget Usage</b>
-
-<div class="progress">
-
-<div
-id="progressBar"
-class="progress-bar"
-></div>
-
-</div>
-
-<p id="usageText">
-0%
-</p>
-
-<div id="budgetMessage"></div>
 
 </div>
 
 </div>
 
 
-
-<!-- VEHICLE BUDGET -->
+<!-- VEHICLE MANAGEMENT -->
 
 <div class="card">
 
-<h2>🚗 የመኪና በጀት</h2>
+<h2>🚗 Vehicle Management</h2>
 
-<label>
-የመኪና ሰሌዳ
-</label>
+<div class="grid">
 
-<input
-id="budgetPlate"
-placeholder="ET-12345"
->
+<div>
+<label>Plate Number</label>
+<input id="vehiclePlate" placeholder="e.g. 12345">
+</div>
 
-<label>
-15-Day Budget (ETB)
-</label>
-
-<input
-id="budgetAmount"
-type="number"
-placeholder="20000"
->
-
-<button
-class="blue"
-onclick="saveBudget()"
->
-💰 በጀት መዝግብ
-</button>
+<div>
+<label>Driver Name</label>
+<input id="vehicleDriver" placeholder="Driver name">
+</div>
 
 </div>
 
+<button class="btn-green" onclick="saveVehicle()">
+➕ Add / Update Vehicle
+</button>
+
+<hr>
+
+<div id="vehicleList"></div>
+
+</div>
+
+
+<!-- BUDGET -->
+
+<div class="card">
+
+<h2>💰 Vehicle 15-Day Budget</h2>
+
+<div class="grid">
+
+<div>
+<label>Vehicle</label>
+<select id="budgetPlate"></select>
+</div>
+
+<div>
+<label>15-Day Budget (ETB)</label>
+<input type="number" id="budgetAmount" placeholder="0">
+</div>
+
+</div>
+
+<button class="btn" onclick="saveBudget()">
+💾 Save Budget
+</button>
+
+</div>
 
 
 <!-- FUEL ENTRY -->
@@ -572,295 +433,171 @@ onclick="saveBudget()"
 
 <h2>⛽ Fuel Entry</h2>
 
-<label>
-የመኪና ሰሌዳ
-</label>
+<div class="grid">
 
-<input
-id="fuelPlate"
-placeholder="ET-12345"
->
+<div>
+<label>Vehicle</label>
+<select id="fuelPlate"></select>
+</div>
 
-<label>
-ቀን
-</label>
+<div>
+<label>Driver Name</label>
+<input id="fuelDriver" placeholder="Driver name">
+</div>
 
-<input
-id="fuelDate"
-type="date"
->
+<div>
+<label>Date</label>
+<input type="date" id="fuelDate">
+</div>
 
-<label>
-ሰዓት
-</label>
+<div>
+<label>Time</label>
+<input type="time" id="fuelTime">
+</div>
 
-<input
-id="fuelTime"
-type="time"
->
+<div>
+<label>Fuel Station</label>
+<input id="fuelStation" placeholder="Fuel station">
+</div>
 
-<label>
-Liter
-</label>
+<div>
+<label>Receipt Number</label>
+<input id="fuelReceipt" placeholder="Receipt number">
+</div>
 
-<input
-id="fuelLiter"
-type="number"
-step="0.01"
-placeholder="40"
->
+<div>
+<label>Fuel (Liter)</label>
+<input type="number" id="fuelLiter" step="0.01" placeholder="0">
+</div>
 
-<label>
-Price / Liter
-</label>
+<div>
+<label>Fuel Price / Liter (ETB)</label>
+<input type="number" id="fuelPrice" step="0.01" placeholder="0">
+</div>
 
-<input
-id="fuelPrice"
-type="number"
-step="0.01"
-placeholder="90"
->
-
-<label>
-Current KM
-</label>
-
-<input
-id="fuelKM"
-type="number"
-step="0.01"
-placeholder="10000"
->
-
-<button
-class="green"
-onclick="saveFuel()"
->
-➕ Fuel መዝግብ
-</button>
+<div>
+<label>Current KM</label>
+<input type="number" id="fuelKM" step="0.01" placeholder="0">
+</div>
 
 </div>
 
+<button class="btn-green" onclick="saveFuel()">
+⛽ Save Fuel
+</button>
+
+</div>
 
 
 <!-- VEHICLE REPORT -->
 
 <div class="card">
 
-<h2>🚘 የመኪና ሪፖርት</h2>
+<h2>🚘 Vehicle Report</h2>
 
-<div id="vehicleReport">
-
-<div class="empty">
-ምንም የመኪና መረጃ የለም።
-</div>
-
-</div>
+<div id="vehicleReport"></div>
 
 </div>
 
 
-
-<!-- HISTORY -->
+<!-- FUEL HISTORY -->
 
 <div class="card">
 
 <h2>📋 Fuel History</h2>
 
-<div id="fuelHistory">
-
-<div class="empty">
-Fuel record የለም።
+<div class="history">
+<div id="fuelHistory"></div>
 </div>
 
 </div>
-
-</div>
-
 
 
 <!-- 15 DAY REPORT -->
 
 <div class="card">
 
-<h2>📄 15-Day Report</h2>
+<h2>📊 Current 15-Day Report</h2>
 
+<div id="periodReport"></div>
 
-<div class="report-row">
+<br>
 
-<span>💰 Total Budget</span>
+<div class="actions">
 
-<b id="reportBudget">
-0 ETB
-</b>
-
-</div>
-
-
-<div class="report-row">
-
-<span>⛽ Total Fuel</span>
-
-<b id="reportLiters">
-0 L
-</b>
-
-</div>
-
-
-<div class="report-row">
-
-<span>💵 Total Expense</span>
-
-<b id="reportExpense">
-0 ETB
-</b>
-
-</div>
-
-
-<div class="report-row">
-
-<span>🛣️ Total KM</span>
-
-<b id="reportKM">
-0 KM
-</b>
-
-</div>
-
-
-<div class="report-row">
-
-<span>📊 KM / Liter</span>
-
-<b id="reportKML">
-0
-</b>
-
-</div>
-
-
-<div class="report-row">
-
-<span>💵 ETB / KM</span>
-
-<b id="reportCostKM">
-0
-</b>
-
-</div>
-
-
-<div class="report-row">
-
-<span>💳 Remaining</span>
-
-<b
-id="reportRemaining"
-class="remaining-text"
->
-0 ETB
-</b>
-
-</div>
-
-
-<button
-class="orange"
-onclick="window.print()"
->
-🖨️ Print / Save PDF
+<button class="btn" onclick="window.print()">
+🖨️ Print / PDF
 </button>
 
-
-<button
-class="purple"
-onclick="exportCSV()"
->
+<button class="btn-green" onclick="exportCSV()">
 📥 Export CSV
 </button>
 
-
-<button
-class="gray"
-onclick="newPeriod()"
->
-🔄 አዲስ 15 ቀን ጀምር
-</button>
-
 </div>
 
+</div>
 
 
 <!-- ARCHIVE -->
 
 <div class="card">
 
-<h2>🗂️ Previous 15-Day Reports</h2>
+<h2>📦 Previous 15-Day Reports</h2>
 
-<div id="archives">
-
-<div class="empty">
-Previous report የለም።
-</div>
+<div id="archives"></div>
 
 </div>
-
-</div>
-
 
 
 <!-- DELETE -->
 
 <div class="card">
 
-<button
-class="red"
-onclick="deleteAll()"
->
-🗑️ ሁሉንም መረጃ ሰርዝ
+<h2>⚙️ Data Management</h2>
+
+<p class="small">
+ማስጠንቀቂያ፦ Delete All ሲደረግ በዚህ browser ውስጥ የተቀመጠው መረጃ ይጠፋል።
+</p>
+
+<button class="btn-red" onclick="deleteAll()">
+🗑️ Delete All Data
 </button>
 
 </div>
 
-
 </div>
-
-
-<footer>
-
-15-Day Fuel & Kilometer Management System
-
-</footer>
-
 
 
 <script>
 
 /* =========================
-   SAFE STORAGE
+   STORAGE
 ========================= */
 
-function getData(key, fallback){
+let vehicles=getData("fm_vehicles",[]);
+let budgets=getData("fm_budgets",[]);
+let fuels=getData("fm_fuels",[]);
+let archives=getData("fm_archives",[]);
+let period=getData("fm_period",null);
+
+
+/* =========================
+   GET DATA
+========================= */
+
+function getData(key,defaultValue){
 
 try{
 
 let data=localStorage.getItem(key);
 
-if(!data){
-return fallback;
-}
+return data
+?JSON.parse(data)
+:defaultValue;
 
-let parsed=JSON.parse(data);
+}catch(e){
 
-return parsed;
-
-}catch(error){
-
-console.log("Storage error:",error);
-
-return fallback;
+return defaultValue;
 
 }
 
@@ -868,35 +605,15 @@ return fallback;
 
 
 /* =========================
-   DATA
-========================= */
-
-let budgets=getData(
-"fm_budgets",
-[]
-);
-
-let fuels=getData(
-"fm_fuels",
-[]
-);
-
-let archives=getData(
-"fm_archives",
-[]
-);
-
-let period=getData(
-"fm_period",
-null
-);
-
-
-/* =========================
-   SAVE
+   SAVE ALL
 ========================= */
 
 function saveAll(){
+
+localStorage.setItem(
+"fm_vehicles",
+JSON.stringify(vehicles)
+);
 
 localStorage.setItem(
 "fm_budgets",
@@ -928,111 +645,204 @@ JSON.stringify(period)
 function savePeriod(){
 
 let start=document
-.getElementById("startDate")
+.getElementById("periodStart")
 .value;
 
 let end=document
-.getElementById("endDate")
+.getElementById("periodEnd")
 .value;
-
 
 if(!start || !end){
 
+alert("⚠️ Start Date እና End Date ያስገቡ።");
+
+return;
+}
+
+if(end<start){
+
+alert("⚠️ End Date ከ Start Date መብለጥ አለበት።");
+
+return;
+}
+
+let d1=new Date(start);
+let d2=new Date(end);
+
+let days=
+Math.floor(
+(d2-d1)/(1000*60*60*24)
+)+1;
+
+if(days!==15){
+
 alert(
-"መጀመሪያ እና መጨረሻ ቀን ያስገቡ።"
+"⚠️ Period በትክክል 15 ቀን መሆን አለበት።\n\n"+
+"ያስገቡት Period: "+days+" ቀን"
 );
 
 return;
-
 }
-
-
-if(new Date(end)<new Date(start)){
-
-alert(
-"መጨረሻ ቀን ከመጀመሪያ ቀን በፊት መሆን አይችልም።"
-);
-
-return;
-
-}
-
 
 period={
 start:start,
 end:end
 };
 
-
 saveAll();
 
 showPeriod();
 
-alert(
-"15-Day Period ተቀምጧል ✅"
-);
+render();
+
+alert("✅ 15-Day Period ተቀምጧል።");
 
 }
-
-
-function showPeriod(){
-
-let text=document
-.getElementById("periodText");
-
-
-if(!period){
-
-text.textContent=
-"Period አልተመዘገበም።";
-
-return;
-
-}
-
-
-text.textContent=
-"🟢 "+period.start+
-"  →  🔴 "+period.end;
-
-}
-
 
 
 /* =========================
-   BUDGET
+   SHOW PERIOD
+========================= */
+
+function showPeriod(){
+
+if(!period){
+
+document.getElementById("periodStatus")
+.innerText="⚠️ 15-Day Period አልተመዘገበም።";
+
+return;
+}
+
+document.getElementById("periodStart")
+.value=period.start;
+
+document.getElementById("periodEnd")
+.value=period.end;
+
+document.getElementById("periodStatus")
+.innerText=
+"📅 Current Period: "+
+period.start+
+" → "+
+period.end;
+
+}
+
+
+/* =========================
+   VEHICLE
+========================= */
+
+function saveVehicle(){
+
+let plate=document
+.getElementById("vehiclePlate")
+.value.trim();
+
+let driver=document
+.getElementById("vehicleDriver")
+.value.trim();
+
+if(!plate){
+
+alert("⚠️ Plate Number ያስገቡ።");
+
+return;
+}
+
+let existing=vehicles.find(
+v=>v.plate.toLowerCase()===
+plate.toLowerCase()
+);
+
+if(existing){
+
+existing.driver=driver;
+
+}else{
+
+vehicles.push({
+
+plate:plate,
+driver:driver
+
+});
+
+}
+
+saveAll();
+
+document.getElementById("vehiclePlate")
+.value="";
+
+document.getElementById("vehicleDriver")
+.value="";
+
+render();
+
+alert("✅ Vehicle ተመዝግቧል።");
+
+}
+
+
+/* =========================
+   DELETE VEHICLE
+========================= */
+
+function deleteVehicle(plate){
+
+if(!confirm(
+"🚗 "+plate+
+"\n\nVehicle ማስወገድ ይፈልጋሉ?\n\n"+
+"Fuel History አይጠፋም።"
+)){
+
+return;
+}
+
+vehicles=vehicles.filter(
+v=>
+v.plate.toLowerCase()!==
+plate.toLowerCase()
+);
+
+saveAll();
+
+render();
+
+}
+
+
+/* =========================
+   SAVE BUDGET
 ========================= */
 
 function saveBudget(){
 
 let plate=document
 .getElementById("budgetPlate")
-.value.trim();
+.value;
 
 let amount=Number(
-document
-.getElementById("budgetAmount")
+document.getElementById("budgetAmount")
 .value
 );
-
 
 if(!plate || amount<=0){
 
 alert(
-"የመኪና ሰሌዳ እና በጀት ያስገቡ።"
+"⚠️ Vehicle እና Budget በትክክል ያስገቡ።"
 );
 
 return;
-
 }
-
 
 let existing=budgets.find(
 b=>
 b.plate.toLowerCase()===
 plate.toLowerCase()
 );
-
 
 if(existing){
 
@@ -1043,42 +853,39 @@ existing.amount=amount;
 budgets.push({
 
 plate:plate,
-
 amount:amount
 
 });
 
 }
 
-
 saveAll();
 
-document
-.getElementById("budgetPlate")
-.value="";
-
-document
-.getElementById("budgetAmount")
+document.getElementById("budgetAmount")
 .value="";
 
 render();
 
 alert(
-"የመኪና በጀት ተመዝግቧል ✅"
+"✅ Budget ተመዝግቧል።\n\n"+
+amount.toFixed(2)+" ETB"
 );
 
 }
 
 
-
 /* =========================
-   FUEL
+   SAVE FUEL
 ========================= */
 
 function saveFuel(){
 
 let plate=document
 .getElementById("fuelPlate")
+.value;
+
+let driver=document
+.getElementById("fuelDriver")
 .value.trim();
 
 let date=document
@@ -1089,20 +896,31 @@ let time=document
 .getElementById("fuelTime")
 .value;
 
+let station=document
+.getElementById("fuelStation")
+.value.trim();
+
+let receipt=document
+.getElementById("fuelReceipt")
+.value.trim();
+
 let liters=Number(
-document.getElementById("fuelLiter").value
+document.getElementById("fuelLiter")
+.value
 );
 
 let price=Number(
-document.getElementById("fuelPrice").value
+document.getElementById("fuelPrice")
+.value
 );
 
 let currentKM=Number(
-document.getElementById("fuelKM").value
+document.getElementById("fuelKM")
+.value
 );
 
 
-/* CHECK PERIOD */
+/* PERIOD CHECK */
 
 if(!period){
 
@@ -1114,11 +932,13 @@ return;
 }
 
 
-if(date < period.start || date > period.end){
+if(
+date<period.start ||
+date>period.end
+){
 
 alert(
-"⚠️ ይህ Fuel date ከአሁኑ 15-Day Period ውጭ ነው።\n\n"+
-"Period: "+
+"⚠️ Fuel Date ከ15-Day Period ውጭ ነው።\n\n"+
 period.start+
 " → "+
 period.end
@@ -1128,7 +948,7 @@ return;
 }
 
 
-/* CHECK INPUT */
+/* INPUT CHECK */
 
 if(
 !plate ||
@@ -1140,14 +960,29 @@ currentKM<0
 ){
 
 alert(
-"⚠️ እባክዎ ሁሉንም Fuel መረጃ ያስገቡ።"
+"⚠️ Vehicle, Date, Time, Liter, Price እና KM ያስገቡ።"
 );
 
 return;
 }
 
 
-/* CHECK VEHICLE BUDGET */
+/* VEHICLE DRIVER */
+
+let vehicle=vehicles.find(
+v=>
+v.plate.toLowerCase()===
+plate.toLowerCase()
+);
+
+if(vehicle && !driver){
+
+driver=vehicle.driver || "";
+
+}
+
+
+/* BUDGET CHECK */
 
 let budgetObject=budgets.find(
 b=>
@@ -1158,8 +993,8 @@ plate.toLowerCase()
 if(!budgetObject){
 
 if(!confirm(
-"⚠️ ይህ መኪና Budget አልተመዘገበለትም።\n\n"+
-"አሁንም Fuel መመዝገብ ይፈልጋሉ?"
+"⚠️ ለዚህ Vehicle Budget አልተመዘገበም።\n\n"+
+"Fuel አሁንም መመዝገብ ይፈልጋሉ?"
 )){
 
 return;
@@ -1187,9 +1022,7 @@ a.date+"T"+a.time
 )
 );
 
-
 let distance=0;
-
 
 if(sameCar.length>0){
 
@@ -1198,7 +1031,6 @@ let previous=sameCar[0];
 distance=
 currentKM-
 Number(previous.currentKM);
-
 
 if(distance<0){
 
@@ -1228,9 +1060,15 @@ id:Date.now(),
 
 plate:plate,
 
+driver:driver,
+
 date:date,
 
 time:time,
+
+station:station,
+
+receipt:receipt,
 
 liters:liters,
 
@@ -1243,6 +1081,15 @@ currentKM:currentKM,
 distance:distance
 
 });
+
+
+/* UPDATE DRIVER */
+
+if(vehicle && driver){
+
+vehicle.driver=driver;
+
+}
 
 
 saveAll();
@@ -1250,28 +1097,28 @@ saveAll();
 
 /* CLEAR */
 
-document
-.getElementById("fuelPlate")
+document.getElementById("fuelDriver")
 .value="";
 
-document
-.getElementById("fuelDate")
+document.getElementById("fuelDate")
 .value="";
 
-document
-.getElementById("fuelTime")
+document.getElementById("fuelTime")
 .value="";
 
-document
-.getElementById("fuelLiter")
+document.getElementById("fuelStation")
 .value="";
 
-document
-.getElementById("fuelPrice")
+document.getElementById("fuelReceipt")
 .value="";
 
-document
-.getElementById("fuelKM")
+document.getElementById("fuelLiter")
+.value="";
+
+document.getElementById("fuelPrice")
+.value="";
+
+document.getElementById("fuelKM")
 .value="";
 
 
@@ -1279,123 +1126,19 @@ render();
 
 
 alert(
-"✅ Fuel በትክክል ተመዝግቧል!\n\n"+
+"✅ Fuel ተመዝግቧል!\n\n"+
 "Expense: "+
 expense.toFixed(2)+
 " ETB\n"+
 "Distance: "+
 distance.toFixed(2)+
-" KM"
+" KM\n"+
+"Price/L: "+
+price.toFixed(2)+
+" ETB"
 );
 
 }
-
-/* Previous KM */
-
-let sameCar=fuels
-.filter(
-f=>
-f.plate.toLowerCase()===
-plate.toLowerCase()
-)
-.sort(
-(a,b)=>
-new Date(
-b.date+"T"+b.time
-)-
-new Date(
-a.date+"T"+a.time
-)
-);
-
-
-let distance=0;
-
-
-if(sameCar.length>0){
-
-let previous=sameCar[0];
-
-distance=
-currentKM-
-Number(previous.currentKM);
-
-
-if(distance<0){
-
-alert(
-"Current KM ከቀድሞው KM መብለጥ አለበት።"
-);
-
-return;
-
-}
-
-}
-
-
-let expense=
-liters*price;
-
-
-fuels.push({
-
-plate:plate,
-
-date:date,
-
-time:time,
-
-liters:liters,
-
-price:price,
-
-expense:expense,
-
-currentKM:currentKM,
-
-distance:distance
-
-});
-
-
-saveAll();
-
-
-document
-.getElementById("fuelPlate")
-.value="";
-
-document
-.getElementById("fuelDate")
-.value="";
-
-document
-.getElementById("fuelTime")
-.value="";
-
-document
-.getElementById("fuelLiter")
-.value="";
-
-document
-.getElementById("fuelPrice")
-.value="";
-
-document
-.getElementById("fuelKM")
-.value="";
-
-
-render();
-
-
-alert(
-"Fuel በትክክል ተመዝግቧል ✅"
-);
-
-}
-
 
 
 /* =========================
@@ -1404,183 +1147,66 @@ alert(
 
 function calculate(){
 
-let budget=budgets.reduce(
-(sum,b)=>
-sum+Number(b.amount||0),
-0
-);
+let activeFuels=fuels;
 
+if(period){
 
-let liters=fuels.reduce(
-(sum,f)=>
-sum+Number(f.liters||0),
-0
-);
-
-
-let expense=fuels.reduce(
-(sum,f)=>
-sum+Number(f.expense||0),
-0
-);
-
-
-let km=fuels.reduce(
-(sum,f)=>
-sum+Number(f.distance||0),
-0
-);
-
-
-let remaining=
-budget-expense;
-
-
-let cars=new Set();
-
-
-budgets.forEach(
-b=>
-cars.add(
-b.plate.toLowerCase()
-)
-);
-
-
-fuels.forEach(
+activeFuels=fuels.filter(
 f=>
-cars.add(
-f.plate.toLowerCase()
-)
+f.date>=period.start &&
+f.date<=period.end
 );
 
-
-document
-.getElementById("totalCars")
-.textContent=
-cars.size;
-
-
-document
-.getElementById("totalBudget")
-.textContent=
-budget.toFixed(2)+" ETB";
-
-
-document
-.getElementById("totalLiters")
-.textContent=
-liters.toFixed(2)+" L";
-
-
-document
-.getElementById("totalExpense")
-.textContent=
-expense.toFixed(2)+" ETB";
-
-
-document
-.getElementById("totalKM")
-.textContent=
-km.toFixed(2)+" KM";
-
-
-document
-.getElementById("totalRemaining")
-.textContent=
-remaining.toFixed(2)+" ETB";
-
-
-/* REPORT */
-
-document
-.getElementById("reportBudget")
-.textContent=
-budget.toFixed(2)+" ETB";
-
-
-document
-.getElementById("reportLiters")
-.textContent=
-liters.toFixed(2)+" L";
-
-
-document
-.getElementById("reportExpense")
-.textContent=
-expense.toFixed(2)+" ETB";
-
-
-document
-.getElementById("reportKM")
-.textContent=
-km.toFixed(2)+" KM";
-
-
-document
-.getElementById("reportKML")
-.textContent=
-liters>0
-?(km/liters).toFixed(2)
-:"0";
-
-
-document
-.getElementById("reportCostKM")
-.textContent=
-km>0
-?(expense/km).toFixed(2)
-:"0";
-
-
-document
-.getElementById("reportRemaining")
-.textContent=
-remaining.toFixed(2)+" ETB";
-
-
-/* PROGRESS */
-
-let percentage=
-budget>0
-?(expense/budget)*100
-:0;
-
-
-document
-.getElementById("progressBar")
-.style.width=
-Math.min(percentage,100)+"%";
-
-
-document
-.getElementById("usageText")
-.textContent=
-percentage.toFixed(1)+"%";
-
-
-let message=document
-.getElementById("budgetMessage");
-
-
-if(percentage>=100){
-
-message.innerHTML=
-"<div class='danger'>⚠️ የ15 ቀን በጀት ተጠቅሟል / አልፏል።</div>";
-
-}else if(percentage>=80){
-
-message.innerHTML=
-"<div class='warning'>⚠️ የበጀት አጠቃቀም "+percentage.toFixed(1)+"% ደርሷል።</div>";
-
-}else{
-
-message.innerHTML="";
-
 }
 
-}
+let plates=[];
 
+vehicles.forEach(v=>{
+if(!plates.includes(v.plate)){
+plates.push(v.plate);
+}
+});
+
+budgets.forEach(b=>{
+if(!plates.includes(b.plate)){
+plates.push(b.plate);
+}
+});
+
+fuels.forEach(f=>{
+if(!plates.includes(f.plate)){
+plates.push(f.plate);
+}
+});
+
+let budget=budgets.reduce(
+(s,b)=>s+Number(b.amount||0),0
+);
+
+let liters=activeFuels.reduce(
+(s,f)=>s+Number(f.liters||0),0
+);
+
+let expense=activeFuels.reduce(
+(s,f)=>s+Number(f.expense||0),0
+);
+
+let km=activeFuels.reduce(
+(s,f)=>s+Number(f.distance||0),0
+);
+
+return{
+
+cars:plates.length,
+budget:budget,
+liters:liters,
+expense:expense,
+km:km,
+remaining:budget-expense
+
+};
+
+}
 
 
 /* =========================
@@ -1594,55 +1220,57 @@ let box=document
 
 box.innerHTML="";
 
-
 let plates=[];
 
+vehicles.forEach(v=>{
+if(!plates.some(
+p=>
+p.toLowerCase()===
+v.plate.toLowerCase()
+)){
+plates.push(v.plate);
+}
+});
 
 budgets.forEach(b=>{
-
-if(
-!plates.some(
+if(!plates.some(
 p=>
 p.toLowerCase()===
 b.plate.toLowerCase()
-)
-){
-
+)){
 plates.push(b.plate);
-
 }
-
 });
 
-
 fuels.forEach(f=>{
-
-if(
-!plates.some(
+if(!plates.some(
 p=>
 p.toLowerCase()===
 f.plate.toLowerCase()
-)
-){
-
+)){
 plates.push(f.plate);
-
 }
-
 });
 
 
 if(plates.length===0){
 
 box.innerHTML=
-"<div class='empty'>ምንም የመኪና መረጃ የለም።</div>";
+"<div class='empty'>"+
+"🚗 ምንም Vehicle የለም።"+
+"</div>";
 
 return;
-
 }
 
 
 plates.forEach(plate=>{
+
+let vehicle=vehicles.find(
+v=>
+v.plate.toLowerCase()===
+plate.toLowerCase()
+);
 
 let budgetObject=budgets.find(
 b=>
@@ -1650,56 +1278,87 @@ b.plate.toLowerCase()===
 plate.toLowerCase()
 );
 
-
 let carFuel=fuels.filter(
 f=>
 f.plate.toLowerCase()===
-plate.toLowerCase()
+plate.toLowerCase() &&
+(!period ||
+(f.date>=period.start &&
+f.date<=period.end))
 );
 
-
-let budget=
-budgetObject
+let budget=budgetObject
 ?Number(budgetObject.amount)
 :0;
 
-
 let liters=carFuel.reduce(
-(s,f)=>
-s+Number(f.liters||0),
-0
+(s,f)=>s+Number(f.liters||0),0
 );
-
 
 let expense=carFuel.reduce(
-(s,f)=>
-s+Number(f.expense||0),
-0
+(s,f)=>s+Number(f.expense||0),0
 );
-
 
 let km=carFuel.reduce(
-(s,f)=>
-s+Number(f.distance||0),
-0
+(s,f)=>s+Number(f.distance||0),0
 );
-
 
 let remaining=
 budget-expense;
-
 
 let kmL=
 liters>0
 ?km/liters
 :0;
 
+let usage=
+budget>0
+?(expense/budget)*100
+:0;
 
-let div=document
-.createElement("div");
+let status="🟢 Normal";
+let statusClass="success";
+
+if(budget<=0){
+
+status="⚪ Budget አልተመዘገበም";
+statusClass="";
+
+}else if(remaining<0){
+
+status="🔴 Budget አልፏል";
+statusClass="danger";
+
+}else if(usage>=80){
+
+status="🟠 Budget 80% ተጠቅመዋል";
+statusClass="warning";
+
+}
+
+
+let latest=carFuel
+.slice()
+.sort(
+(a,b)=>
+new Date(b.date+"T"+b.time)-
+new Date(a.date+"T"+a.time)
+)[0];
+
+let driver=
+vehicle
+?vehicle.driver
+:(latest?latest.driver:"");
+
+let station=
+latest
+?latest.station
+:"";
+
+
+let div=document.createElement("div");
 
 div.className="vehicle";
-
 
 div.innerHTML=
 
@@ -1707,40 +1366,69 @@ div.innerHTML=
 escapeHTML(plate)+
 "</h3>"+
 
+"<p class='small'>"+
+"👨‍✈️ Driver: "+
+escapeHTML(driver||"Not registered")+
+"<br>"+
+"⛽ Latest Station: "+
+escapeHTML(station||"Not registered")+
+"</p>"+
+
 "<div class='vehicle-grid'>"+
 
 "<div class='vehicle-box'>"+
 "💰 Budget"+
-"<b>"+budget.toFixed(2)+" ETB</b>"+
-"</div>"+
+"<b>"+
+budget.toFixed(2)+
+" ETB</b></div>"+
 
 "<div class='vehicle-box'>"+
 "💵 Expense"+
-"<b>"+expense.toFixed(2)+" ETB</b>"+
-"</div>"+
+"<b>"+
+expense.toFixed(2)+
+" ETB</b></div>"+
 
 "<div class='vehicle-box'>"+
 "💳 Remaining"+
-"<b>"+remaining.toFixed(2)+" ETB</b>"+
-"</div>"+
+"<b>"+
+remaining.toFixed(2)+
+" ETB</b></div>"+
 
 "<div class='vehicle-box'>"+
 "⛽ Fuel"+
-"<b>"+liters.toFixed(2)+" L</b>"+
-"</div>"+
+"<b>"+
+liters.toFixed(2)+
+" L</b></div>"+
 
 "<div class='vehicle-box'>"+
-"🛣️ KM"+
-"<b>"+km.toFixed(2)+" KM</b>"+
-"</div>"+
+"🛣️ Distance"+
+"<b>"+
+km.toFixed(2)+
+" KM</b></div>"+
 
 "<div class='vehicle-box'>"+
 "📊 KM/L"+
-"<b>"+kmL.toFixed(2)+"</b>"+
+"<b>"+
+kmL.toFixed(2)+
+"</b></div>"+
+
 "</div>"+
 
-"</div>";
+"<p class='"+statusClass+"'>"+
+status+
+"</p>"+
 
+"<p class='small'>"+
+"Budget Usage: "+
+usage.toFixed(1)+
+"%"+
+"</p>"+
+
+"<div class='progress'>"+
+"<div class='progress-bar' style='width:"+
+Math.min(usage,100)+
+"%'></div>"+
+"</div>";
 
 box.appendChild(div);
 
@@ -1748,6 +1436,57 @@ box.appendChild(div);
 
 }
 
+
+/* =========================
+   VEHICLE LIST
+========================= */
+
+function renderVehicleList(){
+
+let box=document
+.getElementById("vehicleList");
+
+box.innerHTML="";
+
+if(vehicles.length===0){
+
+box.innerHTML=
+"<div class='empty'>"+
+"ምንም Vehicle አልተጨመረም።"+
+"</div>";
+
+return;
+}
+
+
+vehicles.forEach(v=>{
+
+let div=document.createElement("div");
+
+div.className="vehicle";
+
+div.innerHTML=
+
+"<h3>🚗 "+
+escapeHTML(v.plate)+
+"</h3>"+
+
+"<p>"+
+"👨‍✈️ Driver: "+
+escapeHTML(v.driver||"Not registered")+
+"</p>"+
+
+"<button class='btn-red' onclick='deleteVehicle(\""+
+escapeHTML(v.plate)+
+"\")'>"+
+"🗑️ Remove Vehicle"+
+"</button>";
+
+box.appendChild(div);
+
+});
+
+}
 
 
 /* =========================
@@ -1759,104 +1498,131 @@ function renderHistory(){
 let box=document
 .getElementById("fuelHistory");
 
-box.innerHTML="";
-
-
 if(fuels.length===0){
 
 box.innerHTML=
-"<div class='empty'>Fuel record የለም።</div>";
+"<div class='empty'>"+
+"⛽ ምንም Fuel History የለም።"+
+"</div>";
 
 return;
-
 }
 
 
-let sorted=[...fuels].sort(
+let list=fuels
+.slice()
+.sort(
 (a,b)=>
-new Date(
-b.date+"T"+b.time
-)-
-new Date(
-a.date+"T"+a.time
-)
+new Date(b.date+"T"+b.time)-
+new Date(a.date+"T"+a.time)
 );
 
 
-sorted.forEach(item=>{
+let html=
 
-let index=fuels.indexOf(item);
+"<table>"+
+"<thead>"+
+"<tr>"+
+"<th>Date</th>"+
+"<th>Vehicle</th>"+
+"<th>Driver</th>"+
+"<th>Station</th>"+
+"<th>Receipt</th>"+
+"<th>Liter</th>"+
+"<th>Price/L</th>"+
+"<th>Expense</th>"+
+"<th>KM</th>"+
+"<th>Distance</th>"+
+"<th>Action</th>"+
+"</tr>"+
+"</thead>"+
+"<tbody>";
 
 
-let div=document
-.createElement("div");
+list.forEach(f=>{
 
-div.className="history-item";
+html+=
 
+"<tr>"+
 
-div.innerHTML=
-
-"<div class='plate'>🚗 "+
-escapeHTML(item.plate)+
-"</div>"+
-
-"📅 "+item.date+
+"<td>"+
+f.date+
 "<br>"+
+f.time+
+"</td>"+
 
-"🕐 "+item.time+
-"<br>"+
+"<td>"+
+escapeHTML(f.plate)+
+"</td>"+
 
-"⛽ "+Number(item.liters).toFixed(2)+
-" L"+
-"<br>"+
+"<td>"+
+escapeHTML(f.driver||"")+
+"</td>"+
 
-"💰 "+
-Number(item.price).toFixed(2)+
-" ETB/L"+
-"<br>"+
+"<td>"+
+escapeHTML(f.station||"")+
+"</td>"+
 
-"💵 Expense: <b>"+
-Number(item.expense).toFixed(2)+
-" ETB</b>"+
-"<br>"+
+"<td>"+
+escapeHTML(f.receipt||"")+
+"</td>"+
 
-"🛣️ Current KM: "+
-Number(item.currentKM).toFixed(2)+
-"<br>"+
+"<td>"+
+Number(f.liters).toFixed(2)+
+"</td>"+
 
-"📏 Distance: "+
-Number(item.distance).toFixed(2)+
-" KM"+
+"<td>"+
+Number(f.price).toFixed(2)+
+"</td>"+
 
-"<button class='red' onclick='deleteFuel("+index+")'>"+
-"🗑️ Delete"+
-"</button>";
+"<td>"+
+Number(f.expense).toFixed(2)+
+"</td>"+
 
+"<td>"+
+Number(f.currentKM).toFixed(2)+
+"</td>"+
 
-box.appendChild(div);
+"<td>"+
+Number(f.distance||0).toFixed(2)+
+"</td>"+
+
+"<td>"+
+"<button class='btn-red' onclick='deleteFuel("+
+f.id+
+")'>"+
+"Delete"+
+"</button>"+
+"</td>"+
+
+"</tr>";
 
 });
 
-}
 
+html+="</tbody></table>";
+
+box.innerHTML=html;
+
+}
 
 
 /* =========================
    DELETE FUEL
 ========================= */
 
-function deleteFuel(index){
+function deleteFuel(id){
 
 if(!confirm(
-"ይህን Fuel record ማጥፋት ይፈልጋሉ?"
+"⚠️ ይህን Fuel Record ማጥፋት ይፈልጋሉ?"
 )){
 
 return;
-
 }
 
-
-fuels.splice(index,1);
+fuels=fuels.filter(
+f=>f.id!==id
+);
 
 saveAll();
 
@@ -1865,41 +1631,136 @@ render();
 }
 
 
+/* =========================
+   REPORT
+========================= */
+
+function renderReport(){
+
+let box=document
+.getElementById("periodReport");
+
+let d=calculate();
+
+let usage=
+d.budget>0
+?(d.expense/d.budget)*100
+:0;
+
+let kmL=
+d.liters>0
+?d.km/d.liters
+:0;
+
+
+box.innerHTML=
+
+"<div class='report-box'>"+
+"<b>📅 Period:</b> "+
+(period
+?period.start+" → "+period.end
+:"Not Set")+
+"</div>"+
+
+"<div class='report-box'>"+
+"<b>🚗 Vehicles:</b> "+
+d.cars+
+"</div>"+
+
+"<div class='report-box'>"+
+"<b>💰 Total Budget:</b> "+
+d.budget.toFixed(2)+
+" ETB"+
+"</div>"+
+
+"<div class='report-box'>"+
+"<b>⛽ Total Fuel:</b> "+
+d.liters.toFixed(2)+
+" L"+
+"</div>"+
+
+"<div class='report-box'>"+
+"<b>💵 Total Expense:</b> "+
+d.expense.toFixed(2)+
+" ETB"+
+"</div>"+
+
+"<div class='report-box'>"+
+"<b>💳 Remaining:</b> "+
+d.remaining.toFixed(2)+
+" ETB"+
+"</div>"+
+
+"<div class='report-box'>"+
+"<b>🛣️ Total Distance:</b> "+
+d.km.toFixed(2)+
+" KM"+
+"</div>"+
+
+"<div class='report-box'>"+
+"<b>📊 Average KM/L:</b> "+
+kmL.toFixed(2)+
+"</div>"+
+
+"<div class='report-box'>"+
+"<b>📈 Budget Usage:</b> "+
+usage.toFixed(1)+
+"%"+
+"</div>";
+
+}
+
 
 /* =========================
    ARCHIVE
 ========================= */
 
-function createArchive(){
+function newPeriod(){
+
+if(!period){
+
+alert("⚠️ Current Period የለም።");
+
+return;
+}
+
+if(!confirm(
+"📦 Current 15-Day Period ወደ Archive ማስቀመጥ ይፈልጋሉ?"
+)){
+
+return;
+}
+
+let activeFuels=fuels.filter(
+f=>
+f.date>=period.start &&
+f.date<=period.end
+);
 
 let budget=budgets.reduce(
-(s,b)=>s+Number(b.amount||0),
-0
+(s,b)=>s+Number(b.amount||0),0
 );
 
-let liters=fuels.reduce(
-(s,f)=>s+Number(f.liters||0),
-0
+let liters=activeFuels.reduce(
+(s,f)=>s+Number(f.liters||0),0
 );
 
-let expense=fuels.reduce(
-(s,f)=>s+Number(f.expense||0),
-0
+let expense=activeFuels.reduce(
+(s,f)=>s+Number(f.expense||0),0
 );
 
-let km=fuels.reduce(
-(s,f)=>s+Number(f.distance||0),
-0
+let km=activeFuels.reduce(
+(s,f)=>s+Number(f.distance||0),0
 );
 
 
-return{
+archives.push({
 
-start:
-period?period.start:"Not Set",
+id:Date.now(),
 
-end:
-period?period.end:"Not Set",
+start:period.start,
+
+end:period.end,
 
 budget:budget,
 
@@ -1909,64 +1770,35 @@ expense:expense,
 
 km:km,
 
-remaining:
-budget-expense,
+remaining:budget-expense,
 
-saved:
-new Date().toLocaleString()
+saved:new Date().toLocaleString()
 
-};
-
-}
+});
 
 
-
-/* =========================
-   NEW PERIOD
-========================= */
-
-function newPeriod(){
-
-if(
-budgets.length===0 &&
-fuels.length===0
-){
-
-alert(
-"አሁን ላይ የተመዘገበ መረጃ የለም።"
-);
-
-return;
-
-}
-
-
-if(!confirm(
-"የአሁኑን 15-Day Report Archive አድርገው አዲስ Period መጀመር?"
-)){
-
-return;
-
-}
-
-
-archives.unshift(
-createArchive()
-);
-
-
-budgets=[];
-
-fuels=[];
+/*
+   Keep vehicle and fuel history.
+   Start a fresh period.
+*/
 
 period=null;
 
 saveAll();
 
-location.reload();
+document.getElementById("periodStart")
+.value="";
+
+document.getElementById("periodEnd")
+.value="";
+
+render();
+
+alert(
+"✅ 15-Day Report Archive ተደርጓል።"
+);
 
 }
-
 
 
 /* =========================
@@ -1978,75 +1810,76 @@ function renderArchives(){
 let box=document
 .getElementById("archives");
 
-box.innerHTML="";
-
-
 if(archives.length===0){
 
 box.innerHTML=
-"<div class='empty'>Previous report የለም።</div>";
+"<div class='empty'>"+
+"📦 Previous Report የለም።"+
+"</div>";
 
 return;
-
 }
 
 
-archives.forEach((a,i)=>{
+let html="";
 
-let div=document
-.createElement("div");
+archives
+.slice()
+.reverse()
+.forEach(a=>{
 
-div.className="archive";
+let kmL=
+a.liters>0
+?a.km/a.liters
+:0;
 
+html+=
 
-div.innerHTML=
+"<div class='vehicle'>"+
 
-"<b>📄 Report #"+
-(archives.length-i)+
-"</b>"+
-"<br><br>"+
-
-"📅 "+
+"<h3>📅 "+
 a.start+
 " → "+
 a.end+
-"<br>"+
+"</h3>"+
 
+"<p>"+
 "💰 Budget: "+
 Number(a.budget).toFixed(2)+
-" ETB"+
-"<br>"+
+" ETB<br>"+
 
 "⛽ Fuel: "+
 Number(a.liters).toFixed(2)+
-" L"+
-"<br>"+
+" L<br>"+
 
 "💵 Expense: "+
 Number(a.expense).toFixed(2)+
-" ETB"+
-"<br>"+
+" ETB<br>"+
+
+"💳 Remaining: "+
+Number(a.remaining).toFixed(2)+
+" ETB<br>"+
 
 "🛣️ KM: "+
 Number(a.km).toFixed(2)+
+" KM<br>"+
+
+"📊 KM/L: "+
+kmL.toFixed(2)+
 "<br>"+
 
-"💳 Remaining: <b>"+
-Number(a.remaining).toFixed(2)+
-" ETB</b>"+
-"<br><br>"+
+"🕒 Saved: "+
+escapeHTML(a.saved)+
 
-"<span class='small'>Saved: "+
-a.saved+
-"</span>";
+"</p>"+
 
-
-box.appendChild(div);
+"</div>";
 
 });
 
-}
+box.innerHTML=html;
 
+}
 
 
 /* =========================
@@ -2057,99 +1890,77 @@ function exportCSV(){
 
 if(fuels.length===0){
 
-alert(
-"Export ለማድረግ Fuel record የለም።"
-);
+alert("⚠️ Export ለማድረግ Fuel Data የለም።");
 
 return;
-
 }
 
 
-let rows=[
+let csv=
 
-[
-"Plate",
-"Date",
-"Time",
-"Liter",
-"Price/L",
-"Expense",
-"Current KM",
-"Distance KM"
-]
-
-];
+"Date,Time,Vehicle,Driver,Fuel Station,Receipt,Liter,Price Per Liter,Expense,Current KM,Distance\n";
 
 
 fuels.forEach(f=>{
 
-rows.push([
-
-f.plate,
-
+csv+=
+[
 f.date,
-
 f.time,
-
+csvSafe(f.plate),
+csvSafe(f.driver||""),
+csvSafe(f.station||""),
+csvSafe(f.receipt||""),
 f.liters,
-
 f.price,
-
 f.expense,
-
 f.currentKM,
-
-f.distance
-
-]);
+f.distance||0
+].join(",")+
+"\n";
 
 });
 
 
-let csv=rows.map(
-row=>
-row.map(
-v=>
-'"'+
-String(v).replace(/"/g,'""')+
-'"'
-).join(",")
-).join("\n");
-
-
 let blob=new Blob(
-["\ufeff"+csv],
-{
-type:"text/csv;charset=utf-8;"
-}
+[csv],
+{type:"text/csv;charset=utf-8;"}
 );
 
+let url=URL.createObjectURL(blob);
 
-let url=
-URL.createObjectURL(blob);
-
-
-let a=document
-.createElement("a");
-
+let a=document.createElement("a");
 
 a.href=url;
 
 a.download=
-"15-Day-Fuel-KM-Report.csv";
+"fuel-report-"+
 
+new Date()
+.toISOString()
+.slice(0,10)+
 
-document.body.appendChild(a);
+".csv";
 
 a.click();
-
-a.remove();
 
 URL.revokeObjectURL(url);
 
 }
 
+
+/* =========================
+   CSV SAFE
+========================= */
+
+function csvSafe(value){
+
+return '"'+
+String(value)
+.replace(/"/g,'""')+
+'"';
+
+}
 
 
 /* =========================
@@ -2159,45 +1970,127 @@ URL.revokeObjectURL(url);
 function deleteAll(){
 
 if(!confirm(
-"⚠️ ሁሉንም Budget, Fuel, KM እና Report መረጃ ማጥፋት ይፈልጋሉ?"
+"⚠️ WARNING!\n\n"+
+"ሁሉንም Vehicle, Budget, Fuel, Archive መረጃ ማጥፋት ይፈልጋሉ?"
 )){
 
 return;
-
 }
 
+localStorage.removeItem("fm_vehicles");
+localStorage.removeItem("fm_budgets");
+localStorage.removeItem("fm_fuels");
+localStorage.removeItem("fm_archives");
+localStorage.removeItem("fm_period");
 
+vehicles=[];
 budgets=[];
-
 fuels=[];
-
 archives=[];
-
 period=null;
 
-saveAll();
+render();
 
-location.reload();
+alert("✅ ሁሉም Data ተሰርዟል።");
 
 }
-
 
 
 /* =========================
-   ESCAPE
+   ESCAPE HTML
 ========================= */
 
-function escapeHTML(text){
+function escapeHTML(value){
 
-let div=document
-.createElement("div");
-
-div.textContent=text;
-
-return div.innerHTML;
+return String(value)
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#039;");
 
 }
 
+
+/* =========================
+   LOAD VEHICLE DROPDOWNS
+========================= */
+
+function loadVehicleSelects(){
+
+let budgetSelect=
+document.getElementById("budgetPlate");
+
+let fuelSelect=
+document.getElementById("fuelPlate");
+
+
+budgetSelect.innerHTML=
+"<option value=''>Select Vehicle</option>";
+
+fuelSelect.innerHTML=
+"<option value=''>Select Vehicle</option>";
+
+
+vehicles.forEach(v=>{
+
+let o1=document.createElement("option");
+
+o1.value=v.plate;
+
+o1.textContent=
+v.plate+
+(v.driver
+?" - "+v.driver
+:"");
+
+budgetSelect.appendChild(o1);
+
+
+let o2=document.createElement("option");
+
+o2.value=v.plate;
+
+o2.textContent=
+v.plate+
+(v.driver
+?" - "+v.driver
+:"");
+
+fuelSelect.appendChild(o2);
+
+});
+
+}
+
+
+/* =========================
+   AUTO DRIVER
+========================= */
+
+document
+.getElementById("fuelPlate")
+.addEventListener(
+"change",
+function(){
+
+let vehicle=vehicles.find(
+v=>
+v.plate.toLowerCase()===
+this.value.toLowerCase()
+);
+
+if(vehicle){
+
+document
+.getElementById("fuelDriver")
+.value=
+vehicle.driver||"";
+
+}
+
+}
+);
 
 
 /* =========================
@@ -2206,48 +2099,54 @@ return div.innerHTML;
 
 function render(){
 
-calculate();
+loadVehicleSelects();
+
+renderVehicleList();
 
 renderVehicles();
 
 renderHistory();
 
+renderReport();
+
 renderArchives();
+
+
+let d=calculate();
+
+
+document.getElementById("dashCars")
+.innerText=d.cars;
+
+document.getElementById("dashBudget")
+.innerText=
+d.budget.toFixed(2)+" ETB";
+
+document.getElementById("dashFuel")
+.innerText=
+d.liters.toFixed(2)+" L";
+
+document.getElementById("dashExpense")
+.innerText=
+d.expense.toFixed(2)+" ETB";
+
+document.getElementById("dashKM")
+.innerText=
+d.km.toFixed(2)+" KM";
+
+document.getElementById("dashRemaining")
+.innerText=
+d.remaining.toFixed(2)+" ETB";
+
 
 showPeriod();
 
 }
 
 
-
 /* =========================
-   LOAD PERIOD
+   START
 ========================= */
-
-function loadPeriod(){
-
-if(!period){
-
-return;
-
-}
-
-
-document
-.getElementById("startDate")
-.value=period.start;
-
-
-document
-.getElementById("endDate")
-.value=period.end;
-
-}
-
-
-/* START */
-
-loadPeriod();
 
 render();
 
