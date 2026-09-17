@@ -422,4 +422,1495 @@ canvas{
 
 <div>
 <label>Time</label>
-<input
+<input type="time" id="fuelTime">
+</div>
+
+<div>
+<label>Fuel Station</label>
+<input id="fuelStation" placeholder="Station name">
+</div>
+
+<div>
+<label>Receipt Number</label>
+<input id="fuelReceipt" placeholder="Receipt No.">
+</div>
+
+<div>
+<label>Liter</label>
+<input type="number" id="fuelLiters" min="0" step="0.01" oninput="calculatePreview()">
+</div>
+
+<div>
+<label>Price / Liter</label>
+<input type="number" id="fuelPrice" min="0" step="0.01" oninput="calculatePreview()">
+</div>
+
+<div>
+<label>Current KM</label>
+<input type="number" id="fuelKM" min="0" step="0.01">
+</div>
+
+</div>
+
+<div class="summary-box">
+  💵 Calculated Expense:
+  <strong id="expensePreview">0.00</strong>
+</div>
+
+<div class="actions">
+<button class="btn-green" onclick="saveFuel()">Save Fuel</button>
+<button class="btn-gray" onclick="clearFuelForm()">Clear</button>
+<button class="btn-orange" onclick="setToday()">Today / Now</button>
+</div>
+</div>
+
+<!-- VEHICLE REPORT -->
+<div class="card">
+<h2>🚗 Vehicle Report</h2>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Plate</th>
+<th>Driver</th>
+<th>Budget</th>
+<th>Liter</th>
+<th>Expense</th>
+<th>KM</th>
+<th>KM/L</th>
+<th>Remaining</th>
+<th>Usage</th>
+</tr>
+</thead>
+<tbody id="vehicleReport"></tbody>
+</table>
+</div>
+</div>
+
+<!-- SEARCH -->
+<div class="card no-print">
+<h2>🔎 Fuel History Search & Filter</h2>
+
+<div class="grid3">
+
+<div>
+<label>Vehicle</label>
+<select id="filterVehicle" onchange="renderHistory()">
+<option value="">All Vehicles</option>
+</select>
+</div>
+
+<div>
+<label>Driver</label>
+<input id="filterDriver" placeholder="Driver..." oninput="renderHistory()">
+</div>
+
+<div>
+<label>Fuel Station</label>
+<input id="filterStation" placeholder="Station..." oninput="renderHistory()">
+</div>
+
+<div>
+<label>From Date</label>
+<input type="date" id="filterFrom" onchange="renderHistory()">
+</div>
+
+<div>
+<label>To Date</label>
+<input type="date" id="filterTo" onchange="renderHistory()">
+</div>
+
+</div>
+
+<div class="actions">
+<button class="btn-gray" onclick="resetFilters()">🔄 Reset Filter</button>
+</div>
+
+<div class="summary-box">
+  ⛽ Filtered Fuel:
+  <strong id="filteredLiters">0.00 L</strong>
+  &nbsp;&nbsp;|&nbsp;&nbsp;
+  💰 Expense:
+  <strong id="filteredExpense">0.00</strong>
+  &nbsp;&nbsp;|&nbsp;&nbsp;
+  🛣️ KM:
+  <strong id="filteredKM">0.00</strong>
+</div>
+
+</div>
+
+<!-- HISTORY -->
+<div class="card">
+<h2>📋 Fuel History</h2>
+
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Time</th>
+<th>Vehicle</th>
+<th>Driver</th>
+<th>Station</th>
+<th>Receipt</th>
+<th>Liter</th>
+<th>Price/L</th>
+<th>Expense</th>
+<th>KM</th>
+<th>Distance</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody id="fuelHistory"></tbody>
+</table>
+</div>
+</div>
+
+<!-- PRICE HISTORY -->
+<div class="card">
+<h2>📈 Fuel Price History</h2>
+
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Vehicle</th>
+<th>Station</th>
+<th>Previous Price</th>
+<th>Current Price</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody id="priceHistory"></tbody>
+</table>
+</div>
+</div>
+
+<!-- VEHICLE COMPARISON -->
+<div class="card">
+<h2>📊 Vehicle Comparison</h2>
+
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Vehicle</th>
+<th>Driver</th>
+<th>Liter</th>
+<th>Expense</th>
+<th>KM</th>
+<th>KM/L</th>
+<th>Budget</th>
+<th>Remaining</th>
+</tr>
+</thead>
+<tbody id="comparisonTable"></tbody>
+</table>
+</div>
+</div>
+
+<!-- DAILY REPORT -->
+<div class="card no-print">
+<h2>📅 Daily Report</h2>
+
+<div class="grid">
+<div>
+<label>Select Date</label>
+<input type="date" id="dailyDate">
+</div>
+
+<div>
+<label>&nbsp;</label>
+<button onclick="dailyReport()">Generate Daily Report</button>
+</div>
+</div>
+
+<div id="dailyResult"></div>
+</div>
+
+<!-- MONTHLY REPORT -->
+<div class="card no-print">
+<h2>🗓️ Monthly Report</h2>
+
+<div class="grid">
+<div>
+<label>Select Month</label>
+<input type="month" id="monthlyMonth">
+</div>
+
+<div>
+<label>&nbsp;</label>
+<button onclick="monthlyReport()">Generate Monthly Report</button>
+</div>
+</div>
+
+<div id="monthlyResult"></div>
+</div>
+
+<!-- OFFICIAL REPORT -->
+<div class="card" id="officialReport">
+
+<div class="report-head">
+<h2>SEMERA AIRPORT</h2>
+<h3>FUEL & KM MANAGEMENT REPORT</h3>
+<p>15-Day Fuel Utilization Report</p>
+<p id="officialPeriod"></p>
+</div>
+
+<div id="officialSummary"></div>
+
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Vehicle</th>
+<th>Driver</th>
+<th>Station</th>
+<th>Receipt</th>
+<th>Liter</th>
+<th>Price/L</th>
+<th>Expense</th>
+<th>Current KM</th>
+<th>Distance</th>
+</tr>
+</thead>
+<tbody id="officialTable"></tbody>
+</table>
+</div>
+
+<div id="officialTotals" class="summary-box"></div>
+
+</div>
+
+<!-- PRINT -->
+<div class="card no-print">
+<h2>🖨️ Report & Data</h2>
+
+<div class="actions">
+
+<button onclick="window.print()">
+🖨️ Print / Save PDF
+</button>
+
+<button class="btn-green" onclick="exportCSV()">
+📥 Export CSV
+</button>
+
+<button class="btn-danger" onclick="deleteAll()">
+🗑️ Delete All Data
+</button>
+
+</div>
+</div>
+
+<!-- ARCHIVE -->
+<div class="card">
+<h2>🗂️ Previous 15-Day Reports</h2>
+
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Period</th>
+<th>Budget</th>
+<th>Liter</th>
+<th>Expense</th>
+<th>KM</th>
+<th>Remaining</th>
+<th>Saved</th>
+</tr>
+</thead>
+<tbody id="archiveTable"></tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+<script>
+
+const KEYS = {
+  vehicles:"fm_vehicles",
+  budgets:"fm_budgets",
+  fuels:"fm_fuels",
+  archives:"fm_archives",
+  period:"fm_period"
+};
+
+function getData(key){
+  try{
+    return JSON.parse(localStorage.getItem(key)) || [];
+  }catch(e){
+    return [];
+  }
+}
+
+function saveData(key,data){
+  localStorage.setItem(key,JSON.stringify(data));
+}
+
+function getPeriod(){
+  try{
+    return JSON.parse(localStorage.getItem(KEYS.period));
+  }catch(e){
+    return null;
+  }
+}
+
+function savePeriod(){
+
+  const start=document.getElementById("periodStart").value;
+  const end=document.getElementById("periodEnd").value;
+
+  if(!start || !end){
+    alert("Please enter start and end date.");
+    return;
+  }
+
+  const a=new Date(start+"T00:00:00");
+  const b=new Date(end+"T00:00:00");
+
+  const days=Math.round((b-a)/86400000)+1;
+
+  if(days!==15){
+    alert("The period must contain exactly 15 days.");
+    return;
+  }
+
+  localStorage.setItem(
+    KEYS.period,
+    JSON.stringify({start:start,end:end})
+  );
+
+  showPeriod();
+  render();
+  alert("15-day period saved successfully.");
+}
+
+function showPeriod(){
+
+  const p=getPeriod();
+
+  const info=document.getElementById("periodInfo");
+
+  if(!p){
+    info.innerHTML="⚠️ No active 15-day period.";
+    return;
+  }
+
+  document.getElementById("periodStart").value=p.start;
+  document.getElementById("periodEnd").value=p.end;
+
+  info.innerHTML=
+    "📅 Active Period: <strong>"+
+    formatDate(p.start)+"</strong> → <strong>"+
+    formatDate(p.end)+"</strong>";
+}
+
+function clearPeriodForm(){
+  document.getElementById("periodStart").value="";
+  document.getElementById("periodEnd").value="";
+}
+
+function formatDate(d){
+  if(!d)return "";
+  return new Date(d+"T00:00:00").toLocaleDateString();
+}
+
+function inCurrentPeriod(date){
+
+  const p=getPeriod();
+
+  if(!p)return true;
+
+  return date>=p.start && date<=p.end;
+}
+
+function saveVehicle(){
+
+  const plate=document.getElementById("vehiclePlate").value.trim();
+  const driver=document.getElementById("vehicleDriver").value.trim();
+
+  if(!plate){
+    alert("Please enter plate number.");
+    return;
+  }
+
+  let vehicles=getData(KEYS.vehicles);
+
+  const existing=vehicles.find(
+    v=>v.plate.toLowerCase()===plate.toLowerCase()
+  );
+
+  if(existing){
+    existing.plate=plate;
+    existing.driver=driver;
+  }else{
+    vehicles.push({plate:plate,driver:driver});
+  }
+
+  saveData(KEYS.vehicles,vehicles);
+
+  clearVehicleForm();
+  render();
+}
+
+function clearVehicleForm(){
+  document.getElementById("vehiclePlate").value="";
+  document.getElementById("vehicleDriver").value="";
+}
+
+function deleteVehicle(plate){
+
+  if(!confirm(
+    "Remove this vehicle?\nFuel history will NOT be deleted."
+  ))return;
+
+  let vehicles=getData(KEYS.vehicles);
+
+  vehicles=vehicles.filter(v=>v.plate!==plate);
+
+  saveData(KEYS.vehicles,vehicles);
+
+  render();
+}
+
+function saveBudget(){
+
+  const plate=document.getElementById("budgetPlate").value;
+  const amount=parseFloat(
+    document.getElementById("budgetAmount").value
+  );
+
+  if(!plate){
+    alert("Select vehicle.");
+    return;
+  }
+
+  if(isNaN(amount) || amount<0){
+    alert("Enter valid budget.");
+    return;
+  }
+
+  let budgets=getData(KEYS.budgets);
+
+  const existing=budgets.find(b=>b.plate===plate);
+
+  if(existing){
+    existing.amount=amount;
+  }else{
+    budgets.push({plate:plate,amount:amount});
+  }
+
+  saveData(KEYS.budgets,budgets);
+
+  clearBudgetForm();
+  render();
+}
+
+function clearBudgetForm(){
+  document.getElementById("budgetAmount").value="";
+}
+
+function calculatePreview(){
+
+  const liters=parseFloat(
+    document.getElementById("fuelLiters").value
+  ) || 0;
+
+  const price=parseFloat(
+    document.getElementById("fuelPrice").value
+  ) || 0;
+
+  document.getElementById("expensePreview").textContent=
+    (liters*price).toFixed(2);
+}
+
+document.getElementById("fuelPlate").addEventListener(
+  "change",
+  function(){
+
+    const plate=this.value;
+
+    const vehicles=getData(KEYS.vehicles);
+
+    const vehicle=vehicles.find(v=>v.plate===plate);
+
+    if(vehicle){
+      document.getElementById("fuelDriver").value=
+        vehicle.driver || "";
+    }
+  }
+);
+
+function setToday(){
+
+  const now=new Date();
+
+  const date=
+    now.getFullYear()+"-"+
+    String(now.getMonth()+1).padStart(2,"0")+"-"+
+    String(now.getDate()).padStart(2,"0");
+
+  const time=
+    String(now.getHours()).padStart(2,"0")+":"+
+    String(now.getMinutes()).padStart(2,"0");
+
+  document.getElementById("fuelDate").value=date;
+  document.getElementById("fuelTime").value=time;
+}
+
+function saveFuel(){
+
+  const p=getPeriod();
+
+  if(!p){
+    alert("Please create a 15-day period first.");
+    return;
+  }
+
+  const plate=document.getElementById("fuelPlate").value;
+  const driver=document.getElementById("fuelDriver").value.trim();
+  const date=document.getElementById("fuelDate").value;
+  const time=document.getElementById("fuelTime").value;
+  const station=document.getElementById("fuelStation").value.trim();
+  const receipt=document.getElementById("fuelReceipt").value.trim();
+
+  const liters=parseFloat(
+    document.getElementById("fuelLiters").value
+  );
+
+  const price=parseFloat(
+    document.getElementById("fuelPrice").value
+  );
+
+  const currentKM=parseFloat(
+    document.getElementById("fuelKM").value
+  );
+
+  if(!plate || !date || !station ||
+     isNaN(liters) || isNaN(price) || isNaN(currentKM)){
+
+    alert("Please complete all required fuel information.");
+    return;
+  }
+
+  if(!inCurrentPeriod(date)){
+    alert(
+      "Fuel date must be inside the active 15-day period."
+    );
+    return;
+  }
+
+  if(liters<=0 || price<0 || currentKM<0){
+    alert("Enter valid Liter, Price and KM.");
+    return;
+  }
+
+  let fuels=getData(KEYS.fuels);
+
+  const previous=fuels
+    .filter(f=>
+      f.plate===plate &&
+      f.currentKM!==undefined &&
+      parseFloat(f.currentKM)<=currentKM
+    )
+    .sort((a,b)=>
+      new Date((b.date||"")+"T"+(b.time||"00:00"))-
+      new Date((a.date||"")+"T"+(a.time||"00:00"))
+    )[0];
+
+  let distance=0;
+
+  if(previous){
+    distance=currentKM-parseFloat(previous.currentKM);
+
+    if(distance<0){
+      alert(
+        "Current KM cannot be lower than the previous KM."
+      );
+      return;
+    }
+  }
+
+  fuels.push({
+    id:Date.now(),
+    plate:plate,
+    driver:driver,
+    date:date,
+    time:time,
+    station:station,
+    receipt:receipt,
+    liters:liters,
+    price:price,
+    expense:liters*price,
+    currentKM:currentKM,
+    distance:distance
+  });
+
+  saveData(KEYS.fuels,fuels);
+
+  let vehicles=getData(KEYS.vehicles);
+
+  const vehicle=vehicles.find(v=>v.plate===plate);
+
+  if(vehicle && driver){
+    vehicle.driver=driver;
+    saveData(KEYS.vehicles,vehicles);
+  }
+
+  clearFuelForm();
+  render();
+  alert("Fuel entry saved successfully.");
+}
+
+function clearFuelForm(){
+
+  document.getElementById("fuelPlate").value="";
+  document.getElementById("fuelDriver").value="";
+  document.getElementById("fuelDate").value="";
+  document.getElementById("fuelTime").value="";
+  document.getElementById("fuelStation").value="";
+  document.getElementById("fuelReceipt").value="";
+  document.getElementById("fuelLiters").value="";
+  document.getElementById("fuelPrice").value="";
+  document.getElementById("fuelKM").value="";
+
+  document.getElementById("expensePreview").textContent="0.00";
+}
+
+function calculate(){
+
+  const vehicles=getData(KEYS.vehicles);
+  const budgets=getData(KEYS.budgets);
+  const fuels=getData(KEYS.fuels);
+
+  const currentFuels=fuels.filter(
+    f=>inCurrentPeriod(f.date)
+  );
+
+  let budget=0;
+
+  budgets.forEach(b=>{
+    budget+=parseFloat(b.amount)||0;
+  });
+
+  let liters=0;
+  let expense=0;
+  let km=0;
+
+  currentFuels.forEach(f=>{
+    liters+=parseFloat(f.liters)||0;
+    expense+=parseFloat(f.expense)||0;
+    km+=parseFloat(f.distance)||0;
+  });
+
+  document.getElementById("totalVehicles").textContent=
+    vehicles.length;
+
+  document.getElementById("totalBudget").textContent=
+    budget.toFixed(2);
+
+  document.getElementById("totalLiters").textContent=
+    liters.toFixed(2)+" L";
+
+  document.getElementById("totalExpense").textContent=
+    expense.toFixed(2);
+
+  document.getElementById("totalKM").textContent=
+    km.toFixed(2);
+
+  document.getElementById("totalRemaining").textContent=
+    (budget-expense).toFixed(2);
+}
+
+function loadVehicleSelects(){
+
+  const vehicles=getData(KEYS.vehicles);
+  const fuels=getData(KEYS.fuels);
+
+  const allPlates=[
+    ...new Set([
+      ...vehicles.map(v=>v.plate),
+      ...fuels.map(f=>f.plate)
+    ])
+  ];
+
+  const budget=document.getElementById("budgetPlate");
+  const fuel=document.getElementById("fuelPlate");
+  const filter=document.getElementById("filterVehicle");
+
+  const oldBudget=budget.value;
+  const oldFuel=fuel.value;
+  const oldFilter=filter.value;
+
+  budget.innerHTML=
+    '<option value="">Select Vehicle</option>';
+
+  fuel.innerHTML=
+    '<option value="">Select Vehicle</option>';
+
+  filter.innerHTML=
+    '<option value="">All Vehicles</option>';
+
+  allPlates.forEach(plate=>{
+
+    const v=vehicles.find(x=>x.plate===plate);
+    const text=v && v.driver
+      ? plate+" - "+v.driver
+      : plate;
+
+    budget.innerHTML+=
+      `<option value="${escapeHTML(plate)}">${escapeHTML(text)}</option>`;
+
+    fuel.innerHTML+=
+      `<option value="${escapeHTML(plate)}">${escapeHTML(text)}</option>`;
+
+    filter.innerHTML+=
+      `<option value="${escapeHTML(plate)}">${escapeHTML(text)}</option>`;
+  });
+
+  if([...budget.options].some(o=>o.value===oldBudget))
+    budget.value=oldBudget;
+
+  if([...fuel.options].some(o=>o.value===oldFuel))
+    fuel.value=oldFuel;
+
+  if([...filter.options].some(o=>o.value===oldFilter))
+    filter.value=oldFilter;
+}
+
+function renderVehicles(){
+
+  const vehicles=getData(KEYS.vehicles);
+  const fuels=getData(KEYS.fuels);
+  const budgets=getData(KEYS.budgets);
+
+  let html="";
+
+  if(!vehicles.length){
+    html="<p class='small'>No vehicles added yet.</p>";
+  }
+
+  vehicles.forEach(v=>{
+
+    const count=fuels.filter(
+      f=>f.plate===v.plate
+    ).length;
+
+    const budget=budgets.find(
+      b=>b.plate===v.plate
+    );
+
+    html+=`
+      <div class="summary-box">
+        <strong>🚗 ${escapeHTML(v.plate)}</strong><br>
+        👨‍✈️ ${escapeHTML(v.driver||"No driver")}<br>
+        ⛽ Fuel Entries: ${count}<br>
+        💰 Budget: ${(budget?budget.amount:0).toFixed(2)}
+
+        <div style="margin-top:8px">
+          <button
+            class="btn-danger"
+            style="width:auto;padding:7px 12px"
+            onclick="deleteVehicle('${escapeJS(v.plate)}')">
+            Remove
+          </button>
+        </div>
+      </div>
+    `;
+  });
+
+  document.getElementById("vehicleList").innerHTML=html;
+}
+
+function currentFuels(){
+
+  const fuels=getData(KEYS.fuels);
+
+  return fuels.filter(
+    f=>inCurrentPeriod(f.date)
+  );
+}
+
+function renderVehicleReport(){
+
+  const vehicles=getData(KEYS.vehicles);
+  const budgets=getData(KEYS.budgets);
+  const fuels=currentFuels();
+
+  let html="";
+
+  vehicles.forEach(v=>{
+
+    const vf=fuels.filter(
+      f=>f.plate===v.plate
+    );
+
+    const liters=vf.reduce(
+      (s,f)=>s+(parseFloat(f.liters)||0),0
+    );
+
+    const expense=vf.reduce(
+      (s,f)=>s+(parseFloat(f.expense)||0),0
+    );
+
+    const km=vf.reduce(
+      (s,f)=>s+(parseFloat(f.distance)||0),0
+    );
+
+    const budgetObj=budgets.find(
+      b=>b.plate===v.plate
+    );
+
+    const budget=budgetObj?
+      parseFloat(budgetObj.amount)||0:0;
+
+    const remaining=budget-expense;
+
+    const kml=liters>0?km/liters:0;
+
+    const usage=budget>0?
+      expense/budget*100:0;
+
+    let badge="badge-green";
+
+    if(usage>=90) badge="badge-red";
+    else if(usage>=70) badge="badge-orange";
+
+    html+=`
+      <tr>
+        <td>${escapeHTML(v.plate)}</td>
+        <td>${escapeHTML(v.driver||"")}</td>
+        <td>${budget.toFixed(2)}</td>
+        <td>${liters.toFixed(2)}</td>
+        <td>${expense.toFixed(2)}</td>
+        <td>${km.toFixed(2)}</td>
+        <td>${kml.toFixed(2)}</td>
+        <td>${remaining.toFixed(2)}</td>
+        <td>
+          <span class="badge ${badge}">
+            ${usage.toFixed(1)}%
+          </span>
+        </td>
+      </tr>
+    `;
+  });
+
+  document.getElementById("vehicleReport").innerHTML=
+    html ||
+    "<tr><td colspan='9'>No vehicles available.</td></tr>";
+}
+
+function renderComparison(){
+
+  const vehicles=getData(KEYS.vehicles);
+  const budgets=getData(KEYS.budgets);
+  const fuels=currentFuels();
+
+  let html="";
+
+  vehicles.forEach(v=>{
+
+    const vf=fuels.filter(
+      f=>f.plate===v.plate
+    );
+
+    const liters=vf.reduce(
+      (s,f)=>s+(+f.liters||0),0
+    );
+
+    const expense=vf.reduce(
+      (s,f)=>s+(+f.expense||0),0
+    );
+
+    const km=vf.reduce(
+      (s,f)=>s+(+f.distance||0),0
+    );
+
+    const budgetObj=budgets.find(
+      b=>b.plate===v.plate
+    );
+
+    const budget=budgetObj?
+      +budgetObj.amount:0;
+
+    html+=`
+      <tr>
+        <td>${escapeHTML(v.plate)}</td>
+        <td>${escapeHTML(v.driver||"")}</td>
+        <td>${liters.toFixed(2)}</td>
+        <td>${expense.toFixed(2)}</td>
+        <td>${km.toFixed(2)}</td>
+        <td>${(liters?km/liters:0).toFixed(2)}</td>
+        <td>${budget.toFixed(2)}</td>
+        <td>${(budget-expense).toFixed(2)}</td>
+      </tr>
+    `;
+  });
+
+  document.getElementById("comparisonTable").innerHTML=
+    html ||
+    "<tr><td colspan='8'>No vehicle data.</td></tr>";
+}
+
+function getFilteredFuels(){
+
+  let fuels=getData(KEYS.fuels);
+
+  const vehicle=
+    document.getElementById("filterVehicle").value;
+
+  const driver=
+    document.getElementById("filterDriver").value
+    .trim().toLowerCase();
+
+  const station=
+    document.getElementById("filterStation").value
+    .trim().toLowerCase();
+
+  const from=
+    document.getElementById("filterFrom").value;
+
+  const to=
+    document.getElementById("filterTo").value;
+
+  fuels=fuels.filter(f=>{
+
+    if(vehicle && f.plate!==vehicle)
+      return false;
+
+    if(driver &&
+       !(f.driver||"").toLowerCase().includes(driver))
+      return false;
+
+    if(station &&
+       !(f.station||"").toLowerCase().includes(station))
+      return false;
+
+    if(from && f.date<from)
+      return false;
+
+    if(to && f.date>to)
+      return false;
+
+    return true;
+  });
+
+  return fuels.sort((a,b)=>
+    new Date((b.date||"")+"T"+(b.time||"00:00"))-
+    new Date((a.date||"")+"T"+(a.time||"00:00"))
+  );
+}
+
+function renderHistory(){
+
+  const fuels=getFilteredFuels();
+
+  let html="";
+
+  let liters=0;
+  let expense=0;
+  let km=0;
+
+  fuels.forEach(f=>{
+
+    liters+=+f.liters||0;
+    expense+=+f.expense||0;
+    km+=+f.distance||0;
+
+    html+=`
+      <tr>
+        <td>${escapeHTML(formatDate(f.date))}</td>
+        <td>${escapeHTML(f.time||"")}</td>
+        <td>${escapeHTML(f.plate)}</td>
+        <td>${escapeHTML(f.driver||"")}</td>
+        <td>${escapeHTML(f.station||"")}</td>
+        <td>${escapeHTML(f.receipt||"")}</td>
+        <td>${(+f.liters||0).toFixed(2)}</td>
+        <td>${(+f.price||0).toFixed(2)}</td>
+        <td>${(+f.expense||0).toFixed(2)}</td>
+        <td>${(+f.currentKM||0).toFixed(2)}</td>
+        <td>${(+f.distance||0).toFixed(2)}</td>
+        <td>
+          <button
+            class="btn-danger"
+            style="width:auto;padding:5px 8px"
+            onclick="deleteFuel(${f.id})">
+            Delete
+          </button>
+        </td>
+      </tr>
+    `;
+  });
+
+  document.getElementById("fuelHistory").innerHTML=
+    html ||
+    "<tr><td colspan='12'>No matching fuel records.</td></tr>";
+
+  document.getElementById("filteredLiters").textContent=
+    liters.toFixed(2)+" L";
+
+  document.getElementById("filteredExpense").textContent=
+    expense.toFixed(2);
+
+  document.getElementById("filteredKM").textContent=
+    km.toFixed(2);
+}
+
+function resetFilters(){
+
+  document.getElementById("filterVehicle").value="";
+  document.getElementById("filterDriver").value="";
+  document.getElementById("filterStation").value="";
+  document.getElementById("filterFrom").value="";
+  document.getElementById("filterTo").value="";
+
+  renderHistory();
+}
+
+function deleteFuel(id){
+
+  if(!confirm("Delete this fuel record?"))
+    return;
+
+  let fuels=getData(KEYS.fuels);
+
+  fuels=fuels.filter(
+    f=>f.id!==id
+  );
+
+  saveData(KEYS.fuels,fuels);
+
+  render();
+}
+
+function renderPriceReport(){
+
+  const fuels=getData(KEYS.fuels)
+    .filter(f=>inCurrentPeriod(f.date))
+    .sort((a,b)=>
+      new Date((a.date||"")+"T"+(a.time||"00:00"))-
+      new Date((b.date||"")+"T"+(b.time||"00:00"))
+    );
+
+  let html="";
+
+  fuels.forEach((f,i)=>{
+
+    const previous=fuels
+      .slice(0,i)
+      .reverse()
+      .find(x=>
+        x.plate===f.plate &&
+        x.station.toLowerCase()===
+        f.station.toLowerCase()
+      );
+
+    let change=0;
+    let text="—";
+
+    if(previous){
+
+      change=(+f.price||0)-(+previous.price||0);
+
+      if(change>0)
+        text="⬆️ +"+change.toFixed(2);
+
+      else if(change<0)
+        text="⬇️ "+change.toFixed(2);
+
+      else
+        text="➖ 0.00";
+    }
+
+    html+=`
+      <tr>
+        <td>${escapeHTML(formatDate(f.date))}</td>
+        <td>${escapeHTML(f.plate)}</td>
+        <td>${escapeHTML(f.station)}</td>
+        <td>${previous?(+previous.price).toFixed(2):"—"}</td>
+        <td>${(+f.price||0).toFixed(2)}</td>
+        <td>${text}</td>
+      </tr>
+    `;
+  });
+
+  document.getElementById("priceHistory").innerHTML=
+    html ||
+    "<tr><td colspan='6'>No price history.</td></tr>";
+}
+
+function dailyReport(){
+
+  const date=
+    document.getElementById("dailyDate").value;
+
+  if(!date){
+    alert("Select a date.");
+    return;
+  }
+
+  const fuels=getData(KEYS.fuels)
+    .filter(f=>f.date===date);
+
+  let liters=0;
+  let expense=0;
+  let km=0;
+
+  fuels.forEach(f=>{
+    liters+=+f.liters||0;
+    expense+=+f.expense||0;
+    km+=+f.distance||0;
+  });
+
+  document.getElementById("dailyResult").innerHTML=`
+    <div class="summary-box">
+      📅 <strong>${formatDate(date)}</strong><br><br>
+      ⛽ Total Fuel: <strong>${liters.toFixed(2)} L</strong><br>
+      💰 Total Expense: <strong>${expense.toFixed(2)}</strong><br>
+      🛣️ Total KM: <strong>${km.toFixed(2)}</strong><br>
+      🧾 Entries: <strong>${fuels.length}</strong>
+    </div>
+  `;
+}
+
+function monthlyReport(){
+
+  const month=
+    document.getElementById("monthlyMonth").value;
+
+  if(!month){
+    alert("Select month.");
+    return;
+  }
+
+  const fuels=getData(KEYS.fuels)
+    .filter(f=>(f.date||"").startsWith(month));
+
+  let liters=0;
+  let expense=0;
+  let km=0;
+
+  fuels.forEach(f=>{
+    liters+=+f.liters||0;
+    expense+=+f.expense||0;
+    km+=+f.distance||0;
+  });
+
+  document.getElementById("monthlyResult").innerHTML=`
+    <div class="summary-box">
+      🗓️ <strong>${escapeHTML(month)}</strong><br><br>
+      ⛽ Total Fuel: <strong>${liters.toFixed(2)} L</strong><br>
+      💰 Total Expense: <strong>${expense.toFixed(2)}</strong><br>
+      🛣️ Total KM: <strong>${km.toFixed(2)}</strong><br>
+      🧾 Entries: <strong>${fuels.length}</strong>
+    </div>
+  `;
+}
+
+function renderOfficialReport(){
+
+  const p=getPeriod();
+  const fuels=currentFuels();
+  const budgets=getData(KEYS.budgets);
+
+  let budget=0;
+
+  budgets.forEach(b=>{
+    budget+=+b.amount||0;
+  });
+
+  let liters=0;
+  let expense=0;
+  let km=0;
+
+  fuels.forEach(f=>{
+    liters+=+f.liters||0;
+    expense+=+f.expense||0;
+    km+=+f.distance||0;
+  });
+
+  document.getElementById("officialPeriod").innerHTML=
+    p ?
+    "Period: "+formatDate(p.start)+" → "+formatDate(p.end):
+    "No active period";
+
+  document.getElementById("officialSummary").innerHTML=`
+    <div class="grid3">
+      <div class="summary-box">
+        💰 Budget<br>
+        <strong>${budget.toFixed(2)}</strong>
+      </div>
+
+      <div class="summary-box">
+        ⛽ Fuel<br>
+        <strong>${liters.toFixed(2)} L</strong>
+      </div>
+
+      <div class="summary-box">
+        💵 Expense<br>
+        <strong>${expense.toFixed(2)}</strong>
+      </div>
+    </div>
+  `;
+
+  let html="";
+
+  fuels
+    .slice()
+    .sort((a,b)=>
+      new Date((a.date||"")+"T"+(a.time||"00:00"))-
+      new Date((b.date||"")+"T"+(b.time||"00:00"))
+    )
+    .forEach(f=>{
+
+      html+=`
+        <tr>
+          <td>${escapeHTML(formatDate(f.date))}</td>
+          <td>${escapeHTML(f.plate)}</td>
+          <td>${escapeHTML(f.driver||"")}</td>
+          <td>${escapeHTML(f.station||"")}</td>
+          <td>${escapeHTML(f.receipt||"")}</td>
+          <td>${(+f.liters||0).toFixed(2)}</td>
+          <td>${(+f.price||0).toFixed(2)}</td>
+          <td>${(+f.expense||0).toFixed(2)}</td>
+          <td>${(+f.currentKM||0).toFixed(2)}</td>
+          <td>${(+f.distance||0).toFixed(2)}</td>
+        </tr>
+      `;
+    });
+
+  document.getElementById("officialTable").innerHTML=
+    html ||
+    "<tr><td colspan='10'>No fuel records in current period.</td></tr>";
+
+  document.getElementById("officialTotals").innerHTML=
+    "<strong>REPORT TOTALS</strong><br><br>"+
+    "Total Budget: "+budget.toFixed(2)+"<br>"+
+    "Total Fuel: "+liters.toFixed(2)+" L<br>"+
+    "Total Expense: "+expense.toFixed(2)+"<br>"+
+    "Total Distance: "+km.toFixed(2)+" KM<br>"+
+    "Remaining Balance: "+(budget-expense).toFixed(2);
+}
+
+function renderArchives(){
+
+  const archives=getData(KEYS.archives);
+
+  let html="";
+
+  archives
+    .slice()
+    .reverse()
+    .forEach(a=>{
+
+      html+=`
+        <tr>
+          <td>${escapeHTML(formatDate(a.start))}
+              → ${escapeHTML(formatDate(a.end))}</td>
+          <td>${(+a.budget||0).toFixed(2)}</td>
+          <td>${(+a.liters||0).toFixed(2)}</td>
+          <td>${(+a.expense||0).toFixed(2)}</td>
+          <td>${(+a.km||0).toFixed(2)}</td>
+          <td>${(+a.remaining||0).toFixed(2)}</td>
+          <td>${escapeHTML(a.saved||"")}</td>
+        </tr>
+      `;
+    });
+
+  document.getElementById("archiveTable").innerHTML=
+    html ||
+    "<tr><td colspan='7'>No previous reports.</td></tr>";
+}
+
+function newPeriod(){
+
+  const p=getPeriod();
+
+  if(!p){
+    alert("There is no active period to archive.");
+    return;
+  }
+
+  if(!confirm(
+    "Archive the current 15-day period and start a new period?"
+  ))return;
+
+  const fuels=currentFuels();
+  const budgets=getData(KEYS.budgets);
+
+  let budget=0;
+  budgets.forEach(b=>budget+=+b.amount||0);
+
+  let liters=0;
+  let expense=0;
+  let km=0;
+
+  fuels.forEach(f=>{
+    liters+=+f.liters||0;
+    expense+=+f.expense||0;
+    km+=+f.distance||0;
+  });
+
+  const archive={
+    id:Date.now(),
+    start:p.start,
+    end:p.end,
+    budget:budget,
+    liters:liters,
+    expense:expense,
+    km:km,
+    remaining:budget-expense,
+    saved:new Date().toLocaleString()
+  };
+
+  const archives=getData(KEYS.archives);
+
+  archives.push(archive);
+
+  saveData(KEYS.archives,archives);
+
+  localStorage.removeItem(KEYS.period);
+
+  showPeriod();
+  render();
+
+  alert(
+    "Previous 15-day period archived successfully."
+  );
+}
+
+function exportCSV(){
+
+  const fuels=getData(KEYS.fuels);
+
+  if(!fuels.length){
+    alert("No fuel data to export.");
+    return;
+  }
+
+  let csv=
+    "Date,Time,Vehicle,Driver,Station,Receipt,Liter,Price,Liter Expense,Current KM,Distance\n";
+
+  fuels.forEach(f=>{
+
+    csv+=
+      csvSafe(f.date)+","+
+      csvSafe(f.time)+","+
+      csvSafe(f.plate)+","+
+      csvSafe(f.driver)+","+
+      csvSafe(f.station)+","+
+      csvSafe(f.receipt)+","+
+      csvSafe(f.liters)+","+
+      csvSafe(f.price)+","+
+      csvSafe(f.expense)+","+
+      csvSafe(f.currentKM)+","+
+      csvSafe(f.distance)+"\n";
+  });
+
+  const blob=new Blob(
+    ["\ufeff"+csv],
+    {type:"text/csv;charset=utf-8;"}
+  );
+
+  const url=URL.createObjectURL(blob);
+
+  const a=document.createElement("a");
+
+  a.href=url;
+  a.download="fuel-km-report.csv";
+
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+
+  URL.revokeObjectURL(url);
+}
+
+function csvSafe(value){
+
+  value=value===undefined ||
+         value===null ? "" : String(value);
+
+  return '"'+value.replace(/"/g,'""')+'"';
+}
+
+function deleteAll(){
+
+  if(!confirm(
+    "WARNING!\n\nDelete ALL vehicles, budgets, fuel records, archives and period data?"
+  ))return;
+
+  if(!confirm(
+    "This cannot be undone. Continue?"
+  ))return;
+
+  Object.values(KEYS).forEach(
+    key=>localStorage.removeItem(key)
+  );
+
+  render();
+
+  alert("All data deleted.");
+}
+
+function escapeHTML(value){
+
+  return String(value===undefined ||
+                value===null?"":value)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+function escapeJS(value){
+
+  return String(value||"")
+    .replace(/\\/g,"\\\\")
+    .replace(/'/g,"\\'");
+}
+
+function render(){
+
+  loadVehicleSelects();
+  calculate();
+  showPeriod();
+  renderVehicles();
+  renderVehicleReport();
+  renderComparison();
+  renderHistory();
+  renderPriceReport();
+  renderOfficialReport();
+  renderArchives();
+}
+
+window.addEventListener(
+  "load",
+  function(){
+
+    const now=new Date();
+
+    const date=
+      now.getFullYear()+"-"+
+      String(now.getMonth()+1).padStart(2,"0")+"-"+
+      String(now.getDate()).padStart(2,"0");
+
+    document.getElementById("dailyDate").value=date;
+
+    document.getElementById("monthlyMonth").value=
+      date.substring(0,7);
+
+    render();
+  }
+);
+
+</script>
+
+</body>
+</html>
