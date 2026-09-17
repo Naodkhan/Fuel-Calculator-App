@@ -3,73 +3,73 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Fuel & KM Manager</title>
+<title>Fuel KM Manager</title>
 
 <style>
 *{box-sizing:border-box}
 
 body{
- margin:0;
- font-family:Arial,sans-serif;
- background:#f2f5f8;
- color:#172033;
+margin:0;
+font-family:Arial,sans-serif;
+background:#f1f4f8;
+color:#172033
 }
 
 header{
- background:#0866d6;
- color:white;
- padding:18px;
- text-align:center;
+background:#0866d6;
+color:white;
+padding:18px;
+text-align:center
 }
 
 header h1{margin:0;font-size:23px}
-header p{margin:6px 0;font-size:13px}
+header p{margin:6px 0 0;font-size:13px}
 
 .container{
- max-width:850px;
- margin:auto;
- padding:15px;
+max-width:850px;
+margin:auto;
+padding:15px
 }
 
 .card{
- background:white;
- padding:18px;
- margin-bottom:15px;
- border-radius:15px;
- box-shadow:0 3px 12px rgba(0,0,0,.08);
+background:white;
+padding:18px;
+margin-bottom:15px;
+border-radius:15px;
+box-shadow:0 3px 12px rgba(0,0,0,.08)
 }
 
 h2{
- color:#0866d6;
- margin-top:0;
-}
-
-input,select{
- width:100%;
- padding:13px;
- border:1px solid #ccd4df;
- border-radius:9px;
- font-size:16px;
- margin-top:5px;
+margin-top:0;
+color:#0866d6;
+font-size:19px
 }
 
 label{
- display:block;
- font-weight:bold;
- margin-top:12px;
+display:block;
+font-weight:bold;
+margin:12px 0 6px
+}
+
+input{
+width:100%;
+padding:13px;
+border:1px solid #ccd4df;
+border-radius:9px;
+font-size:16px
 }
 
 button{
- width:100%;
- padding:13px;
- border:0;
- border-radius:9px;
- margin-top:12px;
- font-size:16px;
- font-weight:bold;
+width:100%;
+padding:13px;
+margin-top:12px;
+border:0;
+border-radius:9px;
+font-size:16px;
+font-weight:bold
 }
 
-.primary{background:#0866d6;color:white}
+.blue{background:#0866d6;color:white}
 .green{background:#159447;color:white}
 .orange{background:#e89100;color:white}
 .red{background:#d93636;color:white}
@@ -77,113 +77,171 @@ button{
 .purple{background:#6845c5;color:white}
 
 .dashboard{
- display:grid;
- grid-template-columns:1fr 1fr;
- gap:10px;
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px
 }
 
 .stat{
- background:#eef5ff;
- padding:15px;
- border-radius:12px;
- text-align:center;
+background:#eef5ff;
+padding:15px;
+border-radius:12px;
+text-align:center
 }
 
 .stat span{
- display:block;
- font-size:13px;
+display:block;
+font-size:13px
 }
 
 .stat strong{
- display:block;
- margin-top:7px;
- font-size:19px;
- color:#0866d6;
-}
-
-.remaining{
- background:#eaf8ee;
-}
-
-.remaining strong{
- color:#159447;
+display:block;
+font-size:19px;
+margin-top:7px;
+color:#0866d6
 }
 
 .expense{
- background:#fff0f0;
+background:#fff0f0
 }
 
 .expense strong{
- color:#d93636;
+color:#d93636
+}
+
+.remaining{
+background:#eaf8ee
+}
+
+.remaining strong{
+color:#159447
 }
 
 .km{
- background:#f1edff;
+background:#f1edff
 }
 
 .km strong{
- color:#6645b5;
+color:#6645b5
 }
 
-.hidden{
- display:none;
+.warning{
+background:#fff4d6;
+color:#8a5a00;
+padding:13px;
+border-radius:10px;
+margin-top:12px;
+font-weight:bold
 }
 
-.userBox{
- background:#eef5ff;
- padding:12px;
- border-radius:10px;
- margin-bottom:15px;
+.danger{
+background:#ffe5e5;
+color:#a40000;
+padding:13px;
+border-radius:10px;
+margin-top:12px;
+font-weight:bold
 }
 
 .vehicle{
- border:1px solid #ddd;
- padding:15px;
- border-radius:12px;
- margin-bottom:12px;
+border:1px solid #ddd;
+padding:15px;
+border-radius:12px;
+margin-bottom:12px
 }
 
 .vehicle h3{
- color:#0866d6;
- margin-top:0;
+margin:0 0 12px;
+color:#0866d6
 }
 
-.vehicleGrid{
- display:grid;
- grid-template-columns:1fr 1fr;
- gap:8px;
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:8px
 }
 
-.vstat{
- background:#f5f7fa;
- padding:10px;
- text-align:center;
- border-radius:8px;
+.box{
+background:#f5f7fa;
+padding:10px;
+border-radius:8px;
+text-align:center
+}
+
+.box b{
+display:block;
+margin-top:4px
 }
 
 .log{
- border-top:1px solid #ddd;
- padding:14px 0;
- line-height:1.8;
+border-top:1px solid #ddd;
+padding:14px 0;
+line-height:1.8
 }
 
-.car{
- color:#0866d6;
- font-weight:bold;
- font-size:18px;
+.log:first-child{
+border-top:0
+}
+
+.plate{
+font-size:18px;
+font-weight:bold;
+color:#0866d6
+}
+
+.archive{
+background:#f4efff;
+border-left:5px solid #6845c5;
+padding:14px;
+border-radius:9px;
+margin-bottom:10px
+}
+
+.progress{
+height:14px;
+background:#e2e6eb;
+border-radius:20px;
+overflow:hidden;
+margin-top:8px
+}
+
+.progress div{
+height:100%;
+width:0%;
+background:#0866d6
+}
+
+.small{
+font-size:13px;
+color:#687386
 }
 
 footer{
- text-align:center;
- padding:20px;
- color:#777;
- font-size:12px;
+text-align:center;
+padding:20px;
+font-size:12px;
+color:#777
 }
 
 @media(max-width:600px){
- .dashboard{
-  grid-template-columns:1fr 1fr;
- }
+.dashboard,.grid{
+grid-template-columns:1fr 1fr
+}
+}
+
+@media print{
+button,input{
+display:none!important
+}
+
+body{
+background:white
+}
+
+.card{
+box-shadow:none;
+border:1px solid #ddd
+}
 }
 </style>
 </head>
@@ -195,191 +253,27 @@ footer{
 <p>15-Day Fuel • Budget • Kilometer Management</p>
 </header>
 
+<div class="container">
 
-<!-- LOGIN -->
-
-<div id="loginPage" class="container">
+<!-- PERIOD -->
 
 <div class="card">
 
-<h2>🔐 Login</h2>
+<h2>📅 15-Day Period</h2>
 
-<label>Username</label>
-<input id="loginUser" placeholder="Username">
+<label>መጀመሪያ ቀን</label>
+<input type="date" id="startDate">
 
-<label>Password</label>
-<input id="loginPass" type="password" placeholder="Password">
+<label>መጨረሻ ቀን</label>
+<input type="date" id="endDate">
 
-<button class="primary" onclick="login()">
-🔐 Login
+<button class="blue" onclick="savePeriod()">
+💾 Period አስቀምጥ
 </button>
 
-<p class="small">
-Demo Admin: <b>admin</b> / <b>1234</b>
-</p>
-
+<div id="periodBox" class="small">
+Period አልተመዘገበም።
 </div>
-
-</div>
-
-
-<!-- APP -->
-
-<div id="appPage" class="container hidden">
-
-<div class="userBox">
-
-👤 Logged in as:
-<b id="currentUser"></b>
-
-<button class="red" onclick="logout()">
-🚪 Logout
-</button>
-
-</div>
-
-
-<!-- ADMIN -->
-
-<div id="adminPanel" class="hidden">
-
-<div class="card">
-
-<h2>👑 Admin Dashboard</h2>
-
-<div class="dashboard">
-
-<div class="stat">
-<span>👤 Users</span>
-<strong id="userCount">0</strong>
-</div>
-
-<div class="stat">
-<span>🚗 Vehicles</span>
-<strong id="vehicleCount">0</strong>
-</div>
-
-<div class="stat">
-<span>💰 Budget</span>
-<strong id="adminBudget">0</strong>
-</div>
-
-<div class="stat expense">
-<span>💵 Expense</span>
-<strong id="adminExpense">0</strong>
-</div>
-
-<div class="stat km">
-<span>🛣️ KM</span>
-<strong id="adminKm">0</strong>
-</div>
-
-<div class="stat remaining">
-<span>💳 Remaining</span>
-<strong id="adminRemaining">0</strong>
-</div>
-
-</div>
-
-</div>
-
-
-<!-- CREATE USER -->
-
-<div class="card">
-
-<h2>👤 Create User</h2>
-
-<label>Full Name</label>
-<input id="newName" placeholder="Driver Name">
-
-<label>Username</label>
-<input id="newUsername" placeholder="username">
-
-<label>Password</label>
-<input id="newPassword" type="password" placeholder="password">
-
-<button class="green" onclick="createUser()">
-➕ Create User
-</button>
-
-</div>
-
-
-<!-- USER LIST -->
-
-<div class="card">
-
-<h2>👥 Users</h2>
-
-<div id="userList"></div>
-
-</div>
-
-</div>
-
-
-<!-- USER PANEL -->
-
-<div id="userPanel" class="hidden">
-
-<div class="card">
-
-<h2>🚗 My Vehicle</h2>
-
-<label>Vehicle Plate</label>
-<input id="myPlate" placeholder="ET-12345">
-
-<button class="primary" onclick="saveMyVehicle()">
-💾 Save Vehicle
-</button>
-
-</div>
-
-
-<div class="card">
-
-<h2>💰 My 15-Day Budget</h2>
-
-<label>Budget</label>
-<input id="myBudget" type="number" placeholder="20000">
-
-<button class="green" onclick="saveMyBudget()">
-💰 Save Budget
-</button>
-
-</div>
-
-</div>
-
-
-<!-- COMMON FUEL FORM -->
-
-<div class="card">
-
-<h2>⛽ Fuel Entry</h2>
-
-<label>Vehicle Plate</label>
-<input id="plate" placeholder="ET-12345">
-
-<label>Date</label>
-<input id="fuelDate" type="date">
-
-<label>Time</label>
-<input id="fuelTime" type="time">
-
-<label>Fuel (Liter)</label>
-<input id="liters" type="number" step="0.01">
-
-<label>Price / Liter</label>
-<input id="price" type="number" step="0.01">
-
-<label>Current KM</label>
-<input id="currentKm" type="number" step="0.01">
-
-<button class="green" onclick="addFuel()">
-➕ Save Fuel
-</button>
 
 </div>
 
@@ -388,1106 +282,9 @@ Demo Admin: <b>admin</b> / <b>1234</b>
 
 <div class="card">
 
-<h2>📊 Fuel Dashboard</h2>
+<h2>📊 Dashboard</h2>
 
 <div class="dashboard">
 
 <div class="stat">
-<span>🚗 Vehicles</span>
-<strong id="totalCars">0</strong>
-</div>
-
-<div class="stat">
-<span>💰 Budget</span>
-<strong id="totalBudget">0</strong>
-</div>
-
-<div class="stat">
-<span>⛽ Liters</span>
-<strong id="totalLiters">0 L</strong>
-</div>
-
-<div class="stat expense">
-<span>💵 Expense</span>
-<strong id="totalExpense">0</strong>
-</div>
-
-<div class="stat km">
-<span>🛣️ KM</span>
-<strong id="totalKm">0 KM</strong>
-</div>
-
-<div class="stat remaining">
-<span>💳 Remaining</span>
-<strong id="totalRemaining">0</strong>
-</div>
-
-</div>
-
-</div>
-
-
-<!-- VEHICLES -->
-
-<div class="card">
-
-<h2>🚗 Vehicle Reports</h2>
-
-<div id="vehicleReports"></div>
-
-</div>
-
-
-<!-- LOGS -->
-
-<div class="card">
-
-<h2>📋 Fuel History</h2>
-
-<div id="logs"></div>
-
-</div>
-
-
-<!-- REPORT -->
-
-<div class="card">
-
-<h2>📄 15-Day Report</h2>
-
-<p>💰 Budget:
-<b id="reportBudget">0 ETB</b>
-</p>
-
-<p>⛽ Fuel:
-<b id="reportLiters">0 L</b>
-</p>
-
-<p>💵 Expense:
-<b id="reportExpense">0 ETB</b>
-</p>
-
-<p>🛣️ KM:
-<b id="reportKm">0 KM</b>
-</p>
-
-<p>📊 KM/L:
-<b id="reportKmL">0</b>
-</p>
-
-<p>💵 ETB/KM:
-<b id="reportCostKm">0</b>
-</p>
-
-<p>💳 Remaining:
-<b id="reportRemaining">0 ETB</b>
-</p>
-
-<button class="orange" onclick="window.print()">
-🖨️ Print / Save PDF
-</button>
-
-<button class="purple" onclick="downloadCSV()">
-📥 Download Excel/CSV
-</button>
-
-</div>
-
-
-</div>
-
-
-<footer>
-Fuel & Kilometer Management System
-</footer>
-
-
-<script>
-
-let users =
-JSON.parse(localStorage.getItem("fmUsers") || "[]");
-
-let fuelLogs =
-JSON.parse(localStorage.getItem("fmFuel") || "[]");
-
-let currentUser = null;
-
-
-/* DEFAULT ADMIN */
-
-if(!users.find(u=>u.username==="admin")){
-
- users.push({
-  name:"Administrator",
-  username:"admin",
-  password:"1234",
-  role:"admin"
- });
-
- localStorage.setItem(
-  "fmUsers",
-  JSON.stringify(users)
- );
-
-}
-
-
-/* LOGIN */
-
-function login(){
-
- let username =
- document.getElementById("loginUser").value.trim();
-
- let password =
- document.getElementById("loginPass").value;
-
- let user =
- users.find(
-  u =>
-  u.username===username &&
-  u.password===password
- );
-
- if(!user){
-
-  alert("Username ወይም Password ትክክል አይደለም ❌");
-  return;
- }
-
- currentUser=user;
-
- document.getElementById(
-  "loginPage"
- ).classList.add("hidden");
-
- document.getElementById(
-  "appPage"
- ).classList.remove("hidden");
-
- document.getElementById(
-  "currentUser"
- ).textContent=user.name;
-
-
- if(user.role==="admin"){
-
-  document.getElementById(
-   "adminPanel"
-  ).classList.remove("hidden");
-
-  document.getElementById(
-   "userPanel"
-  ).classList.add("hidden");
-
- }else{
-
-  document.getElementById(
-   "adminPanel"
-  ).classList.add("hidden");
-
-  document.getElementById(
-   "userPanel"
-  ).classList.remove("hidden");
-
-  loadUserData();
-
- }
-
- render();
-
-}
-
-
-/* LOGOUT */
-
-function logout(){
-
- currentUser=null;
-
- document.getElementById(
-  "appPage"
- ).classList.add("hidden");
-
- document.getElementById(
-  "loginPage"
- ).classList.remove("hidden");
-
- document.getElementById(
-  "loginUser"
- ).value="";
-
- document.getElementById(
-  "loginPass"
- ).value="";
-}
-
-
-/* CREATE USER */
-
-function createUser(){
-
- let name =
- document.getElementById("newName").value.trim();
-
- let username =
- document.getElementById("newUsername").value.trim();
-
- let password =
- document.getElementById("newPassword").value;
-
- if(!name||!username||!password){
-
-  alert("ሁሉንም መረጃ ያስገቡ።");
-  return;
- }
-
- if(
-  users.find(
-   u=>u.username===username
-  )
- ){
-
-  alert("ይህ Username አለ።");
-  return;
- }
-
- users.push({
-  name:name,
-  username:username,
-  password:password,
-  role:"user"
- });
-
- localStorage.setItem(
-  "fmUsers",
-  JSON.stringify(users)
- );
-
- document.getElementById("newName").value="";
- document.getElementById("newUsername").value="";
- document.getElementById("newPassword").value="";
-
- renderUsers();
- updateAdmin();
-
- alert("User ተፈጥሯል ✅");
-}
-
-
-/* USERS */
-
-function renderUsers(){
-
- let box =
- document.getElementById("userList");
-
- box.innerHTML="";
-
- users
- .filter(u=>u.role==="user")
- .forEach(u=>{
-
-  let div =
-  document.createElement("div");
-
-  div.className="vehicle";
-
-  div.innerHTML=`
-
-  <b>👤 ${escapeHTML(u.name)}</b>
-  <br>
-  Username:
-  ${escapeHTML(u.username)}
-
-  <button
-   class="red"
-   onclick="deleteUser('${escapeHTML(u.username)}')">
-   🗑️ Delete User
-  </button>
-
-  `;
-
-  box.appendChild(div);
-
- });
-}
-
-
-function deleteUser(username){
-
- if(
-  !confirm(
-   "ይህን User ማጥፋት ይፈልጋሉ?"
-  )
- )return;
-
- users =
- users.filter(
-  u=>u.username!==username
- );
-
- localStorage.setItem(
-  "fmUsers",
-  JSON.stringify(users)
- );
-
- renderUsers();
- updateAdmin();
-}
-
-
-/* VEHICLE */
-
-function saveMyVehicle(){
-
- if(!currentUser)return;
-
- let plate =
- document.getElementById(
-  "myPlate"
- ).value.trim();
-
- if(!plate){
-
-  alert("Vehicle plate ያስገቡ።");
-  return;
- }
-
- currentUser.plate=plate;
-
- updateUser();
-
- alert("Vehicle ተቀምጧል ✅");
-}
-
-
-function saveMyBudget(){
-
- if(!currentUser)return;
-
- let budget =
- Number(
-  document.getElementById(
-   "myBudget"
-  ).value
- );
-
- if(budget<=0){
-
-  alert("Budget ያስገቡ።");
-  return;
- }
-
- currentUser.budget=budget;
-
- updateUser();
-
- alert("Budget ተቀምጧል ✅");
-}
-
-
-function updateUser(){
-
- let index =
- users.findIndex(
-  u=>u.username===
-  currentUser.username
- );
-
- if(index>=0){
-
-  users[index]=currentUser;
-
-  localStorage.setItem(
-   "fmUsers",
-   JSON.stringify(users)
-  );
-
- }
-
-}
-
-
-function loadUserData(){
-
- document.getElementById(
-  "myPlate"
- ).value=
- currentUser.plate || "";
-
- document.getElementById(
-  "myBudget"
- ).value=
- currentUser.budget || "";
-
-}
-
-
-/* FUEL */
-
-function addFuel(){
-
- let plate =
- document.getElementById(
-  "plate"
- ).value.trim();
-
- let date =
- document.getElementById(
-  "fuelDate"
- ).value;
-
- let time =
- document.getElementById(
-  "fuelTime"
- ).value;
-
- let liters =
- Number(
-  document.getElementById(
-   "liters"
-  ).value
- );
-
- let price =
- Number(
-  document.getElementById(
-   "price"
-  ).value
- );
-
- let km =
- Number(
-  document.getElementById(
-   "currentKm"
-  ).value
- );
-
-
- if(
-  !plate ||
-  !date ||
-  !time ||
-  liters<=0 ||
-  price<=0 ||
-  km<0
- ){
-
-  alert("ሁሉንም መረጃ ያስገቡ።");
-  return;
- }
-
-
- let previous =
- fuelLogs
- .filter(
-  x=>
-  x.plate.toLowerCase()===
-  plate.toLowerCase()
- )
- .sort(
-  (a,b)=>
-  new Date(
-   b.date+"T"+b.time
-  )-
-  new Date(
-   a.date+"T"+a.time
-  )
- )[0];
-
-
- let distance=0;
-
- if(previous){
-
-  distance =
-  km-previous.currentKm;
-
-  if(distance<0)
-   distance=0;
- }
-
-
- let expense =
- liters*price;
-
-
- fuelLogs.push({
-
-  user:
-  currentUser.username,
-
-  plate:plate,
-
-  date:date,
-
-  time:time,
-
-  liters:liters,
-
-  price:price,
-
-  currentKm:km,
-
-  distance:distance,
-
-  expense:expense
-
- });
-
-
- localStorage.setItem(
-  "fmFuel",
-  JSON.stringify(fuelLogs)
- );
-
-
- document.getElementById("plate").value="";
- document.getElementById("fuelDate").value="";
- document.getElementById("fuelTime").value="";
- document.getElementById("liters").value="";
- document.getElementById("price").value="";
- document.getElementById("currentKm").value="";
-
-
- render();
-
- alert("Fuel record ተመዝግቧል ✅");
-}
-
-
-/* DATA */
-
-function getVisibleLogs(){
-
- if(
-  currentUser &&
-  currentUser.role==="user"
- ){
-
-  return fuelLogs.filter(
-   x=>x.user===
-   currentUser.username
-  );
-
- }
-
- return fuelLogs;
-}
-
-
-function getVisibleUsers(){
-
- if(
-  currentUser &&
-  currentUser.role==="user"
- ){
-
-  return [currentUser];
-
- }
-
- return users.filter(
-  u=>u.role==="user"
- );
-}
-
-
-/* RENDER */
-
-function render(){
-
- let logs =
- getVisibleLogs();
-
- let visibleUsers =
- getVisibleUsers();
-
- let budget=0;
-
- visibleUsers.forEach(
-  u=>budget+=
-  Number(u.budget||0)
- );
-
- let liters=0;
- let expense=0;
- let km=0;
-
- logs.forEach(x=>{
-
-  liters+=x.liters;
-  expense+=x.expense;
-  km+=x.distance;
-
- });
-
-
- let remaining =
- budget-expense;
-
-
- let plates =
- new Set(
-  logs.map(x=>x.plate)
- );
-
-
- document.getElementById(
-  "totalCars"
- ).textContent=
- plates.size;
-
-
- document.getElementById(
-  "totalBudget"
- ).textContent=
- budget.toFixed(2);
-
-
- document.getElementById(
-  "totalLiters"
- ).textContent=
- liters.toFixed(2)+" L";
-
-
- document.getElementById(
-  "totalExpense"
- ).textContent=
- expense.toFixed(2);
-
-
- document.getElementById(
-  "totalKm"
- ).textContent=
- km.toFixed(2)+" KM";
-
-
- document.getElementById(
-  "totalRemaining"
- ).textContent=
- remaining.toFixed(2);
-
-
- document.getElementById(
-  "reportBudget"
- ).textContent=
- budget.toFixed(2)+" ETB";
-
-
- document.getElementById(
-  "reportLiters"
- ).textContent=
- liters.toFixed(2)+" L";
-
-
- document.getElementById(
-  "reportExpense"
- ).textContent=
- expense.toFixed(2)+" ETB";
-
-
- document.getElementById(
-  "reportKm"
- ).textContent=
- km.toFixed(2)+" KM";
-
-
- document.getElementById(
-  "reportRemaining"
- ).textContent=
- remaining.toFixed(2)+" ETB";
-
-
- document.getElementById(
-  "reportKmL"
- ).textContent=
- liters>0 ?
- (km/liters).toFixed(2) :
- "0";
-
-
- document.getElementById(
-  "reportCostKm"
- ).textContent=
- km>0 ?
- (expense/km).toFixed(2) :
- "0";
-
-
- renderVehicles(logs,visibleUsers);
-
- renderLogs(logs);
-
- updateAdmin();
-
- if(
-  currentUser &&
-  currentUser.role==="admin"
- ){
-
-  renderUsers();
-
- }
-
-}
-
-
-function renderVehicles(logs,usersList){
-
- let box =
- document.getElementById(
-  "vehicleReports"
- );
-
- box.innerHTML="";
-
- let plates =
- new Set();
-
- usersList.forEach(u=>{
-
-  if(u.plate)
-   plates.add(u.plate);
-
- });
-
- logs.forEach(x=>{
-  plates.add(x.plate);
- });
-
-
- plates.forEach(plate=>{
-
-  let data =
-  logs.filter(
-   x=>
-   x.plate.toLowerCase()===
-   plate.toLowerCase()
-  );
-
-  let user =
-  usersList.find(
-   u=>
-   u.plate &&
-   u.plate.toLowerCase()===
-   plate.toLowerCase()
-  );
-
-
-  let budget =
-  user ?
-  Number(user.budget||0) :
-  0;
-
-
-  let liters =
-  data.reduce(
-   (s,x)=>s+x.liters,0
-  );
-
-
-  let expense =
-  data.reduce(
-   (s,x)=>s+x.expense,0
-  );
-
-
-  let km =
-  data.reduce(
-   (s,x)=>s+x.distance,0
-  );
-
-
-  let remaining =
-  budget-expense;
-
-
-  let kmL =
-  liters>0 ?
-  km/liters : 0;
-
-
-  let div =
-  document.createElement("div");
-
-  div.className="vehicle";
-
-  div.innerHTML=`
-
-  <h3>🚗 ${escapeHTML(plate)}</h3>
-
-  <div class="vehicleGrid">
-
-  <div class="vstat">
-  💰 Budget
-  <b>${budget.toFixed(2)}</b>
-  </div>
-
-  <div class="vstat">
-  💵 Expense
-  <b>${expense.toFixed(2)}</b>
-  </div>
-
-  <div class="vstat">
-  💳 Remaining
-  <b>${remaining.toFixed(2)}</b>
-  </div>
-
-  <div class="vstat">
-  ⛽ Fuel
-  <b>${liters.toFixed(2)} L</b>
-  </div>
-
-  <div class="vstat">
-  🛣️ KM
-  <b>${km.toFixed(2)}</b>
-  </div>
-
-  <div class="vstat">
-  📊 KM/L
-  <b>${kmL.toFixed(2)}</b>
-  </div>
-
-  </div>
-  `;
-
-  box.appendChild(div);
-
- });
-
-}
-
-
-function renderLogs(logs){
-
- let box =
- document.getElementById("logs");
-
- box.innerHTML="";
-
- if(logs.length===0){
-
-  box.innerHTML=
-  "<p>ምንም Fuel record የለም።</p>";
-
-  return;
- }
-
-
- logs
- .slice()
- .reverse()
- .forEach((x,index)=>{
-
-  let div =
-  document.createElement("div");
-
-  div.className="log";
-
-  div.innerHTML=`
-
-  <div class="car">
-  🚗 ${escapeHTML(x.plate)}
-  </div>
-
-  👤 ${escapeHTML(x.user)}
-
-  <br>
-  📅 ${x.date}
-
-  <br>
-  🕐 ${x.time}
-
-  <br>
-  ⛽ ${x.liters.toFixed(2)} L
-
-  <br>
-  💰 ${x.price.toFixed(2)} ETB/L
-
-  <br>
-  💵 Expense:
-  <b>${x.expense.toFixed(2)} ETB</b>
-
-  <br>
-  🛣️ Current KM:
-  ${x.currentKm.toFixed(2)}
-
-  <br>
-  📏 Distance:
-  ${x.distance.toFixed(2)} KM
-
-  `;
-
-  box.appendChild(div);
-
- });
-
-}
-
-
-/* ADMIN */
-
-function updateAdmin(){
-
- let adminBudget=0;
-
- users
- .filter(u=>u.role==="user")
- .forEach(
-  u=>adminBudget+=
-  Number(u.budget||0)
- );
-
- let expense =
- fuelLogs.reduce(
-  (s,x)=>s+x.expense,0
- );
-
- let km =
- fuelLogs.reduce(
-  (s,x)=>s+x.distance,0
- );
-
-
- document.getElementById(
-  "userCount"
- ).textContent=
- users.filter(
-  u=>u.role==="user"
- ).length;
-
-
- document.getElementById(
-  "vehicleCount"
- ).textContent=
- new Set(
-  fuelLogs.map(x=>x.plate)
- ).size;
-
-
- document.getElementById(
-  "adminBudget"
- ).textContent=
- adminBudget.toFixed(2);
-
-
- document.getElementById(
-  "adminExpense"
- ).textContent=
- expense.toFixed(2);
-
-
- document.getElementById(
-  "adminKm"
- ).textContent=
- km.toFixed(2);
-
-
- document.getElementById(
-  "adminRemaining"
- ).textContent=
- (adminBudget-expense).toFixed(2);
-
-}
-
-
-/* CSV */
-
-function downloadCSV(){
-
- let logs =
- getVisibleLogs();
-
- let rows=[
- [
-  "User",
-  "Plate",
-  "Date",
-  "Time",
-  "Liters",
-  "Price/L",
-  "Expense",
-  "Current KM",
-  "Distance KM"
- ]
- ];
-
-
- logs.forEach(x=>{
-
-  rows.push([
-   x.user,
-   x.plate,
-   x.date,
-   x.time,
-   x.liters,
-   x.price,
-   x.expense,
-   x.currentKm,
-   x.distance
-  ]);
-
- });
-
-
- let csv =
- rows.map(
-  r=>
-  r.map(
-   v=>
-   `"${String(v).replace(/"/g,'""')}"`
-  ).join(",")
- ).join("\n");
-
-
- let blob =
- new Blob(
-  ["\ufeff"+csv],
-  {
-   type:
-   "text/csv;charset=utf-8;"
-  }
- );
-
-
- let url =
- URL.createObjectURL(blob);
-
- let a =
- document.createElement("a");
-
- a.href=url;
-
- a.download=
- "Fuel-KM-Report.csv";
-
- a.click();
-
- URL.revokeObjectURL(url);
-
-}
-
-
-/* SECURITY */
-
-function escapeHTML(text){
-
- let div =
- document.createElement("div");
-
- div.textContent=text;
-
- return div.innerHTML;
-}
-
-
-/* START */
-
-render();
-
-</script>
-
-</body>
-</html>
+<span>🚗 መኪና</
