@@ -1090,23 +1090,45 @@ let time=document
 .value;
 
 let liters=Number(
-document
-.getElementById("fuelLiter")
-.value
+document.getElementById("fuelLiter").value
 );
 
 let price=Number(
-document
-.getElementById("fuelPrice")
-.value
+document.getElementById("fuelPrice").value
 );
 
 let currentKM=Number(
-document
-.getElementById("fuelKM")
-.value
+document.getElementById("fuelKM").value
 );
 
+
+/* CHECK PERIOD */
+
+if(!period){
+
+alert(
+"⚠️ መጀመሪያ 15-Day Period ያስቀምጡ።"
+);
+
+return;
+}
+
+
+if(date < period.start || date > period.end){
+
+alert(
+"⚠️ ይህ Fuel date ከአሁኑ 15-Day Period ውጭ ነው።\n\n"+
+"Period: "+
+period.start+
+" → "+
+period.end
+);
+
+return;
+}
+
+
+/* CHECK INPUT */
 
 if(
 !plate ||
@@ -1118,13 +1140,155 @@ currentKM<0
 ){
 
 alert(
-"እባክዎ ሁሉንም Fuel መረጃ ያስገቡ።"
+"⚠️ እባክዎ ሁሉንም Fuel መረጃ ያስገቡ።"
 );
+
+return;
+}
+
+
+/* CHECK VEHICLE BUDGET */
+
+let budgetObject=budgets.find(
+b=>
+b.plate.toLowerCase()===
+plate.toLowerCase()
+);
+
+if(!budgetObject){
+
+if(!confirm(
+"⚠️ ይህ መኪና Budget አልተመዘገበለትም።\n\n"+
+"አሁንም Fuel መመዝገብ ይፈልጋሉ?"
+)){
 
 return;
 
 }
 
+}
+
+
+/* PREVIOUS KM */
+
+let sameCar=fuels
+.filter(
+f=>
+f.plate.toLowerCase()===
+plate.toLowerCase()
+)
+.sort(
+(a,b)=>
+new Date(
+b.date+"T"+b.time
+)-
+new Date(
+a.date+"T"+a.time
+)
+);
+
+
+let distance=0;
+
+
+if(sameCar.length>0){
+
+let previous=sameCar[0];
+
+distance=
+currentKM-
+Number(previous.currentKM);
+
+
+if(distance<0){
+
+alert(
+"⚠️ Current KM ከቀድሞው KM መብለጥ አለበት።\n\n"+
+"Previous KM: "+
+previous.currentKM
+);
+
+return;
+}
+
+}
+
+
+/* EXPENSE */
+
+let expense=
+liters*price;
+
+
+/* SAVE */
+
+fuels.push({
+
+id:Date.now(),
+
+plate:plate,
+
+date:date,
+
+time:time,
+
+liters:liters,
+
+price:price,
+
+expense:expense,
+
+currentKM:currentKM,
+
+distance:distance
+
+});
+
+
+saveAll();
+
+
+/* CLEAR */
+
+document
+.getElementById("fuelPlate")
+.value="";
+
+document
+.getElementById("fuelDate")
+.value="";
+
+document
+.getElementById("fuelTime")
+.value="";
+
+document
+.getElementById("fuelLiter")
+.value="";
+
+document
+.getElementById("fuelPrice")
+.value="";
+
+document
+.getElementById("fuelKM")
+.value="";
+
+
+render();
+
+
+alert(
+"✅ Fuel በትክክል ተመዝግቧል!\n\n"+
+"Expense: "+
+expense.toFixed(2)+
+" ETB\n"+
+"Distance: "+
+distance.toFixed(2)+
+" KM"
+);
+
+}
 
 /* Previous KM */
 
