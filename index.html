@@ -1,1 +1,411 @@
 
+<!DOCTYPE html>
+<html lang="am">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>15 ቀን ነዳጅ እና KM Tracker</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family:Arial,sans-serif;
+}
+
+body{
+  background:#f1f5f9;
+  color:#172033;
+}
+
+.header{
+  background:#0b63ce;
+  color:white;
+  padding:18px 15px;
+  text-align:center;
+  position:sticky;
+  top:0;
+  z-index:10;
+}
+
+.header h1{
+  font-size:22px;
+}
+
+.header p{
+  margin-top:5px;
+  font-size:13px;
+}
+
+.container{
+  max-width:700px;
+  margin:auto;
+  padding:15px;
+}
+
+.card{
+  background:white;
+  border-radius:14px;
+  padding:18px;
+  margin-bottom:15px;
+  box-shadow:0 3px 12px rgba(0,0,0,.08);
+}
+
+.card h2{
+  font-size:18px;
+  margin-bottom:15px;
+  color:#0b63ce;
+}
+
+label{
+  display:block;
+  margin-top:12px;
+  margin-bottom:6px;
+  font-weight:bold;
+  font-size:14px;
+}
+
+input{
+  width:100%;
+  padding:12px;
+  border:1px solid #ccd3dd;
+  border-radius:9px;
+  font-size:16px;
+  outline:none;
+}
+
+input:focus{
+  border-color:#0b63ce;
+}
+
+button{
+  width:100%;
+  border:0;
+  border-radius:9px;
+  padding:13px;
+  margin-top:15px;
+  font-size:16px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.primary{
+  background:#0b63ce;
+  color:white;
+}
+
+.green{
+  background:#159447;
+  color:white;
+}
+
+.red{
+  background:#d93636;
+  color:white;
+}
+
+.summary{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.box{
+  padding:15px;
+  border-radius:12px;
+  background:#eef5ff;
+  text-align:center;
+}
+
+.box strong{
+  display:block;
+  font-size:20px;
+  margin-top:6px;
+}
+
+.remaining{
+  background:#e9f8ee;
+}
+
+.remaining strong{
+  color:#159447;
+}
+
+.expense{
+  background:#fff1f1;
+}
+
+.expense strong{
+  color:#d93636;
+}
+
+.km{
+  background:#fff8e5;
+}
+
+.km strong{
+  color:#a66a00;
+}
+
+.report{
+  line-height:1.9;
+  font-size:15px;
+}
+
+.hidden{
+  display:none;
+}
+
+.record{
+  border-top:1px solid #ddd;
+  padding:12px 0;
+}
+
+.record:first-child{
+  border-top:0;
+}
+
+.small{
+  font-size:13px;
+  color:#657084;
+}
+
+footer{
+  text-align:center;
+  padding:20px;
+  color:#777;
+  font-size:12px;
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+  <h1>⛽ 15 ቀን ነዳጅ & KM Tracker</h1>
+  <p>የነዳጅ • በጀት • ኪሎሜትር መከታተያ</p>
+</header>
+
+<div class="container">
+
+  <div class="card">
+    <h2>🚗 የ15 ቀን መረጃ</h2>
+
+    <label>የመኪና ሰሌዳ ቁጥር</label>
+    <input id="plate" placeholder="ለምሳሌ ET-12345">
+
+    <label>የ15 ቀን በጀት (ብር)</label>
+    <input id="budget" type="number" placeholder="20000">
+
+    <label>መጀመሪያ የኪሎሜትር ንባብ</label>
+    <input id="startKm" type="number" placeholder="10000">
+
+    <label>መጨረሻ የኪሎሜትር ንባብ</label>
+    <input id="endKm" type="number" placeholder="11250">
+
+    <label>የቀዳችሁት ነዳጅ (ሊትር)</label>
+    <input id="liters" type="number" step="0.01" placeholder="150">
+
+    <label>የነዳጅ ዋጋ / ሊትር (ብር)</label>
+    <input id="price" type="number" step="0.01" placeholder="90">
+
+    <button class="primary" onclick="calculate()">📊 ሂሳብ አስላ</button>
+  </div>
+
+
+  <div id="result" class="card hidden">
+
+    <h2>📊 የ15 ቀን ውጤት</h2>
+
+    <div class="summary">
+
+      <div class="box">
+        የተቀዳ ነዳጅ
+        <strong id="rLiters">0 L</strong>
+      </div>
+
+      <div class="box expense">
+        የነዳጅ ወጪ
+        <strong id="rExpense">0 ETB</strong>
+      </div>
+
+      <div class="box km">
+        የተጓዘ KM
+        <strong id="rKm">0 KM</strong>
+      </div>
+
+      <div class="box remaining">
+        ቀሪ በጀት
+        <strong id="rRemaining">0 ETB</strong>
+      </div>
+
+    </div>
+
+    <div class="card report">
+      <b>🚗 መኪና:</b> <span id="rPlate">-</span><br>
+      <b>💰 የ15 ቀን በጀት:</b> <span id="rBudget">0</span> ETB<br>
+      <b>⛽ የነዳጅ ወጪ:</b> <span id="rExpense2">0</span> ETB<br>
+      <b>🛣️ የተጓዘ:</b> <span id="rKm2">0</span> KM<br>
+      <b>📈 ወጪ / KM:</b> <span id="rCostKm">0</span> ETB/KM<br>
+      <b>📊 በጀት የተጠቀሙት:</b> <span id="rPercent">0</span>%
+    </div>
+
+    <button class="green" onclick="saveRecord()">💾 15 ቀን ሪፖርት አስቀምጥ</button>
+
+  </div>
+
+
+  <div class="card">
+    <h2>📋 የተቀመጡ ሪፖርቶች</h2>
+
+    <div id="records">
+      <p class="small">እስካሁን ሪፖርት የለም።</p>
+    </div>
+
+    <button class="red" onclick="clearRecords()">🗑️ ሁሉንም ሰርዝ</button>
+  </div>
+
+</div>
+
+<footer>
+  15-Day Fuel & KM Tracker
+</footer>
+
+
+<script>
+
+let currentData = null;
+
+function calculate(){
+
+  const plate = document.getElementById("plate").value.trim();
+  const budget = Number(document.getElementById("budget").value);
+  const startKm = Number(document.getElementById("startKm").value);
+  const endKm = Number(document.getElementById("endKm").value);
+  const liters = Number(document.getElementById("liters").value);
+  const price = Number(document.getElementById("price").value);
+
+  if(!plate || budget <= 0 || endKm < startKm || liters <= 0 || price <= 0){
+    alert("እባክዎ ሁሉንም መረጃ በትክክል ያስገቡ።");
+    return;
+  }
+
+  const km = endKm - startKm;
+  const expense = liters * price;
+  const remaining = budget - expense;
+  const costKm = km > 0 ? expense / km : 0;
+  const percent = (expense / budget) * 100;
+
+  currentData = {
+    plate,
+    budget,
+    startKm,
+    endKm,
+    km,
+    liters,
+    price,
+    expense,
+    remaining,
+    costKm,
+    percent,
+    date:new Date().toLocaleDateString()
+  };
+
+  document.getElementById("rPlate").textContent = plate;
+  document.getElementById("rBudget").textContent = budget.toFixed(2);
+  document.getElementById("rLiters").textContent = liters.toFixed(2) + " L";
+  document.getElementById("rExpense").textContent = expense.toFixed(2) + " ETB";
+  document.getElementById("rExpense2").textContent = expense.toFixed(2);
+  document.getElementById("rKm").textContent = km.toFixed(2) + " KM";
+  document.getElementById("rKm2").textContent = km.toFixed(2);
+  document.getElementById("rRemaining").textContent = remaining.toFixed(2) + " ETB";
+  document.getElementById("rCostKm").textContent = costKm.toFixed(2);
+  document.getElementById("rPercent").textContent = percent.toFixed(1);
+
+  document.getElementById("result").classList.remove("hidden");
+}
+
+
+function saveRecord(){
+
+  if(!currentData){
+    alert("መጀመሪያ ሂሳቡን ያስሉ።");
+    return;
+  }
+
+  let records = JSON.parse(localStorage.getItem("fuelRecords") || "[]");
+
+  records.push(currentData);
+
+  localStorage.setItem("fuelRecords", JSON.stringify(records));
+
+  loadRecords();
+
+  alert("የ15 ቀን ሪፖርት ተቀምጧል ✅");
+}
+
+
+function loadRecords(){
+
+  const records = JSON.parse(localStorage.getItem("fuelRecords") || "[]");
+
+  const box = document.getElementById("records");
+
+  if(records.length === 0){
+    box.innerHTML = '<p class="small">እስካሁን ሪፖርት የለም።</p>';
+    return;
+  }
+
+  box.innerHTML = "";
+
+  records.slice().reverse().forEach((r,index)=>{
+
+    const div = document.createElement("div");
+
+    div.className = "record";
+
+    div.innerHTML = `
+      <b>🚗 ${escapeHTML(r.plate)}</b><br>
+      <span class="small">📅 ${r.date}</span><br>
+      💰 በጀት: ${r.budget.toFixed(2)} ETB<br>
+      ⛽ ነዳጅ: ${r.liters.toFixed(2)} L<br>
+      💵 ወጪ: ${r.expense.toFixed(2)} ETB<br>
+      🛣️ KM: ${r.km.toFixed(2)}<br>
+      💳 ቀሪ: ${r.remaining.toFixed(2)} ETB
+    `;
+
+    box.appendChild(div);
+
+  });
+}
+
+
+function clearRecords(){
+
+  if(confirm("ሁሉንም የተቀመጡ ሪፖርቶች ማጥፋት ይፈልጋሉ?")){
+
+    localStorage.removeItem("fuelRecords");
+
+    loadRecords();
+  }
+
+}
+
+
+function escapeHTML(text){
+
+  const div = document.createElement("div");
+
+  div.textContent = text;
+
+  return div.innerHTML;
+}
+
+
+loadRecords();
+
+</script>
+
+</body>
+</html>
