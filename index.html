@@ -1049,4 +1049,445 @@ function render(){
  document.getElementById(
   "totalLiters"
  ).textContent=
- liters
+ liters.toFixed(2)+" L";
+
+
+ document.getElementById(
+  "totalExpense"
+ ).textContent=
+ expense.toFixed(2);
+
+
+ document.getElementById(
+  "totalKm"
+ ).textContent=
+ km.toFixed(2)+" KM";
+
+
+ document.getElementById(
+  "totalRemaining"
+ ).textContent=
+ remaining.toFixed(2);
+
+
+ document.getElementById(
+  "reportBudget"
+ ).textContent=
+ budget.toFixed(2)+" ETB";
+
+
+ document.getElementById(
+  "reportLiters"
+ ).textContent=
+ liters.toFixed(2)+" L";
+
+
+ document.getElementById(
+  "reportExpense"
+ ).textContent=
+ expense.toFixed(2)+" ETB";
+
+
+ document.getElementById(
+  "reportKm"
+ ).textContent=
+ km.toFixed(2)+" KM";
+
+
+ document.getElementById(
+  "reportRemaining"
+ ).textContent=
+ remaining.toFixed(2)+" ETB";
+
+
+ document.getElementById(
+  "reportKmL"
+ ).textContent=
+ liters>0 ?
+ (km/liters).toFixed(2) :
+ "0";
+
+
+ document.getElementById(
+  "reportCostKm"
+ ).textContent=
+ km>0 ?
+ (expense/km).toFixed(2) :
+ "0";
+
+
+ renderVehicles(logs,visibleUsers);
+
+ renderLogs(logs);
+
+ updateAdmin();
+
+ if(
+  currentUser &&
+  currentUser.role==="admin"
+ ){
+
+  renderUsers();
+
+ }
+
+}
+
+
+function renderVehicles(logs,usersList){
+
+ let box =
+ document.getElementById(
+  "vehicleReports"
+ );
+
+ box.innerHTML="";
+
+ let plates =
+ new Set();
+
+ usersList.forEach(u=>{
+
+  if(u.plate)
+   plates.add(u.plate);
+
+ });
+
+ logs.forEach(x=>{
+  plates.add(x.plate);
+ });
+
+
+ plates.forEach(plate=>{
+
+  let data =
+  logs.filter(
+   x=>
+   x.plate.toLowerCase()===
+   plate.toLowerCase()
+  );
+
+  let user =
+  usersList.find(
+   u=>
+   u.plate &&
+   u.plate.toLowerCase()===
+   plate.toLowerCase()
+  );
+
+
+  let budget =
+  user ?
+  Number(user.budget||0) :
+  0;
+
+
+  let liters =
+  data.reduce(
+   (s,x)=>s+x.liters,0
+  );
+
+
+  let expense =
+  data.reduce(
+   (s,x)=>s+x.expense,0
+  );
+
+
+  let km =
+  data.reduce(
+   (s,x)=>s+x.distance,0
+  );
+
+
+  let remaining =
+  budget-expense;
+
+
+  let kmL =
+  liters>0 ?
+  km/liters : 0;
+
+
+  let div =
+  document.createElement("div");
+
+  div.className="vehicle";
+
+  div.innerHTML=`
+
+  <h3>🚗 ${escapeHTML(plate)}</h3>
+
+  <div class="vehicleGrid">
+
+  <div class="vstat">
+  💰 Budget
+  <b>${budget.toFixed(2)}</b>
+  </div>
+
+  <div class="vstat">
+  💵 Expense
+  <b>${expense.toFixed(2)}</b>
+  </div>
+
+  <div class="vstat">
+  💳 Remaining
+  <b>${remaining.toFixed(2)}</b>
+  </div>
+
+  <div class="vstat">
+  ⛽ Fuel
+  <b>${liters.toFixed(2)} L</b>
+  </div>
+
+  <div class="vstat">
+  🛣️ KM
+  <b>${km.toFixed(2)}</b>
+  </div>
+
+  <div class="vstat">
+  📊 KM/L
+  <b>${kmL.toFixed(2)}</b>
+  </div>
+
+  </div>
+  `;
+
+  box.appendChild(div);
+
+ });
+
+}
+
+
+function renderLogs(logs){
+
+ let box =
+ document.getElementById("logs");
+
+ box.innerHTML="";
+
+ if(logs.length===0){
+
+  box.innerHTML=
+  "<p>ምንም Fuel record የለም።</p>";
+
+  return;
+ }
+
+
+ logs
+ .slice()
+ .reverse()
+ .forEach((x,index)=>{
+
+  let div =
+  document.createElement("div");
+
+  div.className="log";
+
+  div.innerHTML=`
+
+  <div class="car">
+  🚗 ${escapeHTML(x.plate)}
+  </div>
+
+  👤 ${escapeHTML(x.user)}
+
+  <br>
+  📅 ${x.date}
+
+  <br>
+  🕐 ${x.time}
+
+  <br>
+  ⛽ ${x.liters.toFixed(2)} L
+
+  <br>
+  💰 ${x.price.toFixed(2)} ETB/L
+
+  <br>
+  💵 Expense:
+  <b>${x.expense.toFixed(2)} ETB</b>
+
+  <br>
+  🛣️ Current KM:
+  ${x.currentKm.toFixed(2)}
+
+  <br>
+  📏 Distance:
+  ${x.distance.toFixed(2)} KM
+
+  `;
+
+  box.appendChild(div);
+
+ });
+
+}
+
+
+/* ADMIN */
+
+function updateAdmin(){
+
+ let adminBudget=0;
+
+ users
+ .filter(u=>u.role==="user")
+ .forEach(
+  u=>adminBudget+=
+  Number(u.budget||0)
+ );
+
+ let expense =
+ fuelLogs.reduce(
+  (s,x)=>s+x.expense,0
+ );
+
+ let km =
+ fuelLogs.reduce(
+  (s,x)=>s+x.distance,0
+ );
+
+
+ document.getElementById(
+  "userCount"
+ ).textContent=
+ users.filter(
+  u=>u.role==="user"
+ ).length;
+
+
+ document.getElementById(
+  "vehicleCount"
+ ).textContent=
+ new Set(
+  fuelLogs.map(x=>x.plate)
+ ).size;
+
+
+ document.getElementById(
+  "adminBudget"
+ ).textContent=
+ adminBudget.toFixed(2);
+
+
+ document.getElementById(
+  "adminExpense"
+ ).textContent=
+ expense.toFixed(2);
+
+
+ document.getElementById(
+  "adminKm"
+ ).textContent=
+ km.toFixed(2);
+
+
+ document.getElementById(
+  "adminRemaining"
+ ).textContent=
+ (adminBudget-expense).toFixed(2);
+
+}
+
+
+/* CSV */
+
+function downloadCSV(){
+
+ let logs =
+ getVisibleLogs();
+
+ let rows=[
+ [
+  "User",
+  "Plate",
+  "Date",
+  "Time",
+  "Liters",
+  "Price/L",
+  "Expense",
+  "Current KM",
+  "Distance KM"
+ ]
+ ];
+
+
+ logs.forEach(x=>{
+
+  rows.push([
+   x.user,
+   x.plate,
+   x.date,
+   x.time,
+   x.liters,
+   x.price,
+   x.expense,
+   x.currentKm,
+   x.distance
+  ]);
+
+ });
+
+
+ let csv =
+ rows.map(
+  r=>
+  r.map(
+   v=>
+   `"${String(v).replace(/"/g,'""')}"`
+  ).join(",")
+ ).join("\n");
+
+
+ let blob =
+ new Blob(
+  ["\ufeff"+csv],
+  {
+   type:
+   "text/csv;charset=utf-8;"
+  }
+ );
+
+
+ let url =
+ URL.createObjectURL(blob);
+
+ let a =
+ document.createElement("a");
+
+ a.href=url;
+
+ a.download=
+ "Fuel-KM-Report.csv";
+
+ a.click();
+
+ URL.revokeObjectURL(url);
+
+}
+
+
+/* SECURITY */
+
+function escapeHTML(text){
+
+ let div =
+ document.createElement("div");
+
+ div.textContent=text;
+
+ return div.innerHTML;
+}
+
+
+/* START */
+
+render();
+
+</script>
+
+</body>
+</html>
