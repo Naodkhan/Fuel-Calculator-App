@@ -120,8 +120,8 @@ table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:9px;borde
 </div>
 
 <script>
-const SUPABASE_URL="https://cxoowkryvdjqesymqicu.supabase.co";
-const SUPABASE_KEY="sb_publishable_...";
+const SUPABASE_URL="https://sipwqfbdqfbcbhlktpot.supabase.co/rest/v1/";
+const SUPABASE_KEY="sb_publishable_MbsvbLUiRc3pU7DVxuJ7wQ_sA3xpgBn";
 let db=null,currentUser=null,currentRole="viewer",vehicles=[],fuelRows=[],currentPeriod=null;
 
 function msg(id,text,type){
@@ -135,7 +135,7 @@ function initSupabase(){
    msg("loginMsg","Supabase library did not load. Check your internet connection and refresh.","error");
    return false;
  }
- db=window.supabase.createClien(https://sipwqfbdqfbcbhlktpot.supabase.co/rest/v1/,sb_publishable_MbsvbLUiRc3pU7DVxuJ7wQ_sA3xpgBn);
+ db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
  return true;
 }
 
