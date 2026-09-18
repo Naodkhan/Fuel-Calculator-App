@@ -121,8 +121,8 @@ table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:9px;borde
 
 <script>
 const SUPABASE_URL="https://cxoowkryvdjqesymqicu.supabase.co";
-const SUPABASE_KEY="sb_publishable_...";
-let db=null,currentUser=null,currentRole="viewer",vehicles=[],fuelRows=[],currentPeriod=null;
+const SUPABASE_KEY="sb_publishable_ef9QG0gURhqWHNJ4WTdNsA_TR4DsJ2u";
+let db=null,currentUser=null,currentRole="viewer",vehicles=[],fuelRows=[],currentPeriod=null,currentBudget=0;
 
 function msg(id,text,type){
  const e=document.getElementById(id); if(!e)return;
@@ -225,6 +225,11 @@ async function loadAll(){
  fuelRows=f.data||[];
  const p=await db.from("periods").select("*").order("created_at",{ascending:false}).limit(1);
  currentPeriod=p.data?.[0]||null;
+ currentBudget=0;
+ if(currentPeriod){
+   const b=await db.from("budgets").select("amount").eq("period_start",currentPeriod.start_date).eq("period_end",currentPeriod.end_date).order("created_at",{ascending:false}).limit(1).maybeSingle();
+   if(!b.error && b.data) currentBudget=Number(b.data.amount||0);
+ }
  renderVehicles();fillVehicleSelect();renderHistory();renderDashboard();
 }
 
@@ -290,7 +295,7 @@ function totals(){
  const expense=rows.reduce((a,x)=>a+Number(x.expense||0),0);
  const liters=rows.reduce((a,x)=>a+Number(x.liters||0),0);
  const km=rows.reduce((a,x)=>a+Number(x.distance||0),0);
- const budget=Number(currentPeriod?.budget||0);
+ const budget=Number(currentBudget||0);
  return {expense,liters,km,budget,remaining:budget-expense};
 }
 async function savePeriod(){
