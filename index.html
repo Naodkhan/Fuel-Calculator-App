@@ -3,348 +3,2025 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
 <title>SEMERA AIRPORT FUEL MANAGEMENT SYSTEM</title>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f3f6fa;color:#172033}
-header{background:#0b5ed7;color:white;padding:14px 18px;position:sticky;top:0;z-index:10}
-header h1{margin:0;font-size:20px}.wrap{max-width:1050px;margin:auto;padding:18px}
-.card{background:white;border-radius:14px;padding:18px;margin-bottom:16px;box-shadow:0 3px 14px #00000012}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
-input,select,button{width:100%;padding:11px;border:1px solid #ccd4df;border-radius:8px;font-size:15px}
-button{border:0;background:#0b5ed7;color:white;font-weight:bold;cursor:pointer}
-button.secondary{background:#667085}.danger{background:#dc3545}.success{background:#198754}
-label{font-weight:bold;font-size:13px;display:block;margin-bottom:5px}
-nav{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:16px}
-nav button{font-size:12px;padding:10px;background:#e7eef8;color:#174ea6}
-nav button.active{background:#0b5ed7;color:white}
-.page{display:none}.page.active{display:block}
-.stat{padding:15px;border-radius:12px;background:#eef5ff}.stat b{display:block;font-size:23px;margin-top:5px}
-table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:9px;border-bottom:1px solid #e6e9ee;text-align:left}
-.tablebox{overflow:auto}.msg{padding:10px;border-radius:8px;margin:10px 0;display:none}.msg.show{display:block}.ok{background:#d1e7dd;color:#0f5132}.err{background:#f8d7da;color:#842029}
-.login{max-width:430px;margin:60px auto}.small{font-size:12px;color:#667085}.right{text-align:right}
-.modal{display:none;position:fixed;inset:0;background:#0008;z-index:20;align-items:center;justify-content:center;padding:15px}.modal.show{display:flex}.modalbox{background:white;padding:20px;border-radius:14px;width:min(500px,100%)}
-@media(max-width:600px){.wrap{padding:10px}header{padding:12px}.grid{grid-template-columns:1fr 1fr}table{min-width:650px}}
+*{box-sizing:border-box}
+
+body{
+ margin:0;
+ font-family:Arial,sans-serif;
+ background:#f3f6fa;
+ color:#172033
+}
+
+header{
+ background:#0b5ed7;
+ color:white;
+ padding:14px 18px;
+ position:sticky;
+ top:0;
+ z-index:10
+}
+
+header h1{
+ margin:0;
+ font-size:20px
+}
+
+.wrap{
+ max-width:1050px;
+ margin:auto;
+ padding:18px
+}
+
+.card{
+ background:white;
+ border-radius:14px;
+ padding:18px;
+ margin-bottom:16px;
+ box-shadow:0 3px 14px #00000012
+}
+
+.grid{
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+ gap:12px
+}
+
+input,select,button{
+ width:100%;
+ padding:11px;
+ border:1px solid #ccd4df;
+ border-radius:8px;
+ font-size:15px
+}
+
+button{
+ border:0;
+ background:#0b5ed7;
+ color:white;
+ font-weight:bold;
+ cursor:pointer
+}
+
+button.secondary{background:#667085}
+.danger{background:#dc3545}
+.success{background:#198754}
+
+label{
+ font-weight:bold;
+ font-size:13px;
+ display:block;
+ margin-bottom:5px
+}
+
+nav{
+ display:grid;
+ grid-template-columns:repeat(4,1fr);
+ gap:7px;
+ margin-bottom:16px
+}
+
+nav button{
+ font-size:12px;
+ padding:10px;
+ background:#e7eef8;
+ color:#174ea6
+}
+
+nav button.active{
+ background:#0b5ed7;
+ color:white
+}
+
+.page{display:none}
+.page.active{display:block}
+
+.stat{
+ padding:15px;
+ border-radius:12px;
+ background:#eef5ff
+}
+
+.stat b{
+ display:block;
+ font-size:23px;
+ margin-top:5px
+}
+
+table{
+ width:100%;
+ border-collapse:collapse;
+ font-size:13px
+}
+
+th,td{
+ padding:9px;
+ border-bottom:1px solid #e6e9ee;
+ text-align:left
+}
+
+.tablebox{overflow:auto}
+
+.msg{
+ padding:10px;
+ border-radius:8px;
+ margin:10px 0;
+ display:none
+}
+
+.msg.show{display:block}
+.ok{background:#d1e7dd;color:#0f5132}
+.err{background:#f8d7da;color:#842029}
+
+.login{
+ max-width:430px;
+ margin:60px auto
+}
+
+.small{
+ font-size:12px;
+ color:#667085
+}
+
+.right{text-align:right}
+
+.modal{
+ display:none;
+ position:fixed;
+ inset:0;
+ background:#0008;
+ z-index:20;
+ align-items:center;
+ justify-content:center;
+ padding:15px
+}
+
+.modal.show{display:flex}
+
+.modalbox{
+ background:white;
+ padding:20px;
+ border-radius:14px;
+ width:min(500px,100%)
+}
+
+@media(max-width:600px){
+ .wrap{padding:10px}
+ header{padding:12px}
+ .grid{grid-template-columns:1fr 1fr}
+ table{min-width:650px}
+}
 </style>
 </head>
+
 <body>
 
+<!-- LOGIN -->
 <div id="loginPage">
-  <div class="login card">
-    <h2>SEMERA AIRPORT FUEL MANAGEMENT SYSTEM</h2>
-    <p class="small">Secure staff login</p>
-    <div id="loginMsg" class="msg"></div>
-    <label>Email</label><input id="loginEmail" type="email" placeholder="name@example.com">
-    <br>
-    <label>Password</label><input id="loginPassword" type="password" placeholder="Minimum 6 characters">
-    <br>
-    <button onclick="login()">Login</button>
-    <br><br>
-    <button class="secondary" onclick="signup()">Create Account</button>
-  </div>
+
+ <div class="login card">
+
+  <h2>SEMERA AIRPORT FUEL MANAGEMENT SYSTEM</h2>
+
+  <p class="small">Secure staff login</p>
+
+  <div id="loginMsg" class="msg"></div>
+
+  <label>Email</label>
+  <input id="loginEmail" type="email" placeholder="name@example.com">
+
+  <br>
+
+  <label>Password</label>
+  <input id="loginPassword" type="password" placeholder="Minimum 6 characters">
+
+  <br>
+
+  <button onclick="login()">Login</button>
+
+  <br><br>
+
+  <button class="secondary" onclick="signup()">Create Account</button>
+
+ </div>
+
 </div>
 
+
+<!-- MAIN APP -->
 <div id="app" style="display:none">
-<header><div class="wrap" style="padding:0"><h1>15-Day Fuel & KM Manager</h1><div id="userInfo" class="small" style="color:#e7efff;margin-top:4px"></div></div></header>
+
+<header>
+
+ <div class="wrap" style="padding:0">
+
+  <h1>SEMERA AIRPORT FUEL MANAGEMENT SYSTEM</h1>
+
+  <div id="userInfo"
+       class="small"
+       style="color:#e7efff;margin-top:4px">
+  </div>
+
+ </div>
+
+</header>
+
 
 <div class="wrap">
+
 <nav>
-<button id="navDashboard" onclick="showPage('dashboard')">Dashboard</button>
-<button id="navVehicles" onclick="showPage('vehicles')">Vehicles</button>
-<button id="navFuel" onclick="showPage('fuel')">Fuel Entry</button>
-<button id="navHistory" onclick="showPage('history')">History</button>
-<button onclick="showPage('reports')">Reports</button>
-<button onclick="showPage('official')">Official Report</button>
-<button onclick="showPage('settings')">Settings</button>
-<button onclick="logout()">Logout</button>
+
+ <button id="navDashboard"
+         onclick="showPage('dashboard')">
+ Dashboard
+ </button>
+
+ <button id="navVehicles"
+         onclick="showPage('vehicles')">
+ Vehicles
+ </button>
+
+ <button id="navFuel"
+         onclick="showPage('fuel')">
+ Fuel Entry
+ </button>
+
+ <button id="navHistory"
+         onclick="showPage('history')">
+ History
+ </button>
+
+ <button onclick="showPage('reports')">
+ Reports
+ </button>
+
+ <button onclick="showPage('official')">
+ Official Report
+ </button>
+
+ <button onclick="showPage('settings')">
+ Settings
+ </button>
+
+ <button onclick="logout()">
+ Logout
+ </button>
+
 </nav>
 
+
+<!-- DASHBOARD -->
 <section id="dashboard" class="page">
-<div class="card"><h2>Dashboard</h2><div class="grid">
-<div class="stat">15-Day Budget<b id="dBudget">0.00</b></div>
-<div class="stat">Fuel Expense<b id="dExpense">0.00</b></div>
-<div class="stat">Remaining<b id="dRemaining">0.00</b></div>
-<div class="stat">Total KM<b id="dKm">0.00</b></div>
-<div class="stat">Liters<b id="dLiters">0.00</b></div>
-</div></div>
-<div class="card"><h3>Current 15-Day Period</h3>
-<div class="grid"><div><label>Start Date</label><input id="periodStart" type="date"></div>
-<div><label>End Date</label><input id="periodEnd" type="date"></div>
-<div style="display:flex;align-items:end"><button onclick="savePeriod()">Save Period</button></div></div>
-<p id="periodMsg" class="msg"></p></div>
+
+ <div class="card">
+
+  <h2>Dashboard</h2>
+
+  <div class="grid">
+
+   <div class="stat">
+    15-Day Budget
+    <b id="dBudget">0.00</b>
+   </div>
+
+   <div class="stat">
+    Fuel Expense
+    <b id="dExpense">0.00</b>
+   </div>
+
+   <div class="stat">
+    Remaining
+    <b id="dRemaining">0.00</b>
+   </div>
+
+   <div class="stat">
+    Total KM
+    <b id="dKm">0.00</b>
+   </div>
+
+   <div class="stat">
+    Liters
+    <b id="dLiters">0.00</b>
+   </div>
+
+  </div>
+
+ </div>
+
+
+ <div class="card">
+
+  <h3>Current 15-Day Period</h3>
+
+  <div class="grid">
+
+   <div>
+    <label>Start Date</label>
+    <input id="periodStart" type="date">
+   </div>
+
+   <div>
+    <label>End Date</label>
+    <input id="periodEnd" type="date">
+   </div>
+
+   <div style="display:flex;align-items:end">
+    <button onclick="savePeriod()">
+     Save Period
+    </button>
+   </div>
+
+  </div>
+
+  <p id="periodMsg" class="msg"></p>
+
+ </div>
+
 </section>
 
+
+<!-- VEHICLES -->
 <section id="vehicles" class="page">
-<div class="card"><h2>Vehicles</h2>
-<div class="grid"><div><label>Plate Number</label><input id="vPlate" placeholder="e.g. 3-12345"></div>
-<div><label>Driver</label><input id="vDriver" placeholder="Driver name"></div>
-<div style="display:flex;align-items:end"><button onclick="addVehicle()">Add Vehicle</button></div></div>
-<p id="vehicleMsg" class="msg"></p></div>
-<div class="card"><div class="tablebox"><table><thead><tr><th>Plate</th><th>Driver</th><th>Action</th></tr></thead><tbody id="vehicleTable"></tbody></table></div></div>
+
+ <div class="card">
+
+  <h2>Vehicles</h2>
+
+  <div class="grid">
+
+   <div>
+    <label>Plate Number</label>
+    <input id="vPlate"
+           placeholder="e.g. 3-12345">
+   </div>
+
+   <div>
+    <label>Driver</label>
+    <input id="vDriver"
+           placeholder="Driver name">
+   </div>
+
+   <div style="display:flex;align-items:end">
+    <button onclick="addVehicle()">
+     Add Vehicle
+    </button>
+   </div>
+
+  </div>
+
+  <p id="vehicleMsg" class="msg"></p>
+
+ </div>
+
+
+ <div class="card">
+
+  <div class="tablebox">
+
+   <table>
+
+    <thead>
+
+     <tr>
+      <th>Plate</th>
+      <th>Driver</th>
+      <th>Action</th>
+     </tr>
+
+    </thead>
+
+    <tbody id="vehicleTable"></tbody>
+
+   </table>
+
+  </div>
+
+ </div>
+
 </section>
 
+
+<!-- FUEL -->
 <section id="fuel" class="page">
-<div class="card"><h2>Fuel Entry</h2><div id="fuelMsg" class="msg"></div>
-<div class="grid">
-<div><label>Vehicle</label><select id="fVehicle"></select></div>
-<div><label>Driver</label><input id="fDriver"></div>
-<div><label>Date</label><input id="fDate" type="date"></div>
-<div><label>Time</label><input id="fTime" type="time"></div>
-<div><label>Fuel Station</label><input id="fStation"></div>
-<div><label>Receipt No.</label><input id="fReceipt"></div>
-<div><label>Liters</label><input id="fLiters" type="number" step="0.01"></div>
-<div><label>Price / Liter</label><input id="fPrice" type="number" step="0.01"></div>
-<div><label>Current KM</label><input id="fKm" type="number" step="0.01"></div>
-</div><br><button onclick="saveFuel()">Save Fuel Entry</button></div>
+
+ <div class="card">
+
+  <h2>Fuel Entry</h2>
+
+  <div id="fuelMsg" class="msg"></div>
+
+  <div class="grid">
+
+   <div>
+    <label>Vehicle</label>
+    <select id="fVehicle"></select>
+   </div>
+
+   <div>
+    <label>Driver</label>
+    <input id="fDriver">
+   </div>
+
+   <div>
+    <label>Date</label>
+    <input id="fDate" type="date">
+   </div>
+
+   <div>
+    <label>Time</label>
+    <input id="fTime" type="time">
+   </div>
+
+   <div>
+    <label>Fuel Station</label>
+    <input id="fStation">
+   </div>
+
+   <div>
+    <label>Receipt No.</label>
+    <input id="fReceipt">
+   </div>
+
+   <div>
+    <label>Liters</label>
+    <input id="fLiters"
+           type="number"
+           step="0.01">
+   </div>
+
+   <div>
+    <label>Price / Liter</label>
+    <input id="fPrice"
+           type="number"
+           step="0.01">
+   </div>
+
+   <div>
+    <label>Current KM</label>
+    <input id="fKm"
+           type="number"
+           step="0.01">
+   </div>
+
+  </div>
+
+  <br>
+
+  <button onclick="saveFuel()">
+   Save Fuel Entry
+  </button>
+
+ </div>
+
 </section>
 
+
+<!-- HISTORY -->
 <section id="history" class="page">
-<div class="card"><h2>Fuel History</h2><button onclick="exportCSV()">Export CSV</button></div>
-<div class="card"><div class="tablebox"><table><thead><tr><th>Date</th><th>Vehicle</th><th>Driver</th><th>Station</th><th>Receipt</th><th>Liters</th><th>Price</th><th>Expense</th><th>KM</th><th>Distance</th></tr></thead><tbody id="historyTable"></tbody></table></div></div>
+
+ <div class="card">
+
+  <h2>Fuel History</h2>
+
+  <button onclick="exportCSV()">
+   Export CSV
+  </button>
+
+ </div>
+
+
+ <div class="card">
+
+  <div class="tablebox">
+
+   <table>
+
+    <thead>
+
+     <tr>
+      <th>Date</th>
+      <th>Vehicle</th>
+      <th>Driver</th>
+      <th>Station</th>
+      <th>Receipt</th>
+      <th>Liters</th>
+      <th>Price</th>
+      <th>Expense</th>
+      <th>KM</th>
+      <th>Distance</th>
+     </tr>
+
+    </thead>
+
+    <tbody id="historyTable"></tbody>
+
+   </table>
+
+  </div>
+
+ </div>
+
 </section>
 
+
+<!-- REPORTS -->
 <section id="reports" class="page">
-<div class="card"><h2>15-Day Report</h2><div id="reportText"></div><br><button onclick="window.print()">Print / Save PDF</button></div>
+
+ <div class="card">
+
+  <h2>15-Day Fuel Management Report</h2>
+
+  <div id="reportText"></div>
+
+  <br>
+
+  <button onclick="window.print()">
+   Print / Save PDF
+  </button>
+
+ </div>
+
 </section>
 
+
+<!-- OFFICIAL REPORT -->
 <section id="official" class="page">
-<div class="card"><h2>Official Fuel & KM Report</h2><p class="small">Generated from the current database records.</p>
-<div id="officialReport"></div><br><button onclick="window.print()">Print Official Report</button></div>
+
+ <div class="card">
+
+  <h2>Official Fuel & KM Report</h2>
+
+  <p class="small">
+   Generated from the current database records.
+  </p>
+
+  <div id="officialReport"></div>
+
+  <br>
+
+  <button onclick="window.print()">
+   Print Official Report
+  </button>
+
+ </div>
+
 </section>
 
+
+<!-- SETTINGS -->
 <section id="settings" class="page">
-<div class="card"><h2>Settings</h2><p>Logged in as: <b id="settingsEmail"></b></p><p>Role: <b id="settingsRole"></b></p>
-<p class="small">Roles: admin, fuel_officer, viewer. Viewer accounts can read records; staff roles can add/update records.</p></div>
+
+ <div class="card">
+
+  <h2>Settings</h2>
+
+  <p>
+   Logged in as:
+   <b id="settingsEmail"></b>
+  </p>
+
+  <p>
+   Role:
+   <b id="settingsRole"></b>
+  </p>
+
+  <p class="small">
+   Roles: admin, fuel_officer, viewer.
+   Viewer accounts can read records;
+   staff roles can add/update records.
+  </p>
+
+ </div>
+
 </section>
+
 </div>
 </div>
+
 
 <script>
-const SUPABASE_URL="https://cxoowkryvdjqesymqicu.supabase.co";
-const SUPABASE_KEY="sb_publishable_ef9QG0gURhqWHNJ4WTdNsA_TR4DsJ2u";
-let db=null,currentUser=null,currentRole="viewer",vehicles=[],fuelRows=[],currentPeriod=null,currentBudget=0;
+
+/* =========================
+   SUPABASE CONFIGURATION
+   ========================= */
+
+const SUPABASE_URL =
+"https://cxoowkryvdjqesymqicu.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_ef9QG0gURhqWHNJ4WTdNsA_TR4DsJ2u";
+
+
+let db = null;
+
+let currentUser = null;
+
+let currentRole = "viewer";
+
+let vehicles = [];
+
+let fuelRows = [];
+
+let currentPeriod = null;
+
+let currentBudget = 0;
+
+
+/* =========================
+   MESSAGE
+   ========================= */
 
 function msg(id,text,type){
- const e=document.getElementById(id); if(!e)return;
- e.textContent=text;e.className="msg show "+(type==="error"?"err":"ok");
+
+ const e = document.getElementById(id);
+
+ if(!e) return;
+
+ e.textContent = text;
+
+ e.className =
+   "msg show " +
+   (type === "error" ? "err" : "ok");
 }
-function clearMsg(id){const e=document.getElementById(id);if(e)e.className="msg";}
+
+
+function clearMsg(id){
+
+ const e = document.getElementById(id);
+
+ if(e) e.className = "msg";
+
+}
+
+
+/* =========================
+   SUPABASE
+   ========================= */
 
 function initSupabase(){
+
  if(!window.supabase){
-   msg("loginMsg","Supabase library did not load. Check your internet connection and refresh.","error");
-   return false;
+
+  msg(
+   "loginMsg",
+   "Supabase library did not load. Check your internet connection and refresh.",
+   "error"
+  );
+
+  return false;
  }
- db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
+ db = window.supabase.createClient(
+   SUPABASE_URL,
+   SUPABASE_KEY
+ );
+
  return true;
 }
+
+
+/* =========================
+   LOGIN
+   ========================= */
 
 async function login(){
- if(!initSupabase())return;
- const email=document.getElementById("loginEmail").value.trim();
- const password=document.getElementById("loginPassword").value;
- if(!email||!password){msg("loginMsg","Please enter email and password.","error");return;}
- msg("loginMsg","Logging in...","ok");
- const {data,error}=await db.auth.signInWithPassword({email,password});
- if(error){msg("loginMsg",error.message,"error");return;}
- currentUser=data.user;
+
+ if(!initSupabase()) return;
+
+ const email =
+   document.getElementById("loginEmail").value.trim();
+
+ const password =
+   document.getElementById("loginPassword").value;
+
+ if(!email || !password){
+
+  msg(
+   "loginMsg",
+   "Please enter email and password.",
+   "error"
+  );
+
+  return;
+ }
+
+ msg(
+  "loginMsg",
+  "Logging in...",
+  "ok"
+ );
+
+ const {data,error} =
+   await db.auth.signInWithPassword({
+    email,
+    password
+   });
+
+ if(error){
+
+  msg(
+   "loginMsg",
+   error.message,
+   "error"
+  );
+
+  return;
+ }
+
+ currentUser = data.user;
+
  await startApp();
+
 }
+
+
+/* =========================
+   SIGN UP
+   ========================= */
 
 async function signup(){
- if(!initSupabase())return;
- const email=document.getElementById("loginEmail").value.trim();
- const password=document.getElementById("loginPassword").value;
- if(!email||!password){msg("loginMsg","Please enter email and password.","error");return;}
- if(password.length<6){msg("loginMsg","Password must be at least 6 characters.","error");return;}
- msg("loginMsg","Creating account...","ok");
- const {data,error}=await db.auth.signUp({
-   email,password,
-   options:{data:{full_name:email.split("@")[0]}}
- });
- if(error){msg("loginMsg",error.message,"error");return;}
+
+ if(!initSupabase()) return;
+
+ const email =
+   document.getElementById("loginEmail").value.trim();
+
+ const password =
+   document.getElementById("loginPassword").value;
+
+ if(!email || !password){
+
+  msg(
+   "loginMsg",
+   "Please enter email and password.",
+   "error"
+  );
+
+  return;
+ }
+
+ if(password.length < 6){
+
+  msg(
+   "loginMsg",
+   "Password must be at least 6 characters.",
+   "error"
+  );
+
+  return;
+ }
+
+ msg(
+  "loginMsg",
+  "Creating account...",
+  "ok"
+ );
+
+ const {data,error} =
+   await db.auth.signUp({
+
+    email,
+    password,
+
+    options:{
+     data:{
+      full_name:
+        email.split("@")[0]
+     }
+    }
+
+   });
+
+ if(error){
+
+  msg(
+   "loginMsg",
+   error.message,
+   "error"
+  );
+
+  return;
+ }
+
  if(data.user){
-   if(data.session){
-     currentUser=data.user;
-     await startApp();
-   }else{
-     msg("loginMsg","Account created. Check your email, confirm the account, then Login.","ok");
-   }
- }else msg("loginMsg","Account could not be created.","error");
+
+  if(data.session){
+
+   currentUser = data.user;
+
+   await startApp();
+
+  }else{
+
+   msg(
+    "loginMsg",
+    "Account created. Check your email, confirm the account, then Login.",
+    "ok"
+   );
+
+  }
+
+ }else{
+
+  msg(
+   "loginMsg",
+   "Account could not be created.",
+   "error"
+  );
+
+ }
+
 }
+
+
+/* =========================
+   LOGOUT
+   ========================= */
 
 async function logout(){
- if(db)await db.auth.signOut();
- currentUser=null;
- document.getElementById("app").style.display="none";
- document.getElementById("loginPage").style.display="block";
+
+ if(db){
+
+  await db.auth.signOut();
+
+ }
+
+ currentUser = null;
+
+ document.getElementById("app").style.display =
+   "none";
+
+ document.getElementById("loginPage").style.display =
+   "block";
+
 }
+
+
+/* =========================
+   START APP
+   ========================= */
 
 async function startApp(){
- document.getElementById("loginPage").style.display="none";
- document.getElementById("app").style.display="block";
- document.getElementById("userInfo").textContent=currentUser.email;
- document.getElementById("settingsEmail").textContent=currentUser.email;
+
+ document.getElementById("loginPage").style.display =
+   "none";
+
+ document.getElementById("app").style.display =
+   "block";
+
+ document.getElementById("userInfo").textContent =
+   currentUser.email;
+
+ document.getElementById("settingsEmail").textContent =
+   currentUser.email;
+
  await loadProfile();
+
  await loadAll();
+
  showPage("dashboard");
+
 }
+
+
+/* =========================
+   PROFILE
+   ========================= */
 
 async function loadProfile(){
- const {data,error}=await db.from("profiles").select("*").eq("id",currentUser.id).maybeSingle();
- if(error)console.log("Profile:",error.message);
- currentRole=data?.role||"viewer";
- document.getElementById("settingsRole").textContent=currentRole;
+
+ const {data,error} =
+   await db
+    .from("profiles")
+    .select("*")
+    .eq("id",currentUser.id)
+    .maybeSingle();
+
+ if(error){
+
+  console.log(
+   "Profile:",
+   error.message
+  );
+
+ }
+
+ currentRole =
+   data?.role || "viewer";
+
+ document.getElementById(
+   "settingsRole"
+ ).textContent = currentRole;
+
 }
+
+
+/* =========================
+   PERMISSION
+   ========================= */
 
 function allowedWrite(){
- if(currentRole!=="admin"&&currentRole!=="fuel_officer"){
-   alert("Your account is Viewer. Admin or Fuel Officer permission is required.");
-   return false;
+
+ if(
+   currentRole !== "admin" &&
+   currentRole !== "fuel_officer"
+ ){
+
+  alert(
+   "Your account is Viewer. Admin or Fuel Officer permission is required."
+  );
+
+  return false;
  }
+
  return true;
+
 }
+
+
+/* =========================
+   PAGE NAVIGATION
+   ========================= */
 
 function showPage(id){
- document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
- document.getElementById(id).classList.add("active");
- document.querySelectorAll("nav button").forEach(x=>x.classList.remove("active"));
- const n=document.getElementById("nav"+id.charAt(0).toUpperCase()+id.slice(1));
- if(n)n.classList.add("active");
- if(id==="dashboard")renderDashboard();
- if(id==="reports")renderReport();
- if(id==="official")renderOfficial();
+
+ document
+  .querySelectorAll(".page")
+  .forEach(x =>
+    x.classList.remove("active")
+  );
+
+ document
+  .getElementById(id)
+  .classList.add("active");
+
+ document
+  .querySelectorAll("nav button")
+  .forEach(x =>
+    x.classList.remove("active")
+  );
+
+ const n =
+   document.getElementById(
+    "nav" +
+    id.charAt(0).toUpperCase() +
+    id.slice(1)
+   );
+
+ if(n) n.classList.add("active");
+
+ if(id === "dashboard")
+   renderDashboard();
+
+ if(id === "reports")
+   renderReport();
+
+ if(id === "official")
+   renderOfficial();
+
 }
+
+
+/* =========================
+   LOAD DATA
+   ========================= */
 
 async function loadAll(){
- const v=await db.from("vehicles").select("*").order("plate");
- if(v.error)console.log(v.error);
- vehicles=v.data||[];
- const f=await db.from("fuel_entries").select("*").order("fuel_date",{ascending:false}).order("created_at",{ascending:false});
- if(f.error)console.log(f.error);
- fuelRows=f.data||[];
- const p=await db.from("periods").select("*").order("created_at",{ascending:false}).limit(1);
- currentPeriod=p.data?.[0]||null;
- currentBudget=0;
+
+ const v =
+   await db
+    .from("vehicles")
+    .select("*")
+    .order("plate");
+
+ if(v.error)
+   console.log(v.error);
+
+ vehicles = v.data || [];
+
+
+ const f =
+   await db
+    .from("fuel_entries")
+    .select("*")
+    .order("fuel_date",{
+      ascending:false
+    })
+    .order("created_at",{
+      ascending:false
+    });
+
+ if(f.error)
+   console.log(f.error);
+
+ fuelRows = f.data || [];
+
+
+ const p =
+   await db
+    .from("periods")
+    .select("*")
+    .order("created_at",{
+      ascending:false
+    })
+    .limit(1);
+
+ currentPeriod =
+   p.data?.[0] || null;
+
+
+ currentBudget = 0;
+
+
  if(currentPeriod){
-   const b=await db.from("budgets").select("amount").eq("period_start",currentPeriod.start_date).eq("period_end",currentPeriod.end_date).order("created_at",{ascending:false}).limit(1).maybeSingle();
-   if(!b.error && b.data) currentBudget=Number(b.data.amount||0);
+
+  const b =
+    await db
+     .from("budgets")
+     .select("amount")
+     .eq(
+       "period_start",
+       currentPeriod.start_date
+     )
+     .eq(
+       "period_end",
+       currentPeriod.end_date
+     )
+     .order("created_at",{
+       ascending:false
+     })
+     .limit(1)
+     .maybeSingle();
+
+  if(!b.error && b.data){
+
+   currentBudget =
+     Number(b.data.amount || 0);
+
+  }
+
  }
- renderVehicles();fillVehicleSelect();renderHistory();renderDashboard();
+
+
+ renderVehicles();
+
+ fillVehicleSelect();
+
+ renderHistory();
+
+ renderDashboard();
+
 }
+
+
+/* =========================
+   VEHICLES
+   ========================= */
 
 function renderVehicles(){
- document.getElementById("vehicleTable").innerHTML=vehicles.map(v=>`<tr><td>${esc(v.plate)}</td><td>${esc(v.driver||"")}</td><td>${currentRole==="admin"?`<button class="danger" onclick="deleteVehicle(${v.id})">Delete</button>`:"View only"}</td></tr>`).join("");
+
+ document.getElementById(
+  "vehicleTable"
+ ).innerHTML =
+
+ vehicles.map(v => `
+
+  <tr>
+
+   <td>${esc(v.plate)}</td>
+
+   <td>${esc(v.driver || "")}</td>
+
+   <td>
+
+    ${
+     currentRole === "admin"
+
+     ?
+
+     `<button
+       class="danger"
+       onclick="deleteVehicle(${v.id})">
+       Delete
+      </button>`
+
+     :
+
+     "View only"
+    }
+
+   </td>
+
+  </tr>
+
+ `).join("");
+
 }
+
+
 function fillVehicleSelect(){
- document.getElementById("fVehicle").innerHTML='<option value="">Select vehicle</option>'+vehicles.map(v=>`<option value="${v.id}">${esc(v.plate)}</option>`).join("");
+
+ document.getElementById(
+  "fVehicle"
+ ).innerHTML =
+
+ '<option value="">Select vehicle</option>' +
+
+ vehicles.map(v =>
+
+  `<option value="${v.id}">
+    ${esc(v.plate)}
+   </option>`
+
+ ).join("");
+
 }
+
+
 async function addVehicle(){
- if(!allowedWrite())return;
- const plate=document.getElementById("vPlate").value.trim(),driver=document.getElementById("vDriver").value.trim();
- if(!plate){msg("vehicleMsg","Plate number is required.","error");return;}
- const {error}=await db.from("vehicles").insert({plate,driver});
- if(error){msg("vehicleMsg",error.message,"error");return;}
- msg("vehicleMsg","Vehicle added successfully.","ok");
- document.getElementById("vPlate").value="";document.getElementById("vDriver").value="";
+
+ if(!allowedWrite()) return;
+
+ const plate =
+   document.getElementById(
+    "vPlate"
+   ).value.trim();
+
+ const driver =
+   document.getElementById(
+    "vDriver"
+   ).value.trim();
+
+ if(!plate){
+
+  msg(
+   "vehicleMsg",
+   "Plate number is required.",
+   "error"
+  );
+
+  return;
+ }
+
+ const {error} =
+   await db
+    .from("vehicles")
+    .insert({
+     plate,
+     driver
+    });
+
+ if(error){
+
+  msg(
+   "vehicleMsg",
+   error.message,
+   "error"
+  );
+
+  return;
+ }
+
+ msg(
+  "vehicleMsg",
+  "Vehicle added successfully.",
+  "ok"
+ );
+
+ document.getElementById(
+  "vPlate"
+ ).value = "";
+
+ document.getElementById(
+  "vDriver"
+ ).value = "";
+
  await loadAll();
+
 }
+
+
 async function deleteVehicle(id){
- if(currentRole!=="admin")return alert("Only Admin can delete vehicles.");
- if(!confirm("Delete this vehicle and related fuel records?"))return;
- const {error}=await db.from("vehicles").delete().eq("id",id);
- if(error)alert(error.message); else await loadAll();
+
+ if(currentRole !== "admin"){
+
+  alert(
+   "Only Admin can delete vehicles."
+  );
+
+  return;
+ }
+
+ if(
+  !confirm(
+   "Delete this vehicle and related fuel records?"
+  )
+ ) return;
+
+ const {error} =
+   await db
+    .from("vehicles")
+    .delete()
+    .eq("id",id);
+
+ if(error)
+   alert(error.message);
+ else
+   await loadAll();
+
 }
+
+
+/* =========================
+   FUEL ENTRY
+   ========================= */
 
 async function saveFuel(){
- if(!allowedWrite())return;
- const vehicle_id=document.getElementById("fVehicle").value;
- const liters=Number(document.getElementById("fLiters").value);
- const price=Number(document.getElementById("fPrice").value);
- const km=document.getElementById("fKm").value===""?null:Number(document.getElementById("fKm").value);
- const date=document.getElementById("fDate").value;
- if(!vehicle_id||!liters||!price||!date){msg("fuelMsg","Vehicle, date, liters and price are required.","error");return;}
- const previous=fuelRows.filter(x=>String(x.vehicle_id)===String(vehicle_id)&&x.current_km!=null&&x.fuel_date<=date).sort((a,b)=>new Date(b.fuel_date)-new Date(a.fuel_date))[0];
- const distance=(km!=null&&previous?.current_km!=null)?Math.max(0,km-Number(previous.current_km)):0;
- const {error}=await db.from("fuel_entries").insert({
-   vehicle_id,driver:document.getElementById("fDriver").value.trim(),
-   fuel_date:date,fuel_time:document.getElementById("fTime").value||null,
-   station:document.getElementById("fStation").value.trim(),
-   receipt:document.getElementById("fReceipt").value.trim(),
-   liters,price,expense:liters*price,current_km:km,distance
- });
- if(error){msg("fuelMsg",error.message,"error");return;}
- msg("fuelMsg","Fuel entry saved successfully.","ok");
- ["fDriver","fTime","fStation","fReceipt","fLiters","fPrice","fKm"].forEach(id=>document.getElementById(id).value="");
+
+ if(!allowedWrite()) return;
+
+ const vehicle_id =
+   document.getElementById(
+    "fVehicle"
+   ).value;
+
+ const liters =
+   Number(
+    document.getElementById(
+     "fLiters"
+    ).value
+   );
+
+ const price =
+   Number(
+    document.getElementById(
+     "fPrice"
+    ).value
+   );
+
+ const km =
+   document.getElementById(
+    "fKm"
+   ).value === ""
+
+   ?
+
+   null
+
+   :
+
+   Number(
+    document.getElementById(
+     "fKm"
+    ).value
+   );
+
+ const date =
+   document.getElementById(
+    "fDate"
+   ).value;
+
+
+ if(
+  !vehicle_id ||
+  !liters ||
+  !price ||
+  !date
+ ){
+
+  msg(
+   "fuelMsg",
+   "Vehicle, date, liters and price are required.",
+   "error"
+  );
+
+  return;
+ }
+
+
+ const previous =
+   fuelRows
+
+    .filter(x =>
+      String(x.vehicle_id) ===
+      String(vehicle_id) &&
+      x.current_km != null &&
+      x.fuel_date <= date
+    )
+
+    .sort(
+      (a,b) =>
+       new Date(b.fuel_date) -
+       new Date(a.fuel_date)
+    )[0];
+
+
+ const distance =
+   (
+    km != null &&
+    previous?.current_km != null
+   )
+
+   ?
+
+   Math.max(
+    0,
+    km - Number(previous.current_km)
+   )
+
+   :
+
+   0;
+
+
+ const {error} =
+   await db
+    .from("fuel_entries")
+    .insert({
+
+     vehicle_id,
+
+     driver:
+      document.getElementById(
+       "fDriver"
+      ).value.trim(),
+
+     fuel_date:date,
+
+     fuel_time:
+      document.getElementById(
+       "fTime"
+      ).value || null,
+
+     station:
+      document.getElementById(
+       "fStation"
+      ).value.trim(),
+
+     receipt:
+      document.getElementById(
+       "fReceipt"
+      ).value.trim(),
+
+     liters,
+
+     price,
+
+     expense:
+      liters * price,
+
+     current_km:km,
+
+     distance
+
+    });
+
+
+ if(error){
+
+  msg(
+   "fuelMsg",
+   error.message,
+   "error"
+  );
+
+  return;
+ }
+
+
+ msg(
+  "fuelMsg",
+  "Fuel entry saved successfully.",
+  "ok"
+ );
+
+
+ [
+  "fDriver",
+  "fTime",
+  "fStation",
+  "fReceipt",
+  "fLiters",
+  "fPrice",
+  "fKm"
+ ].forEach(
+  id =>
+   document.getElementById(id).value=""
+ );
+
+
  await loadAll();
+
 }
+
+
+/* =========================
+   HISTORY
+   ========================= */
 
 function renderHistory(){
- document.getElementById("historyTable").innerHTML=fuelRows.map(x=>{
-  const v=vehicles.find(z=>String(z.id)===String(x.vehicle_id));
-  return `<tr><td>${x.fuel_date||""}</td><td>${esc(v?.plate||"")}</td><td>${esc(x.driver||"")}</td><td>${esc(x.station||"")}</td><td>${esc(x.receipt||"")}</td><td>${num(x.liters)}</td><td>${num(x.price)}</td><td>${num(x.expense)}</td><td>${num(x.current_km)}</td><td>${num(x.distance)}</td></tr>`;
+
+ document.getElementById(
+  "historyTable"
+ ).innerHTML =
+
+ fuelRows.map(x => {
+
+  const v =
+    vehicles.find(z =>
+      String(z.id) ===
+      String(x.vehicle_id)
+    );
+
+  return `
+
+   <tr>
+
+    <td>${x.fuel_date || ""}</td>
+
+    <td>${esc(v?.plate || "")}</td>
+
+    <td>${esc(x.driver || "")}</td>
+
+    <td>${esc(x.station || "")}</td>
+
+    <td>${esc(x.receipt || "")}</td>
+
+    <td>${num(x.liters)}</td>
+
+    <td>${num(x.price)}</td>
+
+    <td>${num(x.expense)}</td>
+
+    <td>${num(x.current_km)}</td>
+
+    <td>${num(x.distance)}</td>
+
+   </tr>
+
+  `;
+
  }).join("");
+
 }
+
+
+/* =========================
+   PERIOD
+   ========================= */
 
 function periodRows(){
- if(!currentPeriod)return fuelRows;
- return fuelRows.filter(x=>x.fuel_date>=currentPeriod.start_date&&x.fuel_date<=currentPeriod.end_date);
-}
-function totals(){
- const rows=periodRows();
- const expense=rows.reduce((a,x)=>a+Number(x.expense||0),0);
- const liters=rows.reduce((a,x)=>a+Number(x.liters||0),0);
- const km=rows.reduce((a,x)=>a+Number(x.distance||0),0);
- const budget=Number(currentBudget||0);
- return {expense,liters,km,budget,remaining:budget-expense};
-}
-async function savePeriod(){
- if(!allowedWrite())return;
- const s=document.getElementById("periodStart").value,e=document.getElementById("periodEnd").value;
- if(!s||!e){msg("periodMsg","Enter start and end dates.","error");return;}
- const d1=new Date(s+"T00:00:00"),d2=new Date(e+"T00:00:00");
- const days=Math.round((d2-d1)/86400000)+1;
- if(days!==15){msg("periodMsg","The period must contain exactly 15 days.","error");return;}
- const {error}=await db.from("periods").insert({start_date:s,end_date:e});
- if(error){msg("periodMsg",error.message,"error");return;}
- currentPeriod={start_date:s,end_date:e};
- msg("periodMsg","15-day period saved.","ok");
- await loadAll();
-}
-function renderDashboard(){
- if(currentPeriod){document.getElementById("periodStart").value=currentPeriod.start_date;document.getElementById("periodEnd").value=currentPeriod.end_date;}
- const t=totals();
- ["dBudget","dExpense","dRemaining","dKm","dLiters"].forEach((id,i)=>document.getElementById(id).textContent=[t.budget,t.expense,t.remaining,t.km,t.liters][i].toFixed(2));
-}
-function renderReport(){
- const t=totals();
- document.getElementById("reportText").innerHTML=`<p><b>Period:</b> ${currentPeriod?currentPeriod.start_date+" to "+currentPeriod.end_date:"Not set"}</p>
- <div class="grid"><div class="stat">Budget<b>${t.budget.toFixed(2)}</b></div><div class="stat">Expense<b>${t.expense.toFixed(2)}</b></div><div class="stat">Remaining<b>${t.remaining.toFixed(2)}</b></div><div class="stat">KM<b>${t.km.toFixed(2)}</b></div><div class="stat">Liters<b>${t.liters.toFixed(2)}</b></div></div>`;
-}
-function renderOfficial(){
- const t=totals();
- document.getElementById("officialReport").innerHTML=`<h3>15-DAY FUEL & KILOMETER REPORT</h3>
- <p><b>Period:</b> ${currentPeriod?currentPeriod.start_date+" — "+currentPeriod.end_date:"Not configured"}</p>
- <table><tr><th>Total Budget</th><td>${t.budget.toFixed(2)}</td></tr><tr><th>Total Fuel Expense</th><td>${t.expense.toFixed(2)}</td></tr><tr><th>Remaining Balance</th><td>${t.remaining.toFixed(2)}</td></tr><tr><th>Total Liters</th><td>${t.liters.toFixed(2)}</td></tr><tr><th>Total KM</th><td>${t.km.toFixed(2)}</td></tr></table>
- <br><p>Prepared from the records stored in the Fuel & KM Manager database.</p>`;
-}
-function exportCSV(){
- const head=["Date","Vehicle","Driver","Station","Receipt","Liters","Price","Expense","Current KM","Distance"];
- const rows=fuelRows.map(x=>{const v=vehicles.find(z=>String(z.id)===String(x.vehicle_id));return [x.fuel_date,v?.plate||"",x.driver||"",x.station||"",x.receipt||"",x.liters,x.price,x.expense,x.current_km,x.distance]});
- const csv=[head,...rows].map(r=>r.map(v=>`"${String(v??"").replaceAll('"','""')}"`).join(",")).join("\n");
- const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));a.download="fuel-km-report.csv";a.click();
-}
-function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
-function num(v){return v==null||v===""?"":Number(v).toFixed(2)}
 
-window.addEventListener("load",async()=>{
- if(!initSupabase())return;
- const {data}=await db.auth.getSession();
- if(data?.session){currentUser=data.session.user;await startApp();}
- db.auth.onAuthStateChange(async(_event,session)=>{
-   if(session&&!currentUser){currentUser=session.user;await startApp();}
- });
-});
+ if(!currentPeriod)
+   return fuelRows;
+
+ return fuelRows.filter(x =>
+   x.fuel_date >=
+   currentPeriod.start_date &&
+
+   x.fuel_date <=
+   currentPeriod.end_date
+ );
+
+}
+
+
+function totals(){
+
+ const rows =
+   periodRows();
+
+ const expense =
+   rows.reduce(
+    (a,x) =>
+     a + Number(x.expense || 0),
+    0
+   );
+
+ const liters =
+   rows.reduce(
+    (a,x) =>
+     a + Number(x.liters || 0),
+    0
+   );
+
+ const km =
+   rows.reduce(
+    (a,x) =>
+     a + Number(x.distance || 0),
+    0
+   );
+
+ const budget =
+   Number(currentBudget || 0);
+
+ return {
+
+  expense,
+
+  liters,
+
+  km,
+
+  budget,
+
+  remaining:
+   budget - expense
+
+ };
+
+}
+
+
+/* =========================
+   SAVE PERIOD
+   ========================= */
+
+async function savePeriod(){
+
+ if(!allowedWrite()) return;
+
+ const s =
+   document.getElementById(
+    "periodStart"
+   ).value;
+
+ const e =
+   document.getElementById(
+    "periodEnd"
+   ).value;
+
+
+ if(!s || !e){
+
+  msg(
+   "periodMsg",
+   "Enter start and end dates.",
+   "error"
+  );
+
+  return;
+ }
+
+
+ const d1 =
+   new Date(
+    s + "T00:00:00"
+   );
+
+ const d2 =
+   new Date(
+    e + "T00:00:00"
+   );
+
+
+ const days =
+   Math.round(
+    (d2 - d1) /
+    86400000
+   ) + 1;
+
+
+ if(days !== 15){
+
+  msg(
+   "periodMsg",
+   "The period must contain exactly 15 days.",
+   "error"
+  );
+
+  return;
+ }
+
+
+ const {error} =
+   await db
+    .from("periods")
+    .insert({
+
+     start_date:s,
+
+     end_date:e
+
+    });
+
+
+ if(error){
+
+  msg(
+   "periodMsg",
+   error.message,
+   "error"
+  );
+
+  return;
+ }
+
+
+ currentPeriod = {
+
+  start_date:s,
+
+  end_date:e
+
+ };
+
+
+ msg(
+  "periodMsg",
+  "15-day period saved.",
+  "ok"
+ );
+
+
+ await loadAll();
+
+}
+
+
+/* =========================
+   DASHBOARD
+   ========================= */
+
+function renderDashboard(){
+
+ if(currentPeriod){
+
+  document.getElementById(
+   "periodStart"
+  ).value =
+   currentPeriod.start_date;
+
+  document.getElementById(
+   "periodEnd"
+  ).value =
+   currentPeriod.end_date;
+
+ }
+
+
+ const t =
+   totals();
+
+
+ [
+  "dBudget",
+  "dExpense",
+  "dRemaining",
+  "dKm",
+  "dLiters"
+
+ ].forEach(
+  (id,i) =>
+
+   document.getElementById(id)
+    .textContent =
+
+    [
+     t.budget,
+     t.expense,
+     t.remaining,
+     t.km,
+     t.liters
+    ][i].toFixed(2)
+
+ );
+
+}
+
+
+/* =========================
+   REPORT
+   ========================= */
+
+function renderReport(){
+
+ const t =
+   totals();
+
+ document.getElementById(
+  "reportText"
+ ).innerHTML = `
+
+  <p>
+
+   <b>Period:</b>
+
+   ${
+    currentPeriod
+
+    ?
+
+    currentPeriod.start_date +
+    " to " +
+    currentPeriod.end_date
+
+    :
+
+    "Not set"
+   }
+
+  </p>
+
+
+  <div class="grid">
+
+   <div class="stat">
+    Budget
+    <b>${t.budget.toFixed(2)}</b>
+   </div>
+
+   <div class="stat">
+    Expense
+    <b>${t.expense.toFixed(2)}</b>
+   </div>
+
+   <div class="stat">
+    Remaining
+    <b>${t.remaining.toFixed(2)}</b>
+   </div>
+
+   <div class="stat">
+    KM
+    <b>${t.km.toFixed(2)}</b>
+   </div>
+
+   <div class="stat">
+    Liters
+    <b>${t.liters.toFixed(2)}</b>
+   </div>
+
+  </div>
+
+ `;
+
+}
+
+
+/* =========================
+   OFFICIAL REPORT
+   ========================= */
+
+function renderOfficial(){
+
+ const t =
+   totals();
+
+ document.getElementById(
+  "officialReport"
+ ).innerHTML = `
+
+  <h3>
+   SEMERA AIRPORT FUEL & KILOMETER REPORT
+  </h3>
+
+
+  <p>
+
+   <b>Period:</b>
+
+   ${
+    currentPeriod
+
+    ?
+
+    currentPeriod.start_date +
+    " — " +
+    currentPeriod.end_date
+
+    :
+
+    "Not configured"
+   }
+
+  </p>
+
+
+  <table>
+
+   <tr>
+    <th>Total Budget</th>
+    <td>${t.budget.toFixed(2)}</td>
+   </tr>
+
+   <tr>
+    <th>Total Fuel Expense</th>
+    <td>${t.expense.toFixed(2)}</td>
+   </tr>
+
+   <tr>
+    <th>Remaining Balance</th>
+    <td>${t.remaining.toFixed(2)}</td>
+   </tr>
+
+   <tr>
+    <th>Total Liters</th>
+    <td>${t.liters.toFixed(2)}</td>
+   </tr>
+
+   <tr>
+    <th>Total KM</th>
+    <td>${t.km.toFixed(2)}</td>
+   </tr>
+
+  </table>
+
+
+  <br>
+
+  <p>
+   Prepared from the records stored in the
+   SEMERA AIRPORT FUEL MANAGEMENT SYSTEM database.
+  </p>
+
+ `;
+
+}
+
+
+/* =========================
+   EXPORT CSV
+   ========================= */
+
+function exportCSV(){
+
+ const head = [
+
+  "Date",
+  "Vehicle",
+  "Driver",
+  "Station",
+  "Receipt",
+  "Liters",
+  "Price",
+  "Expense",
+  "Current KM",
+  "Distance"
+
+ ];
+
+
+ const rows =
+   fuelRows.map(x => {
+
+    const v =
+      vehicles.find(z =>
+       String(z.id) ===
+       String(x.vehicle_id)
+      );
+
+    return [
+
+     x.fuel_date,
+
+     v?.plate || "",
+
+     x.driver || "",
+
+     x.station || "",
+
+     x.receipt || "",
+
+     x.liters,
+
+     x.price,
+
+     x.expense,
+
+     x.current_km,
+
+     x.distance
+
+    ];
+
+   });
+
+
+ const csv =
+   [head,...rows]
+
+   .map(r =>
+    r.map(v =>
+     `"${String(v ?? "")
+       .replaceAll('"','""')}"`
+    ).join(",")
+   )
+
+   .join("\n");
+
+
+ const a =
+   document.createElement("a");
+
+
+ a.href =
+   URL.createObjectURL(
+    new Blob(
+     [csv],
+     {type:"text/csv"}
+    )
+   );
+
+
+ a.download =
+   "semara-airport-fuel-report.csv";
+
+
+ a.click();
+
+}
+
+
+/* =========================
+   HELPERS
+   ========================= */
+
+function esc(v){
+
+ return String(v ?? "")
+  .replace(
+   /[&<>"']/g,
+   m =>
+    ({
+     "&":"&amp;",
+     "<":"&lt;",
+     ">":"&gt;",
+     '"':"&quot;",
+     "'":"&#039;"
+    }[m])
+  );
+
+}
+
+
+function num(v){
+
+ return v == null || v === ""
+
+   ?
+
+   ""
+
+   :
+
+   Number(v).toFixed(2);
+
+}
+
+
+/* =========================
+   START
+   ========================= */
+
+window.addEventListener(
+ "load",
+ async () => {
+
+  if(!initSupabase())
+    return;
+
+
+  const {data} =
+    await db.auth.getSession();
+
+
+  if(data?.session){
+
+   currentUser =
+     data.session.user;
+
+   await startApp();
+
+  }
+
+
+  db.auth.onAuthStateChange(
+   async (_event,session) => {
+
+    if(
+     session &&
+     !currentUser
+    ){
+
+     currentUser =
+       session.user;
+
+     await startApp();
+
+    }
+
+   }
+  );
+
+ }
+);
+
 </script>
+
 </body>
 </html>
