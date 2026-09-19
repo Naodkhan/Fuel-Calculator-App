@@ -648,7 +648,7 @@ function autoFillPreviousRefill(){
   updateFuelDifferences();
 }
 
-["fPreviousKm","fRefillKm","fPreviousDate","fDate"].forEach(id=>{
+["fPreviousKm","fRefillKm","fPreviousDate"].forEach(id=>{
   const el=document.getElementById(id);
   if(el){
     el.addEventListener("input",updateFuelDifferences);
@@ -661,6 +661,20 @@ if(fuelVehicleSelect) fuelVehicleSelect.addEventListener("change",()=>{
   autoFillPreviousRefill();
   updateFuelDifferences();
 });
+
+const fuelDateInput=document.getElementById("fDate");
+if(fuelDateInput){
+  fuelDateInput.addEventListener("change",()=>{
+    // Recalculate the previous refill whenever the refill date changes.
+    // This prevents an old later date from remaining in the form.
+    autoFillPreviousRefill();
+    updateFuelDifferences();
+  });
+  fuelDateInput.addEventListener("input",()=>{
+    autoFillPreviousRefill();
+    updateFuelDifferences();
+  });
+}
 
 
 async function saveFuel(){
