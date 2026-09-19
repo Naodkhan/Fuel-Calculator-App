@@ -216,10 +216,12 @@ th,td{padding:9px;border-bottom:1px solid #e6e9ee;text-align:left}
 <div><label>Receipt No.</label><input id="fReceipt"></div>
 <div><label>Fuel Refilled (Liters)</label><input id="fLiters" type="number" step="0.01" min="0" placeholder="e.g. 80"></div>
 <div><label>Fuel Price per Liter (Birr)</label><input id="fPrice" type="number" step="0.01" min="0" placeholder="e.g. 120"></div>
-<div><label>Total Amount of Fuel Refill (Birr)</label><input id="fExpense" type="number" step="0.01" min="0" placeholder="e.g. 9600"></div>
-<div><label>KM Traveled Before Refill</label><input id="fDistance" type="number" step="0.01" min="0" placeholder="e.g. 450"></div>
-<div><label>KM Reading at Refill</label><input id="fRefillKm" type="number" step="0.01" min="0" placeholder="e.g. 12500"></div>
-<div><label>Days Before Refill</label><input id="fDays" type="number" step="1" min="0" placeholder="e.g. 7"></div>
+<div><label>Total Amount of Price (Birr)</label><input id="fExpense" type="number" step="0.01" min="0" placeholder="e.g. 9600"></div>
+<div><label>Previous KM Reading</label><input id="fPreviousKm" type="number" step="0.01" min="0" placeholder="Previous refill KM"></div>
+<div><label>KM Reading at Refill</label><input id="fRefillKm" type="number" step="0.01" min="0" placeholder="Current refill KM"></div>
+<div><label>KM Difference at Refill</label><input id="fDistance" type="number" step="0.01" readonly placeholder="Calculated automatically"></div>
+<div><label>Previous Refill Date</label><input id="fPreviousDate" type="date"></div>
+<div><label>Days Difference at Refill</label><input id="fDays" type="number" step="1" readonly placeholder="Calculated automatically"></div>
 </div>
 <br>
 <button onclick="saveFuel()">Save Fuel Entry</button>
@@ -519,6 +521,25 @@ function updateFuelTotal(){
 if(litersInput) litersInput.addEventListener("input",updateFuelTotal);
 if(priceInput) priceInput.addEventListener("input",updateFuelTotal);
 
+function updateFuelDifferences(){
+  const previousKm=Number(document.getElementById("fPreviousKm")?.value||0);
+  const refillKm=Number(document.getElementById("fRefillKm")?.value||0);
+  const previousDate=document.getElementById("fPreviousDate")?.value||"";
+  const date=document.getElementById("fDate")?.value||"";
+  const distanceEl=document.getElementById("fDistance");
+  const daysEl=document.getElementById("fDays");
+  if(distanceEl) distanceEl.value=(refillKm>=previousKm && (previousKm>0 || refillKm>0)) ? (refillKm-previousKm).toFixed(2) : "";
+  if(daysEl && previousDate && date){
+    const diff=Math.round((new Date(date+"T00:00:00")-new Date(previousDate+"T00:00:00"))/86400000);
+    daysEl.value=diff>=0 ? diff : "";
+  }else if(daysEl) daysEl.value="";
+}
+["fPreviousKm","fRefillKm","fPreviousDate","fDate"].forEach(id=>{
+  const el=document.getElementById(id);
+  if(el) el.addEventListener("input",updateFuelDifferences);
+  if(el) el.addEventListener("change",updateFuelDifferences);
+});
+
 async function saveFuel(){
  if(!allowedWrite())return;
 
@@ -528,17 +549,36 @@ async function saveFuel(){
  const expense=Number(document.getElementById("fExpense").value);
  const liters=Number(document.getElementById("fLiters").value);
  const price=Number(document.getElementById("fPrice").value);
- const distance=Number(document.getElementById("fDistance").value);
  const refillKm=Number(document.getElementById("fRefillKm").value);
- const days=Number(document.getElementById("fDays").value);
+ const previousKm=Number(document.getElementById("fPreviousKm").value);
+ const previousDate=document.getElementById("fPreviousDate").value;
 
- if(!vehicle_id||!date||!expense||!liters||!price||distance<0||refillKm<0||days<0){
-   msg("fuelMsg","Vehicle, date, liters, price per liter, total amount, KM traveled, KM reading at refill and days are required.","error");
+ if(!vehicle_id||!date||!expense||!liters||!price||refillKm<0||previousKm<0||!previousDate){
+   msg("fuelMsg","Vehicle, date, liters, price per liter, total amount, previous KM, current KM and previous refill date are required.","error");
    return;
  }
+
+ if(refillKm<previousKm){
+   msg("fuelMsg","Current refill KM cannot be less than previous KM.","error");
+   return;
+ }
+
+ const distance=refillKm-previousKm;
+ const d1=new Date(previousDate+"T00:00:00");
+ const d2=new Date(date+"T00:00:00");
+ const days=Math.round((d2-d1)/86400000);
+
+ if(days<0){
+   msg("fuelMsg","Current refill date cannot be earlier than previous refill date.","error");
+   return;
+ }
+
+ document.getElementById("fDistance").value=distance.toFixed(2);
+ document.getElementById("fDays").value=days;
+
  const calculatedTotal=liters*price;
  if(Math.abs(expense-calculatedTotal)>0.01){
-   msg("fuelMsg","Total Amount of Fuel Refill must equal liters × price per liter.","error");
+   msg("fuelMsg","Total Amount of Price must equal liters × price per liter.","error");
    return;
  }
 
@@ -560,7 +600,7 @@ async function saveFuel(){
 
  msg("fuelMsg","Fuel entry saved successfully.","ok");
 
- ["fReceipt","fExpense","fLiters","fPrice","fDistance","fRefillKm","fDays"]
+ ["fReceipt","fExpense","fLiters","fPrice","fPreviousKm","fRefillKm","fDistance","fPreviousDate","fDays"]
  .forEach(id=>document.getElementById(id).value="");
 
  await loadAll();
