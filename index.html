@@ -212,14 +212,12 @@ th,td{padding:9px;border-bottom:1px solid #e6e9ee;text-align:left}
 <div id="fuelMsg" class="msg"></div>
 <div class="grid">
 <div><label>Vehicle</label><select id="fVehicle"></select></div>
-<div><label>Driver</label><input id="fDriver"></div>
-<div><label>Date</label><input id="fDate" type="date"></div>
-<div><label>Time</label><input id="fTime" type="time"></div>
-<div><label>Fuel Station</label><input id="fStation"></div>
+<div><label>Date Filled</label><input id="fDate" type="date"></div>
 <div><label>Receipt No.</label><input id="fReceipt"></div>
-<div><label>Liters</label><input id="fLiters" type="number" step="0.01"></div>
-<div><label>Price / Liter</label><input id="fPrice" type="number" step="0.01"></div>
-<div><label>Current KM</label><input id="fKm" type="number" step="0.01"></div>
+<div><label>Total Fuel Amount (Birr)</label><input id="fExpense" type="number" step="0.01" min="0" placeholder="e.g. 5000"></div>
+<div><label>Fuel Consumption (Liters)</label><input id="fLiters" type="number" step="0.01" min="0" placeholder="e.g. 80"></div>
+<div><label>KM Traveled Before Refill</label><input id="fDistance" type="number" step="0.01" min="0" placeholder="e.g. 450"></div>
+<div><label>Days Before Refill</label><input id="fDays" type="number" step="1" min="0" placeholder="e.g. 7"></div>
 </div>
 <br>
 <button onclick="saveFuel()">Save Fuel Entry</button>
@@ -234,7 +232,7 @@ th,td{padding:9px;border-bottom:1px solid #e6e9ee;text-align:left}
 <div class="card">
 <div class="tablebox">
 <table>
-<thead><tr><th>Date</th><th>Vehicle</th><th>Driver</th><th>Station</th><th>Receipt</th><th>Liters</th><th>Price</th><th>Expense</th><th>KM</th><th>Distance</th></tr></thead>
+<thead><tr><th>Date</th><th>Vehicle</th><th>Receipt</th><th>Fuel Amount (Birr)</th><th>Fuel Consumption (L)</th><th>KM Traveled</th><th>Days Before Refill</th></tr></thead>
 <tbody id="historyTable"></tbody>
 </table>
 </div>
@@ -256,8 +254,9 @@ th,td{padding:9px;border-bottom:1px solid #e6e9ee;text-align:left}
 
 <div class="petty-tabs no-print">
 <button id="tabAirport" onclick="showPettyForm('airport')">AIRPORT FUEL PETTY CASH REPORT FORM</button>
-<button id="tabNormal" onclick="showPettyForm('normal')">AIRPORT NORMAL PETTY CASH</button>
-<button id="tabExpress" onclick="showPettyForm('express')">EXPRESS FUEL PETTY CASH FORM</button>
+<button id="tabNormal" onclick="showPettyForm('normal')">AIRPORT NORMAL PETTY CASH REPORT FORM</button>
+<button id="tabExpress" onclick="showPettyForm('express')">EXPRESS FUEL PETTY CASH REPORT FORM</button>
+<button id="tabExpressNormal" onclick="showPettyForm('expressNormal')">EXPRESS NORMAL PETTY CASH REPORT FORM</button>
 <button id="tabBalance" onclick="showPettyForm('balance')">Petty Cash Balance</button>
 </div>
 
@@ -287,6 +286,24 @@ th,td{padding:9px;border-bottom:1px solid #e6e9ee;text-align:left}
 </div>
 
 <div id="officialReport"></div>
+
+<div id="expressNormalInputs" class="petty-inputs no-print" style="display:none">
+<div><label>Report No.</label><input id="enReportNo" class="report-input"></div>
+<div><label>Date</label><input id="enDate" type="date" class="report-input"></div>
+<div><label>Name</label><input id="enName" class="report-input"></div>
+<div><label>Department</label><input id="enDept" class="report-input" value="SEMERA AIRPORT"></div>
+<div><label>Location</label><input id="enLoc" class="report-input" value="SEMERA AIRPORT"></div>
+<div><label>From</label><input id="enFrom" type="date" class="report-input"></div>
+<div><label>To</label><input id="enTo" type="date" class="report-input"></div>
+<div><label>Cash Received This Period</label><input id="enCash" type="number" step="0.01" class="report-input" value="0"></div>
+<div><label>Cash Due From Previous Period</label><input id="enPrevious" type="number" step="0.01" class="report-input" value="0"></div>
+<div><label>Total Petty Cash Amount</label><input id="enFund" type="number" step="0.01" class="report-input" value="0"></div>
+</div>
+
+<div id="expressNormalActions" class="petty-actions no-print" style="display:none">
+<button onclick="renderExpressNormal()">Update Form</button>
+<button class="success" onclick="window.print()">Print / Save PDF</button>
+</div>
 </div>
 </section>
 
@@ -492,34 +509,29 @@ async function saveFuel(){
  if(!allowedWrite())return;
 
  const vehicle_id=document.getElementById("fVehicle").value;
- const liters=Number(document.getElementById("fLiters").value);
- const price=Number(document.getElementById("fPrice").value);
- const km=document.getElementById("fKm").value===""?null:Number(document.getElementById("fKm").value);
  const date=document.getElementById("fDate").value;
+ const receipt=document.getElementById("fReceipt").value.trim();
+ const expense=Number(document.getElementById("fExpense").value);
+ const liters=Number(document.getElementById("fLiters").value);
+ const distance=Number(document.getElementById("fDistance").value);
+ const days=Number(document.getElementById("fDays").value);
 
- if(!vehicle_id||!liters||!price||!date){
-   msg("fuelMsg","Vehicle, date, liters and price are required.","error");
+ if(!vehicle_id||!date||!expense||!liters||distance<0||days<0){
+   msg("fuelMsg","Vehicle, date, total fuel amount, liters, KM traveled and days are required.","error");
    return;
  }
 
- const previous=fuelRows
-   .filter(x=>String(x.vehicle_id)===String(vehicle_id)&&x.current_km!=null&&x.fuel_date<=date)
-   .sort((a,b)=>new Date(b.fuel_date)-new Date(a.fuel_date))[0];
-
- const distance=(km!=null&&previous?.current_km!=null)
-   ?Math.max(0,km-Number(previous.current_km)):0;
-
  const {error}=await db.from("fuel_entries").insert({
    vehicle_id,
-   driver:document.getElementById("fDriver").value.trim(),
+   driver:null,
    fuel_date:date,
-   fuel_time:document.getElementById("fTime").value||null,
-   station:document.getElementById("fStation").value.trim(),
-   receipt:document.getElementById("fReceipt").value.trim(),
+   fuel_time:null,
+   station:null,
+   receipt,
    liters,
-   price,
-   expense:liters*price,
-   current_km:km,
+   price:liters ? expense/liters : 0,
+   expense,
+   current_km:null,
    distance
  });
 
@@ -527,28 +539,39 @@ async function saveFuel(){
 
  msg("fuelMsg","Fuel entry saved successfully.","ok");
 
- ["fDriver","fTime","fStation","fReceipt","fLiters","fPrice","fKm"]
+ ["fReceipt","fExpense","fLiters","fDistance","fDays"]
  .forEach(id=>document.getElementById(id).value="");
 
  await loadAll();
 }
 
 function renderHistory(){
- document.getElementById("historyTable").innerHTML=fuelRows.map(x=>{
-  const v=vehicles.find(z=>String(z.id)===String(x.vehicle_id));
+ const ordered=[...fuelRows].sort((a,b)=>{
+   const va=String(a.vehicle_id), vb=String(b.vehicle_id);
+   if(va!==vb)return va.localeCompare(vb);
+   return String(a.fuel_date||"").localeCompare(String(b.fuel_date||""));
+ });
+ const previousByVehicle={};
 
-  return `<tr>
-  <td>${x.fuel_date||""}</td>
-  <td>${esc(v?.plate||"")}</td>
-  <td>${esc(x.driver||"")}</td>
-  <td>${esc(x.station||"")}</td>
-  <td>${esc(x.receipt||"")}</td>
-  <td>${num(x.liters)}</td>
-  <td>${num(x.price)}</td>
-  <td>${num(x.expense)}</td>
-  <td>${num(x.current_km)}</td>
-  <td>${num(x.distance)}</td>
-  </tr>`;
+ document.getElementById("historyTable").innerHTML=[...fuelRows]
+ .map(x=>{
+   const v=vehicles.find(z=>String(z.id)===String(x.vehicle_id));
+   const key=String(x.vehicle_id);
+   const prev=previousByVehicle[key];
+   let days="";
+   if(prev?.fuel_date && x.fuel_date){
+     days=Math.max(0,Math.round((new Date(x.fuel_date+"T00:00:00")-new Date(prev.fuel_date+"T00:00:00"))/86400000));
+   }
+   previousByVehicle[key]=x;
+   return `<tr>
+   <td>${x.fuel_date||""}</td>
+   <td>${esc(v?.plate||"")}</td>
+   <td>${esc(x.receipt||"")}</td>
+   <td>${num(x.expense)}</td>
+   <td>${num(x.liters)}</td>
+   <td>${num(x.distance)}</td>
+   <td>${days}</td>
+   </tr>`;
  }).join("");
 }
 
@@ -659,6 +682,27 @@ function showPettyForm(type){
  document.querySelectorAll(".petty-tabs button").forEach(b=>b.classList.remove("active"));
  const tab=document.getElementById("tab"+type.charAt(0).toUpperCase()+type.slice(1));
  if(tab)tab.classList.add("active");
+
+ const shared=document.querySelector(".petty-inputs");
+ const sharedActions=document.querySelector(".petty-actions");
+ const enInputs=document.getElementById("expressNormalInputs");
+ const enActions=document.getElementById("expressNormalActions");
+
+ if(type==="expressNormal"){
+   if(shared)shared.style.display="none";
+   if(sharedActions)sharedActions.style.display="none";
+   if(enInputs)enInputs.style.display="grid";
+   if(enActions)enActions.style.display="grid";
+   const d=new Date().toISOString().slice(0,10);
+   ["enDate","enFrom","enTo"].forEach(id=>{const e=document.getElementById(id);if(e&&!e.value)e.value=d;});
+   renderExpressNormal();
+   return;
+ }
+
+ if(shared)shared.style.display="grid";
+ if(sharedActions)sharedActions.style.display="grid";
+ if(enInputs)enInputs.style.display="none";
+ if(enActions)enActions.style.display="none";
  setOfficialDefaults();
  renderOfficial();
 }
@@ -708,7 +752,7 @@ function renderAirportForm(){
  while(rows.length<5)rows.push({date:"",description:"",amount:"",liter:"",unit:"",total:"",code:""});
 
  let cells=`
- <div class="fcell title" style="grid-column:span 9">FUEL PETTY CASH REPORT</div>
+ <div class="fcell title" style="grid-column:span 9">AIRPORT FUEL PETTY CASH REPORT FORM</div>
  <div class="fcell left" style="grid-column:span 2">Report No.</div><div class="fcell">${field("rNo","SEMERA-"+todayString().replaceAll("-",""))}</div>
  <div class="fcell" style="grid-column:span 9"></div><div class="fcell left" style="grid-column:span 2">DATE:</div><div class="fcell">${field("rDate")}</div>
  <div class="fcell left" style="grid-column:span 2">Name</div><div class="fcell" style="grid-column:span 3">${field("rName")}</div>
@@ -754,12 +798,13 @@ function renderAirportForm(){
 }
 
 function renderNormalForm(){
+ const t=totals();
  const rows=Array.from({length:10},(_,i)=>`<div class="fcell row">${i===0?field("rFrom"): ""}</div>
  <div class="fcell row" style="grid-column:span 4;text-align:left"></div>
  <div class="fcell row">ETB</div><div class="fcell row">1 Pc</div><div class="fcell row"></div><div class="fcell row"></div><div class="fcell row" style="grid-column:span 3"></div>`).join("");
  const totalId="normalTotal";
  let cells=`
- <div class="fcell title" style="grid-column:span 9">NORMAL PETTY CASH REPORT</div>
+ <div class="fcell title" style="grid-column:span 9">AIRPORT NORMAL PETTY CASH REPORT FORM</div>
  <div class="fcell left" style="grid-column:span 2">Report No.</div><div class="fcell">${field("rNo","NORMAL-"+todayString().replaceAll("-",""))}</div>
  <div class="fcell" style="grid-column:span 9"></div><div class="fcell left" style="grid-column:span 2">DATE:</div><div class="fcell">${field("rDate")}</div>
  <div class="fcell left" style="grid-column:span 2">Name</div><div class="fcell" style="grid-column:span 3">${field("rName")}</div>
@@ -782,14 +827,14 @@ function renderNormalForm(){
  <b>Cash On Hand This Period:</b> ${(Number(document.getElementById("rCash")?.value||0)+Number(document.getElementById("rPrevious")?.value||0)-t.expense).toFixed(2)} &nbsp;&nbsp;
  <b>Total Petty Cash Amount:</b> ${(Number(document.getElementById("rFund")?.value||0) || (Number(document.getElementById("rCash")?.value||0)+Number(document.getElementById("rPrevious")?.value||0))).toFixed(2)}
  </div>`;
- return pettyHeader("AIRPORT NORMAL PETTY CASH","normal",cells);
+ return pettyHeader("AIRPORT NORMAL PETTY CASH REPORT FORM","normal",cells);
 }
 
 function renderExpressForm(){
  const cash=Number(document.getElementById("rCash")?.value||0);
  const previous=Number(document.getElementById("rPrevious")?.value||0);
  const cells=`
- <div class="fcell title" style="grid-column:span 7">EXPRESS PETTY CASH REPORT</div>
+ <div class="fcell title" style="grid-column:span 7">EXPRESS FUEL PETTY CASH REPORT FORM</div>
  <div class="fcell left" style="grid-column:span 2">Report No.</div><div class="fcell">${field("rNo","EXPRESS-"+todayString().replaceAll("-",""))}</div><div class="fcell" style="grid-column:span 2"></div>
  <div class="fcell" style="grid-column:span 7"></div><div class="fcell left">DATE:</div><div class="fcell" style="grid-column:span 2">${field("rDate")}</div>
  <div class="fcell left" style="grid-column:span 2">Name</div><div class="fcell" style="grid-column:span 3">${field("rName")}</div><div class="fcell" style="grid-column:span 2">Department: ${field("rDept")}</div><div class="fcell left">Loc.</div><div class="fcell" style="grid-column:span 2">${field("rLoc")}</div>
@@ -809,7 +854,7 @@ function renderExpressForm(){
  <b>Cash On Hand This Period:</b> ${(cash+previous).toFixed(2)} &nbsp;&nbsp;
  <b>Total Petty Cash Amount:</b> ${(Number(document.getElementById("rFund")?.value||0) || (cash+previous)).toFixed(2)}
  </div>`;
- return pettyHeader("EXPRESS FUEL PETTY CASH FORM","express",cells);
+ return pettyHeader("EXPRESS FUEL PETTY CASH REPORT FORM","express",cells);
 }
 
 function renderBalanceForm(){
@@ -820,9 +865,9 @@ function renderBalanceForm(){
  const airport=Number(document.getElementById("rFund")?.value||0);
  const express=Number(localStorage.getItem("expressPettyCashFund")||0);
  const rows=[
- ["AIRPORT NORMAL PETTY CASH",normal,normal,0],
- ["Airport AIRPORT FUEL PETTY CASH REPORT FORM",airport,cash+previous,t.expense],
- ["Express AIRPORT FUEL PETTY CASH REPORT FORM",express,express,0]
+ ["AIRPORT NORMAL PETTY CASH REPORT FORM",normal,normal,0],
+ ["AIRPORT FUEL PETTY CASH REPORT FORM",airport,cash+previous,t.expense],
+ ["EXPRESS FUEL PETTY CASH REPORT FORM",express,express,0]
  ];
  const total=rows.reduce((a,r)=>a+r[1],0);
  return `<div class="balance-sheet">
@@ -843,36 +888,74 @@ function renderOfficial(){
 
 function renderExpressNormal(){
  const v=id=>document.getElementById(id)?.value||"";
- const no=v("enReportNo")||("SEMERA-EXP-"+new Date().toISOString().slice(0,10).replaceAll("-",""));
+ const no=v("enReportNo")||("SEMERA-EXP-NORMAL-"+new Date().toISOString().slice(0,10).replaceAll("-",""));
  const date=v("enDate")||new Date().toISOString().slice(0,10);
  const cash=Number(v("enCash")||0);
  const previous=Number(v("enPrevious")||0);
  const fund=Number(v("enFund")||0)||(cash+previous);
  const expense=0;
  const balance=cash+previous-expense;
- document.getElementById("enOutNo").textContent=no;
- document.getElementById("enOutDate").textContent=date;
- document.getElementById("enOutDept").textContent=v("enDept")||"SEMERA AIRPORT";
- document.getElementById("enOutLoc").textContent=v("enLoc")||"SEMERA AIRPORT";
- document.getElementById("enOutName").textContent=v("enName");
- document.getElementById("enOutFrom").textContent=v("enFrom");
- document.getElementById("enOutTo").textContent=v("enTo");
- document.getElementById("enOutCash").textContent=cash.toFixed(2);
- document.getElementById("enOutPrevious").textContent=previous.toFixed(2);
- document.getElementById("enOutExpense").textContent=expense.toFixed(2);
- document.getElementById("enOutBalance").textContent=balance.toFixed(2);
- document.getElementById("enOutFund").textContent=fund.toFixed(2);
+ const dept=v("enDept")||"SEMERA AIRPORT";
+ const loc=v("enLoc")||"SEMERA AIRPORT";
+ const name=v("enName");
+ const from=v("enFrom");
+ const to=v("enTo");
+
+ document.getElementById("officialReport").innerHTML=`
+ <div class="form-sheet">
+   <div class="form-grid airport">
+     <div class="fcell title" style="grid-column:span 9">EXPRESS NORMAL PETTY CASH REPORT FORM</div>
+     <div class="fcell left" style="grid-column:span 2">Report No.</div><div class="fcell">${esc(no)}</div>
+     <div class="fcell" style="grid-column:span 2">DATE</div><div class="fcell">${esc(date)}</div>
+     <div class="fcell left" style="grid-column:span 2">Name</div><div class="fcell" style="grid-column:span 2">${esc(name)}</div>
+     <div class="fcell left" style="grid-column:span 2">Department</div><div class="fcell" style="grid-column:span 2">${esc(dept)}</div>
+     <div class="fcell left" style="grid-column:span 2">Location</div><div class="fcell" style="grid-column:span 2">${esc(loc)}</div>
+     <div class="fcell left" style="grid-column:span 2">Period From</div><div class="fcell">${esc(from)}</div>
+     <div class="fcell left" style="grid-column:span 2">Period To</div><div class="fcell">${esc(to)}</div>
+
+     <div class="fcell head" style="grid-column:span 9">PETTY CASH EXPENDITURE</div>
+     <div class="fcell head">Date</div><div class="fcell head" style="grid-column:span 4">Description / Purpose</div>
+     <div class="fcell head">Amount</div><div class="fcell head">Receipt / Ref.</div><div class="fcell head">Code</div>
+     ${Array.from({length:8},(_,i)=>`
+       <div class="fcell row"></div>
+       <div class="fcell row" style="grid-column:span 4"></div>
+       <div class="fcell row"></div><div class="fcell row"></div><div class="fcell row"></div>
+     `).join("")}
+
+     <div class="fcell left big" style="grid-column:span 5">
+       Total Expense This Period: <b>${expense.toFixed(2)}</b><br>
+       Cash On Hand This Period: <b>${balance.toFixed(2)}</b><br>
+       Total Petty Cash Amount: <b>${fund.toFixed(2)}</b>
+     </div>
+     <div class="fcell big" style="grid-column:span 4">
+       Cash Received This Period: <b>${cash.toFixed(2)}</b><br>
+       Cash Due From Previous Period: <b>${previous.toFixed(2)}</b>
+     </div>
+
+     <div class="fcell big left" style="grid-column:span 5">
+       Approved By: __________________________<br><br>
+       Approval Date: _________________________
+     </div>
+     <div class="fcell big left" style="grid-column:span 4">
+       Prepared By: ___________________________<br><br>
+       Signature: ______________________________
+     </div>
+   </div>
+ </div>`;
 }
 
 function exportCSV(){
- const head=["Date","Vehicle","Driver","Station","Receipt","Liters","Price","Expense","Current KM","Distance"];
+ const head=["Date","Vehicle","Receipt","Fuel Amount (Birr)","Fuel Consumption (Liters)","KM Traveled","Days Before Refill"];
 
- const rows=fuelRows.map(x=>{
+ const rows=fuelRows.map((x,i)=>{
    const v=vehicles.find(z=>String(z.id)===String(x.vehicle_id));
-   return [
-     x.fuel_date,v?.plate||"",x.driver||"",x.station||"",
-     x.receipt||"",x.liters,x.price,x.expense,x.current_km,x.distance
-   ];
+   const previous=fuelRows
+     .filter(y=>String(y.vehicle_id)===String(x.vehicle_id)&&y.fuel_date<x.fuel_date)
+     .sort((a,b)=>new Date(b.fuel_date)-new Date(a.fuel_date))[0];
+   const days=previous?.fuel_date
+     ?Math.max(0,Math.round((new Date(x.fuel_date+"T00:00:00")-new Date(previous.fuel_date+"T00:00:00"))/86400000))
+     :"";
+   return [x.fuel_date,v?.plate||"",x.receipt||"",x.expense,x.liters,x.distance,days];
  });
 
  const csv=[head,...rows]
