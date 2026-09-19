@@ -274,9 +274,11 @@ th,td{padding:9px;border-bottom:1px solid #e6e9ee;text-align:left}
 <div><label>Budget Code / Dept. &amp; Loc.</label><input id="rBudgetCode" class="report-input" value="SEMERA AIRPORT"></div>
 <div><label>Cash Received This Period</label><input id="rCash" type="number" step="0.01" class="report-input" value="0"></div>
 <div><label>Cash Due From Previous Period</label><input id="rPrevious" type="number" step="0.01" class="report-input" value="0"></div>
+<div><label>Total Expense This Period</label><input id="rExpenseDisplay" type="number" step="0.01" class="report-input" value="0" readonly></div>
+<div><label>Cash On Hand This Period</label><input id="rCashOnHand" type="number" step="0.01" class="report-input" value="0" readonly></div>
+<div><label>Total Petty Cash Amount</label><input id="rFund" type="number" step="0.01" class="report-input" value="0"></div>
 <div><label>Approved By</label><input id="rApproved" class="report-input"></div>
 <div><label>Approval Date</label><input id="rApprovedDate" type="date" class="report-input"></div>
-<div><label>Total Petty Cash Amount</label><input id="rFund" type="number" step="0.01" class="report-input" value="0"></div>
 </div>
 
 <div class="petty-actions no-print">
@@ -662,6 +664,14 @@ function showPettyForm(type){
 }
 
 function updateOfficialReport(){
+ const tt=totals();
+ const cash=Number(document.getElementById("rCash")?.value||0);
+ const previous=Number(document.getElementById("rPrevious")?.value||0);
+ const expenseEl=document.getElementById("rExpenseDisplay");
+ const handEl=document.getElementById("rCashOnHand");
+ if(expenseEl) expenseEl.value=tt.expense.toFixed(2);
+ if(handEl) handEl.value=(cash+previous-tt.expense).toFixed(2);
+
  setOfficialDefaults();
  renderOfficial();
 }
@@ -725,7 +735,6 @@ function renderAirportForm(){
  <div class="fcell total">ETB ${t.expense.toFixed(2)}</div><div class="fcell total">${t.liters.toFixed(2)}</div>
  <div class="fcell total">-</div><div class="fcell total">${t.expense.toFixed(2)}</div>
  <div class="fcell total" style="grid-column:span 3">${field("rBudgetCode","SEMERA AIRPORT")}</div>
- <div class="fcell big left" style="grid-column:span 5">Approved: ${field("rApproved")}<br><br>Date: ${field("rApprovedDate")}<br><br>Approved: __________________</div>
  <div class="fcell big left" style="grid-column:span 7">
  Cash Received This Period: ${Number(document.getElementById("rCash")?.value||0).toFixed(2)}<br>
  Cash Due From Previous Period: ${Number(document.getElementById("rPrevious")?.value||0).toFixed(2)}<br>
@@ -733,6 +742,7 @@ function renderAirportForm(){
  Cash On Hand This Period: ${(Number(document.getElementById("rCash")?.value||0)+Number(document.getElementById("rPrevious")?.value||0)-t.expense).toFixed(2)}<br>
  <b>Total Petty Cash Amount: ${Number(document.getElementById("rFund")?.value||0).toFixed(2)}</b>
  </div>
+ <div class="fcell big left" style="grid-column:span 5">Approved: ${field("rApproved")}<br><br>Date: ${field("rApprovedDate")}<br><br>Approved: __________________</div>
  <div class="fcell big left" style="grid-column:span 12">
  <b>Cash Received This Period:</b> ${Number(document.getElementById("rCash")?.value||0).toFixed(2)} &nbsp;&nbsp;
  <b>Cash Due From Previous Period:</b> ${Number(document.getElementById("rPrevious")?.value||0).toFixed(2)} &nbsp;&nbsp;
@@ -763,8 +773,8 @@ function renderNormalForm(){
  <div class="fcell total" style="grid-column:span 7;text-align:right">Total</div>
  <div class="fcell total">ETB</div><div class="fcell total">1 Pc</div><div class="fcell total">-</div><div class="fcell total">0.00</div><div class="fcell total" style="grid-column:span 3">${field("rBudgetCode","SEMERA AIRPORT")}</div>
  <div class="fcell" style="grid-column:span 12">Total &nbsp; 0.00 &nbsp;&nbsp; VAT (15%) &nbsp; 0.00 &nbsp;&nbsp; Total (Including VAT) &nbsp; 0.00</div>
- <div class="fcell big left" style="grid-column:span 5">Approved: ${field("rApproved")}<br><br>Date: ${field("rApprovedDate")}<br><br>Approved: __________________</div>
  <div class="fcell big left" style="grid-column:span 7">Cash Received This Period: ${Number(document.getElementById("rCash")?.value||0).toFixed(2)}<br>Cash Due From Previous Period: ${Number(document.getElementById("rPrevious")?.value||0).toFixed(2)}<br>Total Expense This Period: 0.00<br>Cash On Hand This Period: 0.00<br><b>Total Petty Cash Amount: ${Number(document.getElementById("rFund")?.value||0).toFixed(2)}</b></div>
+ <div class="fcell big left" style="grid-column:span 5">Approved: ${field("rApproved")}<br><br>Date: ${field("rApprovedDate")}<br><br>Approved: __________________</div>
  <div class="fcell big left" style="grid-column:span 12">
  <b>Cash Received This Period:</b> ${Number(document.getElementById("rCash")?.value||0).toFixed(2)} &nbsp;&nbsp;
  <b>Cash Due From Previous Period:</b> ${Number(document.getElementById("rPrevious")?.value||0).toFixed(2)} &nbsp;&nbsp;
@@ -789,9 +799,9 @@ function renderExpressForm(){
  <div class="fcell row"></div><div class="fcell row" style="grid-column:span 4"></div><div class="fcell row">ETB</div><div class="fcell row"></div><div class="fcell row" style="grid-column:span 2">${field("rBudgetCode","SEMERA AIRPORT")}</div>
  <div class="fcell total" style="grid-column:span 6;text-align:right">Total</div><div class="fcell total">ETB</div><div class="fcell total">0.00</div><div class="fcell total" style="grid-column:span 2"></div>
  <div class="fcell" style="grid-column:span 10">Foreign Currency</div>
+ <div class="fcell big left" style="grid-column:span 6">Cash Received This Period: ${cash.toFixed(2)}<br>Cash Due From Previous Period: ${previous.toFixed(2)}<br>Total Expense This Period: 0.00<br>Cash On Hand This Period: ${(cash+previous).toFixed(2)}<br><b>Total Petty Cash Amount: ${Number(document.getElementById("rFund")?.value||0).toFixed(2)}</b></div>
  <div class="fcell" style="grid-column:span 7">Approved: ${field("rApproved")}</div><div class="fcell" style="grid-column:span 3">Date: ${field("rApprovedDate")}</div>
  <div class="fcell big left" style="grid-column:span 4">Approved: __________________<br><br>Date: __________________</div>
- <div class="fcell big left" style="grid-column:span 6">Cash Received This Period: ${cash.toFixed(2)}<br>Cash Due From Previous Period: ${previous.toFixed(2)}<br>Total Expense This Period: 0.00<br>Cash On Hand This Period: ${(cash+previous).toFixed(2)}<br><b>Total Petty Cash Amount: ${Number(document.getElementById("rFund")?.value||0).toFixed(2)}</b></div>
  <div class="fcell big left" style="grid-column:span 10">
  <b>Cash Received This Period:</b> ${cash.toFixed(2)} &nbsp;&nbsp;
  <b>Cash Due From Previous Period:</b> ${previous.toFixed(2)} &nbsp;&nbsp;
