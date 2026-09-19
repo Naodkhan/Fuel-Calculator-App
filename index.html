@@ -255,9 +255,9 @@ th,td{padding:9px;border-bottom:1px solid #e6e9ee;text-align:left}
 <h2 class="no-print">Petty Cash Forms</h2>
 
 <div class="petty-tabs no-print">
-<button id="tabAirport" onclick="showPettyForm('airport')">Fuel Petty Cash</button>
-<button id="tabNormal" onclick="showPettyForm('normal')">Normal Petty Cash</button>
-<button id="tabExpress" onclick="showPettyForm('express')">Express Petty Cash</button>
+<button id="tabAirport" onclick="showPettyForm('airport')">AIRPORT FUEL PETTY CASH REPORT FORM</button>
+<button id="tabNormal" onclick="showPettyForm('normal')">AIRPORT NORMAL PETTY CASH</button>
+<button id="tabExpress" onclick="showPettyForm('express')">EXPRESS FUEL PETTY CASH FORM</button>
 <button id="tabBalance" onclick="showPettyForm('balance')">Petty Cash Balance</button>
 </div>
 
@@ -740,7 +740,7 @@ function renderAirportForm(){
  <b>Cash On Hand This Period:</b> ${(Number(document.getElementById("rCash")?.value||0)+Number(document.getElementById("rPrevious")?.value||0)-t.expense).toFixed(2)} &nbsp;&nbsp;
  <b>Total Petty Cash Amount:</b> ${(Number(document.getElementById("rFund")?.value||0) || (Number(document.getElementById("rCash")?.value||0)+Number(document.getElementById("rPrevious")?.value||0))).toFixed(2)}
  </div>`;
- return pettyHeader("Fuel Petty Cash","airport",cells);
+ return pettyHeader("AIRPORT FUEL PETTY CASH REPORT FORM","airport",cells);
 }
 
 function renderNormalForm(){
@@ -772,7 +772,7 @@ function renderNormalForm(){
  <b>Cash On Hand This Period:</b> ${(Number(document.getElementById("rCash")?.value||0)+Number(document.getElementById("rPrevious")?.value||0)-t.expense).toFixed(2)} &nbsp;&nbsp;
  <b>Total Petty Cash Amount:</b> ${(Number(document.getElementById("rFund")?.value||0) || (Number(document.getElementById("rCash")?.value||0)+Number(document.getElementById("rPrevious")?.value||0))).toFixed(2)}
  </div>`;
- return pettyHeader("Normal Petty Cash","normal",cells);
+ return pettyHeader("AIRPORT NORMAL PETTY CASH","normal",cells);
 }
 
 function renderExpressForm(){
@@ -799,7 +799,7 @@ function renderExpressForm(){
  <b>Cash On Hand This Period:</b> ${(cash+previous).toFixed(2)} &nbsp;&nbsp;
  <b>Total Petty Cash Amount:</b> ${(Number(document.getElementById("rFund")?.value||0) || (cash+previous)).toFixed(2)}
  </div>`;
- return pettyHeader("Express Petty Cash","express",cells);
+ return pettyHeader("EXPRESS FUEL PETTY CASH FORM","express",cells);
 }
 
 function renderBalanceForm(){
@@ -810,9 +810,9 @@ function renderBalanceForm(){
  const airport=Number(document.getElementById("rFund")?.value||0);
  const express=Number(localStorage.getItem("expressPettyCashFund")||0);
  const rows=[
- ["Normal Petty Cash",normal,normal,0],
- ["Airport Fuel Petty Cash",airport,cash+previous,t.expense],
- ["Express Fuel Petty Cash",express,express,0]
+ ["AIRPORT NORMAL PETTY CASH",normal,normal,0],
+ ["Airport AIRPORT FUEL PETTY CASH REPORT FORM",airport,cash+previous,t.expense],
+ ["Express AIRPORT FUEL PETTY CASH REPORT FORM",express,express,0]
  ];
  const total=rows.reduce((a,r)=>a+r[1],0);
  return `<div class="balance-sheet">
@@ -828,6 +828,30 @@ function renderOfficial(){
  else if(pettyFormType==="normal")document.getElementById("officialReport").innerHTML=renderNormalForm();
  else if(pettyFormType==="express")document.getElementById("officialReport").innerHTML=renderExpressForm();
  else document.getElementById("officialReport").innerHTML=renderBalanceForm();
+}
+
+
+function renderExpressNormal(){
+ const v=id=>document.getElementById(id)?.value||"";
+ const no=v("enReportNo")||("SEMERA-EXP-"+new Date().toISOString().slice(0,10).replaceAll("-",""));
+ const date=v("enDate")||new Date().toISOString().slice(0,10);
+ const cash=Number(v("enCash")||0);
+ const previous=Number(v("enPrevious")||0);
+ const fund=Number(v("enFund")||0)||(cash+previous);
+ const expense=0;
+ const balance=cash+previous-expense;
+ document.getElementById("enOutNo").textContent=no;
+ document.getElementById("enOutDate").textContent=date;
+ document.getElementById("enOutDept").textContent=v("enDept")||"SEMERA AIRPORT";
+ document.getElementById("enOutLoc").textContent=v("enLoc")||"SEMERA AIRPORT";
+ document.getElementById("enOutName").textContent=v("enName");
+ document.getElementById("enOutFrom").textContent=v("enFrom");
+ document.getElementById("enOutTo").textContent=v("enTo");
+ document.getElementById("enOutCash").textContent=cash.toFixed(2);
+ document.getElementById("enOutPrevious").textContent=previous.toFixed(2);
+ document.getElementById("enOutExpense").textContent=expense.toFixed(2);
+ document.getElementById("enOutBalance").textContent=balance.toFixed(2);
+ document.getElementById("enOutFund").textContent=fund.toFixed(2);
 }
 
 function exportCSV(){
