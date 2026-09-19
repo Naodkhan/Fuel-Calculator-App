@@ -123,6 +123,11 @@ th,td{padding:9px;border-bottom:1px solid #e6e9ee;text-align:left}
 
 .report-input{background:#fff;color:#172033;cursor:text;}
 .report-input:read-only{background:#fff;color:#172033;}
+
+.petty-summary-table{width:100%;border-collapse:collapse;margin-top:8px;font-size:14px}
+.petty-summary-table th,.petty-summary-table td{border:1px solid #222;padding:9px;text-align:left}
+.petty-summary-table th{font-weight:bold;background:#f3f6fa}
+.petty-summary-table td.amount{text-align:right;font-weight:bold;white-space:nowrap}
 </style>
 </head>
 
@@ -893,12 +898,16 @@ function renderAirportForm(){
  <b>Total Petty Cash Amount: ${Number(document.getElementById("rFund")?.value||0).toFixed(2)}</b>
  </div>
  <div class="fcell big left" style="grid-column:span 5">Approved: ${field("rApproved")}<br><br>Date: ${field("rApprovedDate")}<br><br>Approved: __________________</div>
- <div class="fcell big left" style="grid-column:span 12">
- <b>Cash Received This Period:</b> ${Number(document.getElementById("rCash")?.value||0).toFixed(2)} &nbsp;&nbsp;
- <b>Cash Due From Previous Period:</b> ${Number(document.getElementById("rPrevious")?.value||0).toFixed(2)} &nbsp;&nbsp;
- <b>Total Expense This Period:</b> ${enteredExpense.toFixed(2)} &nbsp;&nbsp;
- <b>Cash On Hand This Period:</b> ${enteredCashOnHand.toFixed(2)} &nbsp;&nbsp;
- <b>Total Petty Cash Amount:</b> ${(Number(document.getElementById("rFund")?.value||0) || (Number(document.getElementById("rCash")?.value||0)+Number(document.getElementById("rPrevious")?.value||0))).toFixed(2)}
+ <div class="fcell big" style="grid-column:span 12">
+ <table class="petty-summary-table">
+  <tbody>
+   <tr><th>Cash Received This Period</th><td class="amount">${Number(document.getElementById("rCash")?.value||0).toFixed(2)} ETB</td></tr>
+   <tr><th>Cash Due From Previous Period</th><td class="amount">${Number(document.getElementById("rPrevious")?.value||0).toFixed(2)} ETB</td></tr>
+   <tr><th>Total Expense This Period</th><td class="amount">${enteredExpense.toFixed(2)} ETB</td></tr>
+   <tr><th>Cash On Hand This Period</th><td class="amount">${enteredCashOnHand.toFixed(2)} ETB</td></tr>
+   <tr><th>Total Petty Cash Amount</th><td class="amount">${(Number(document.getElementById("rFund")?.value||0) || (Number(document.getElementById("rCash")?.value||0)+Number(document.getElementById("rPrevious")?.value||0))).toFixed(2)} ETB</td></tr>
+  </tbody>
+ </table>
  </div>`;
  return pettyHeader("AIRPORT FUEL PETTY CASH REPORT FORM","airport",cells);
 }
@@ -928,12 +937,16 @@ function renderNormalForm(){
  <div class="fcell" style="grid-column:span 12">Total &nbsp; 0.00 &nbsp;&nbsp; VAT (15%) &nbsp; 0.00 &nbsp;&nbsp; Total (Including VAT) &nbsp; 0.00</div>
  <div class="fcell big left" style="grid-column:span 7">Cash Received This Period: ${Number(document.getElementById("rCash")?.value||0).toFixed(2)}<br>Cash Due From Previous Period: ${Number(document.getElementById("rPrevious")?.value||0).toFixed(2)}<br>Total Expense This Period: ${enteredExpense.toFixed(2)}<br>Cash On Hand This Period: ${enteredCashOnHand.toFixed(2)}<br><b>Total Petty Cash Amount: ${Number(document.getElementById("rFund")?.value||0).toFixed(2)}</b></div>
  <div class="fcell big left" style="grid-column:span 5">Approved: ${field("rApproved")}<br><br>Date: ${field("rApprovedDate")}<br><br>Approved: __________________</div>
- <div class="fcell big left" style="grid-column:span 12">
- <b>Cash Received This Period:</b> ${Number(document.getElementById("rCash")?.value||0).toFixed(2)} &nbsp;&nbsp;
- <b>Cash Due From Previous Period:</b> ${Number(document.getElementById("rPrevious")?.value||0).toFixed(2)} &nbsp;&nbsp;
- <b>Total Expense This Period:</b> ${enteredExpense.toFixed(2)} &nbsp;&nbsp;
- <b>Cash On Hand This Period:</b> ${enteredCashOnHand.toFixed(2)} &nbsp;&nbsp;
- <b>Total Petty Cash Amount:</b> ${(Number(document.getElementById("rFund")?.value||0) || (Number(document.getElementById("rCash")?.value||0)+Number(document.getElementById("rPrevious")?.value||0))).toFixed(2)}
+ <div class="fcell big" style="grid-column:span 12">
+ <table class="petty-summary-table">
+  <tbody>
+   <tr><th>Cash Received This Period</th><td class="amount">${Number(document.getElementById("rCash")?.value||0).toFixed(2)} ETB</td></tr>
+   <tr><th>Cash Due From Previous Period</th><td class="amount">${Number(document.getElementById("rPrevious")?.value||0).toFixed(2)} ETB</td></tr>
+   <tr><th>Total Expense This Period</th><td class="amount">${enteredExpense.toFixed(2)} ETB</td></tr>
+   <tr><th>Cash On Hand This Period</th><td class="amount">${enteredCashOnHand.toFixed(2)} ETB</td></tr>
+   <tr><th>Total Petty Cash Amount</th><td class="amount">${(Number(document.getElementById("rFund")?.value||0) || (Number(document.getElementById("rCash")?.value||0)+Number(document.getElementById("rPrevious")?.value||0))).toFixed(2)} ETB</td></tr>
+  </tbody>
+ </table>
  </div>`;
  return pettyHeader("AIRPORT NORMAL PETTY CASH REPORT FORM","normal",cells);
 }
@@ -1036,14 +1049,16 @@ function renderExpressNormal(){
        <div class="fcell row"></div><div class="fcell row"></div><div class="fcell row"></div>
      `).join("")}
 
-     <div class="fcell left big" style="grid-column:span 5">
-       Total Expense This Period: <b>${expense.toFixed(2)}</b><br>
-       Cash On Hand This Period: <b>${balance.toFixed(2)}</b><br>
-       Total Petty Cash Amount: <b>${fund.toFixed(2)}</b>
-     </div>
-     <div class="fcell big" style="grid-column:span 4">
-       Cash Received This Period: <b>${cash.toFixed(2)}</b><br>
-       Cash Due From Previous Period: <b>${previous.toFixed(2)}</b>
+     <div class="fcell big" style="grid-column:span 9">
+       <table class="petty-summary-table">
+        <tbody>
+         <tr><th>Cash Received This Period</th><td class="amount">${cash.toFixed(2)} ETB</td></tr>
+         <tr><th>Cash Due From Previous Period</th><td class="amount">${previous.toFixed(2)} ETB</td></tr>
+         <tr><th>Total Expense This Period</th><td class="amount">${expense.toFixed(2)} ETB</td></tr>
+         <tr><th>Cash On Hand This Period</th><td class="amount">${balance.toFixed(2)} ETB</td></tr>
+         <tr><th>Total Petty Cash Amount</th><td class="amount">${fund.toFixed(2)} ETB</td></tr>
+        </tbody>
+       </table>
      </div>
 
      <div class="fcell big left" style="grid-column:span 5">
