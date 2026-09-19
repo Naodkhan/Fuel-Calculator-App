@@ -31,25 +31,37 @@ th,td{padding:9px;border-bottom:1px solid #e6e9ee;text-align:left}
 .login{max-width:430px;margin:60px auto}
 .small{font-size:12px;color:#667085}.right{text-align:right}
 
-/* Official petty cash report */
+/* Exact Airport petty-cash form */
 .report-form{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px}
 .report-form .wide{grid-column:span 2}
-.petty-report{background:#fff;color:#000;border:2px solid #111;margin-top:15px;overflow:auto}
-.petty-title{text-align:center;font-size:24px;font-weight:900;border-bottom:2px solid #111;padding:12px}
-.petty-meta{display:grid;grid-template-columns:1.3fr 1.3fr 1fr 1fr}
-.petty-meta>div{border-right:2px solid #111;border-bottom:2px solid #111;padding:9px;min-height:43px}
-.petty-meta>div:last-child{border-right:0}
-.petty-meta .label{font-weight:bold}
-.petty-table{width:100%;border-collapse:collapse;min-width:900px}
-.petty-table th,.petty-table td{border:2px solid #111;padding:8px;text-align:center;color:#000}
-.petty-table th{font-weight:900}
-.petty-summary{display:grid;grid-template-columns:1fr 1.5fr}
-.petty-summary>div{border:2px solid #111;border-top:0;padding:12px;min-height:160px}
-.petty-sign{display:grid;grid-template-columns:1fr 1fr}
-.petty-sign>div{border:2px solid #111;border-top:0;padding:10px;min-height:85px}
 .report-input{border:1px solid #aaa;border-radius:5px;padding:6px;width:100%;font-size:13px}
+.airport-form{background:#fff;color:#000;border:2px solid #000;margin-top:15px;overflow:auto}
+.airport-grid{min-width:1050px;display:grid;grid-template-columns:1.1fr 1.55fr 1.55fr 1.55fr 1.55fr 1.05fr 0.75fr 0.95fr 1.05fr 1.45fr 0.8fr 0.8fr;}
+.af{border-right:2px solid #000;border-bottom:2px solid #000;padding:6px;min-height:38px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:12px}
+.af.left{text-align:left;justify-content:flex-start;font-weight:700}
+.af.title{font-size:24px;font-weight:900;min-height:60px}
+.af.head{font-weight:900;min-height:52px}
+.af.smallhead{font-size:11px;font-weight:900;min-height:24px}
+.af.row{min-height:30px}
+.af.total{font-weight:900;min-height:32px}
+.af.bottom{min-height:28px;text-align:left;justify-content:flex-start}
+.af.blank{min-height:26px}
+.af.no-right{border-right:0}
+.af.no-bottom{border-bottom:0}
+.af.input{display:block;text-align:left;justify-content:flex-start}
+.af.signature{font-family:monospace;color:#333}
+.airport-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
 .no-print{display:block}
-
+@media print{
+ body{background:#fff}
+ header,nav,#loginPage,.no-print,.report-form{display:none!important}
+ #app{display:block!important}
+ .wrap{max-width:none;padding:0}
+ .card{box-shadow:none;padding:0}
+ #official{display:block!important}
+ .airport-form{border:2px solid #000;margin:0}
+ @page{size:A4 landscape;margin:6mm}
+}
 @media(max-width:700px){
  .wrap{padding:10px}
  header{padding:12px}
@@ -202,31 +214,29 @@ th,td{padding:9px;border-bottom:1px solid #e6e9ee;text-align:left}
 
 <section id="official" class="page">
 <div class="card">
-<h2 class="no-print">Fuel Petty Cash Report</h2>
+<h2 class="no-print">Fuel Petty Cash Report — Airport Form</h2>
 
 <div class="report-form no-print">
 <div><label>Report No.</label><input id="rNo" class="report-input"></div>
 <div><label>Date</label><input id="rDate" type="date" class="report-input"></div>
 <div><label>Name</label><input id="rName" class="report-input"></div>
 <div><label>Bank Account</label><input id="rBank" class="report-input"></div>
-
 <div><label>Department</label><input id="rDept" class="report-input" value="Fuel Management"></div>
 <div><label>Location</label><input id="rLoc" class="report-input" value="SEMERA AIRPORT"></div>
 <div><label>From</label><input id="rFrom" type="date" class="report-input"></div>
 <div><label>To</label><input id="rTo" type="date" class="report-input"></div>
-
 <div><label>Signature</label><input id="rSignature" class="report-input"></div>
 <div><label>Check No.</label><input id="rCheck" class="report-input"></div>
-<div><label>Cash Received This Period</label><input id="rCash" type="number" step="0.01" class="report-input" value="0"></div>
-<div><label>Cash Due From Previous Period</label><input id="rPrevious" type="number" step="0.01" class="report-input" value="0"></div>
-
-<div><label>Approved By</label><input id="rApproved" class="report-input"></div>
+<div><label>Accountant</label><input id="rAccountant" class="report-input"></div>
+<div><label>Budget Code / Dept. &amp; Loc.</label><input id="rBudgetCode" class="report-input" value="SEMERA AIRPORT"></div>
+<div><label>Cash Received this period</label><input id="rCash" type="number" step="0.01" class="report-input" value="0"></div>
+<div><label>Cash due from previous period</label><input id="rPrevious" type="number" step="0.01" class="report-input" value="0"></div>
+<div><label>Approved</label><input id="rApproved" class="report-input"></div>
 <div><label>Approval Date</label><input id="rApprovedDate" type="date" class="report-input"></div>
-<div><label>Budget Code / Dept. & Loc.</label><input id="rBudgetCode" class="report-input" value="SEMERA AIRPORT"></div>
 <div><label>Cash Fund</label><input id="rFund" type="number" step="0.01" class="report-input" value="0"></div>
 </div>
 
-<div class="no-print" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:15px">
+<div class="airport-actions no-print">
 <button onclick="updateOfficialReport()">Update Report</button>
 <button class="success" onclick="window.print()">Print / Save PDF</button>
 </div>
@@ -588,11 +598,9 @@ function setOfficialDefaults(){
  const rFrom=document.getElementById("rFrom");
  const rTo=document.getElementById("rTo");
  const rApprovedDate=document.getElementById("rApprovedDate");
-
  if(!rDate.value)rDate.value=todayString();
  if(!rName.value)rName.value=currentUser?.email?.split("@")[0]||"";
  if(!rApprovedDate.value)rApprovedDate.value=todayString();
-
  if(currentPeriod){
    if(!rFrom.value)rFrom.value=currentPeriod.start_date;
    if(!rTo.value)rTo.value=currentPeriod.end_date;
@@ -601,132 +609,111 @@ function setOfficialDefaults(){
 
 function updateOfficialReport(){
  renderOfficial();
- alert("Official report updated successfully.");
 }
 
 function renderOfficial(){
  setOfficialDefaults();
-
  const t=totals();
-
- const reportNo=document.getElementById("rNo").value.trim()||
-   "SEMERA-"+todayString().replaceAll("-","");
-
+ const reportNo=document.getElementById("rNo").value.trim()||("SEMERA-"+todayString().replaceAll("-",""));
  const date=document.getElementById("rDate").value||todayString();
  const name=document.getElementById("rName").value||"";
  const bank=document.getElementById("rBank").value||"";
  const dept=document.getElementById("rDept").value||"Fuel Management";
  const loc=document.getElementById("rLoc").value||"SEMERA AIRPORT";
- const from=document.getElementById("rFrom").value||
-   (currentPeriod?.start_date||"");
- const to=document.getElementById("rTo").value||
-   (currentPeriod?.end_date||"");
- const signature=document.getElementById("rSignature").value||"";
+ const from=document.getElementById("rFrom").value||(currentPeriod?.start_date||"");
+ const to=document.getElementById("rTo").value||(currentPeriod?.end_date||"");
+ const signature=document.getElementById("rSignature").value||"-----------------------";
  const check=document.getElementById("rCheck").value||"";
- const cash=Number(document.getElementById("rCash").value||0);
- const previous=Number(document.getElementById("rPrevious").value||0);
+ const accountant=document.getElementById("rAccountant").value||"";
  const approved=document.getElementById("rApproved").value||"";
  const approvedDate=document.getElementById("rApprovedDate").value||"";
  const budgetCode=document.getElementById("rBudgetCode").value||"SEMERA AIRPORT";
+ const cash=Number(document.getElementById("rCash").value||0);
+ const previous=Number(document.getElementById("rPrevious").value||0);
  const fund=Number(document.getElementById("rFund").value||0);
-
  const balance=cash+previous-t.expense;
  const totalFund=fund||cash+previous;
 
- const rows=periodRows().map(x=>{
+ const rows=periodRows().slice(0,4).map(x=>{
    const v=vehicles.find(z=>String(z.id)===String(x.vehicle_id));
-   return {
-     date:x.fuel_date||"",
-     description:`Fuel - ${v?.plate||""} ${x.station?"/ "+x.station:""}`,
-     amount:Number(x.expense||0),
-     liter:Number(x.liters||0),
-     unit:Number(x.price||0),
-     total:Number(x.expense||0),
-     code:budgetCode
-   };
+   return {date:x.fuel_date||"",description:`Fuel - ${v?.plate||""}${x.station?" / "+x.station:""}`,amount:Number(x.expense||0),liter:Number(x.liters||0),unit:Number(x.price||0),total:Number(x.expense||0),code:budgetCode};
  });
-
- while(rows.length<5){
-   rows.push({date:"",description:"",amount:"",liter:"",unit:"",total:"",code:""});
- }
-
- let body=rows.slice(0,5).map(r=>`
- <tr>
-   <td>${esc(r.date)}</td>
-   <td style="text-align:left">${esc(r.description)}</td>
-   <td>${r.amount===""?"":Number(r.amount).toFixed(2)}</td>
-   <td>${r.liter===""?"":Number(r.liter).toFixed(2)}</td>
-   <td>${r.unit===""?"":Number(r.unit).toFixed(2)}</td>
-   <td>${r.total===""?"":Number(r.total).toFixed(2)}</td>
-   <td>${esc(r.code)}</td>
- </tr>`).join("");
+ while(rows.length<4)rows.push({date:"",description:"",amount:"",liter:"",unit:"",total:"",code:""});
+ const body=rows.map(r=>`
+ <div class="af row">${esc(r.date)}</div>
+ <div class="af row" style="grid-column:span 4;text-align:left;justify-content:flex-start">${esc(r.description)}</div>
+ <div class="af row">${r.amount===""?"":Number(r.amount).toFixed(2)}</div>
+ <div class="af row">${r.liter===""?"":Number(r.liter).toFixed(2)}</div>
+ <div class="af row">${r.unit===""?"":Number(r.unit).toFixed(2)}</div>
+ <div class="af row">${r.total===""?"":Number(r.total).toFixed(2)}</div>
+ <div class="af row" style="grid-column:span 3">${esc(r.code)}</div>`).join("");
 
  document.getElementById("officialReport").innerHTML=`
- <div class="petty-report">
+ <div class="airport-form">
+   <div class="airport-grid">
+     <div class="af title" style="grid-column:span 9">FUEL PETTY CASH REPORT</div>
+     <div class="af left" style="grid-column:span 2">Report No.</div>
+     <div class="af" style="grid-column:span 1">${esc(reportNo)}</div>
 
-   <div class="petty-title">FUEL PETTY CASH REPORT</div>
+     <div class="af" style="grid-column:span 9"></div>
+     <div class="af left" style="grid-column:span 2">DATE:</div>
+     <div class="af" style="grid-column:span 1">${esc(date)}</div>
 
-   <div class="petty-meta">
-     <div><span class="label">Report No.</span><br>${esc(reportNo)}</div>
-     <div><span class="label">DATE</span><br>${esc(date)}</div>
-     <div><span class="label">Department:</span><br>${esc(dept)}</div>
-     <div><span class="label">Loc.</span><br>${esc(loc)}</div>
+     <div class="af left" style="grid-column:span 2">Name</div>
+     <div class="af" style="grid-column:span 3">${esc(name)}</div>
+     <div class="af" style="grid-column:span 4">Department: ${esc(dept)}</div>
+     <div class="af left" style="grid-column:span 2">Loc.</div>
+     <div class="af" style="grid-column:span 1">${esc(loc)}</div>
 
-     <div><span class="label">Name</span><br>${esc(name)}</div>
-     <div><span class="label">Bank Account</span><br>${esc(bank)}</div>
-     <div><span class="label">Signature</span><br>${esc(signature)}</div>
-     <div><span class="label">From</span><br>${esc(from)} &nbsp; <b>To:</b> ${esc(to)}</div>
+     <div class="af left" style="grid-column:span 2">Bank Account</div>
+     <div class="af" style="grid-column:span 3">${esc(bank)}</div>
+     <div class="af" style="grid-column:span 4"></div>
+     <div class="af left" style="grid-column:span 2"></div>
+     <div class="af" style="grid-column:span 1"></div>
+
+     <div class="af left" style="grid-column:span 2">Signature</div>
+     <div class="af signature" style="grid-column:span 3">${esc(signature)}</div>
+     <div class="af" style="grid-column:span 4;font-weight:700">From &nbsp; ${esc(from)}</div>
+     <div class="af left" style="grid-column:span 1">To</div>
+     <div class="af" style="grid-column:span 2">${esc(to)}</div>
+
+     <div class="af head">DATE</div>
+     <div class="af head" style="grid-column:span 4">Description</div>
+     <div class="af head">Amount in<br>Local Currencies</div>
+     <div class="af head">Liter</div>
+     <div class="af head">Unit<br>Price/Lt</div>
+     <div class="af head" style="grid-column:span 1">Total Price</div>
+     <div class="af head" style="grid-column:span 3">Budget Code/Dept. &amp; Loc.</div>
+
+     ${body}
+
+     <div class="af total" style="grid-column:span 5;text-align:right;justify-content:flex-end">Total</div>
+     <div class="af total">ETB ${t.expense.toFixed(2)}</div>
+     <div class="af total">${t.liters.toFixed(2)}</div>
+     <div class="af total">-</div>
+     <div class="af total">${t.expense.toFixed(2)}</div>
+     <div class="af total" style="grid-column:span 3">${esc(budgetCode)}</div>
+
+     <div class="af blank" style="grid-column:span 12"></div>
+     <div class="af blank" style="grid-column:span 12"></div>
+     <div class="af blank" style="grid-column:span 12"></div>
+     <div class="af blank" style="grid-column:span 12"></div>
+     <div class="af blank" style="grid-column:span 12"></div>
+
+     <div class="af left" style="grid-column:span 5;min-height:30px">Approved: ${esc(approved)}</div>
+     <div class="af left" style="grid-column:span 7;min-height:30px">Cash Received this period: ${cash.toFixed(2)}</div>
+     <div class="af left" style="grid-column:span 5;min-height:30px">Date: ${esc(approvedDate)}</div>
+     <div class="af left" style="grid-column:span 7;min-height:30px">Cash due from previous period: ${previous.toFixed(2)}</div>
+     <div class="af left" style="grid-column:span 5;min-height:30px">Approved: __________________________</div>
+     <div class="af left" style="grid-column:span 7;min-height:30px">Total expense this report: ${t.expense.toFixed(2)}</div>
+     <div class="af left" style="grid-column:span 5;min-height:30px">Date: ______________________________</div>
+     <div class="af left" style="grid-column:span 7;min-height:30px">Balance on hand this report: ${balance.toFixed(2)}</div>
+     <div class="af" style="grid-column:span 5;min-height:48px"></div>
+     <div class="af" style="grid-column:span 7;min-height:48px;font-size:18px;font-weight:900">Total Amount Petty Cash Fund: ${totalFund.toFixed(2)}</div>
+
+     <div class="af left" style="grid-column:span 6;min-height:45px">Check No.: ${esc(check)}</div>
+     <div class="af left" style="grid-column:span 6;min-height:45px">Accountant: ${esc(accountant)} __________________________</div>
    </div>
-
-   <table class="petty-table">
-     <thead>
-       <tr>
-         <th>DATE</th>
-         <th>Description</th>
-         <th>Amount in<br>Local Currency</th>
-         <th>Liter</th>
-         <th>Unit Price /<br>Lt</th>
-         <th>Total Price</th>
-         <th>Budget Code/Dept. &amp; Loc.</th>
-       </tr>
-     </thead>
-     <tbody>
-       ${body}
-       <tr>
-         <th colspan="2" style="text-align:right">Total</th>
-         <th>${t.expense.toFixed(2)}</th>
-         <th>${t.liters.toFixed(2)}</th>
-         <th>-</th>
-         <th>${t.expense.toFixed(2)}</th>
-         <th>${esc(budgetCode)}</th>
-       </tr>
-     </tbody>
-   </table>
-
-   <div class="petty-summary">
-     <div>
-       <b>Approved:</b> ${esc(approved)}<br><br>
-       <b>Date:</b> ${esc(approvedDate)}<br><br>
-       <b>Approved:</b> __________________________<br><br>
-       <b>Date:</b> _______________________________
-     </div>
-
-     <div>
-       <p><b>Cash Received this period:</b> ${cash.toFixed(2)}</p>
-       <p><b>Cash due from previous period:</b> ${previous.toFixed(2)}</p>
-       <p><b>Total expense this report:</b> ${t.expense.toFixed(2)}</p>
-       <p><b>Balance on hand this report:</b> ${balance.toFixed(2)}</p>
-       <h2 style="text-align:center;margin-top:25px">
-       Total Amount Petty Cash Fund: ${totalFund.toFixed(2)}
-       </h2>
-     </div>
-   </div>
-
-   <div class="petty-sign">
-     <div><b>Check No.</b><br>${esc(check)}</div>
-     <div><b>Accountant</b><br><br>____________________________</div>
-   </div>
-
  </div>`;
 }
 
