@@ -513,9 +513,22 @@ function fillVehicleSelect(){
  const el=document.getElementById("fVehicle");
  if(!el)return;
  let html='<option value="">Select vehicle or generator</option>';
- if(vehicles.length)html+='<optgroup label="Vehicles">'+vehicles.map(v=>`<option value="vehicle:${v.id}">${esc(v.plate)}</option>`).join("")+'</optgroup>';
- if(generators.length)html+='<optgroup label="Generators">'+generators.map((g,i)=>`<option value="generator:${i}">${esc(g.name)}${g.location?' — '+esc(g.location):''}</option>`).join("")+'</optgroup>';
+ // Vehicle option value is the actual Supabase BIGINT id.
+ // This avoids passing a malformed string such as ".1" to the database.
+ if(vehicles.length){
+   html+='<optgroup label="Vehicles">'+vehicles.map(v=>{
+     const id=String(v.id);
+     return `<option value="${esc(id)}">${esc(v.plate)}</option>`;
+   }).join("")+'</optgroup>';
+ }
+ if(generators.length){
+   html+='<optgroup label="Generators">'+generators.map((g,i)=>
+     `<option value="generator:${i}">${esc(g.name)}${g.location?' — '+esc(g.location):''}</option>`
+   ).join("")+'</optgroup>';
+ }
  el.innerHTML=html;
+ autoFillPreviousRefill();
+ updateFuelDifferences();
 }
 function loadGenerators(){
  try{generators=JSON.parse(localStorage.getItem("semara_generators")||"[]");}catch(e){generators=[];}
@@ -581,23 +594,74 @@ if(litersInput) litersInput.addEventListener("input",updateFuelTotal);
 if(priceInput) priceInput.addEventListener("input",updateFuelTotal);
 
 function updateFuelDifferences(){
-  const previousKm=Number(document.getElementById("fPreviousKm")?.value||0);
-  const refillKm=Number(document.getElementById("fRefillKm")?.value||0);
+  const previousKmRaw=document.getElementById("fPreviousKm")?.value||"";
+  const refillKmRaw=document.getElementById("fRefillKm")?.value||"";
+  const previousKm=Number(previousKmRaw);
+  const refillKm=Number(refillKmRaw);
   const previousDate=document.getElementById("fPreviousDate")?.value||"";
   const date=document.getElementById("fDate")?.value||"";
   const distanceEl=document.getElementById("fDistance");
   const daysEl=document.getElementById("fDays");
-  if(distanceEl) distanceEl.value=(refillKm>=previousKm && (previousKm>0 || refillKm>0)) ? (refillKm-previousKm).toFixed(2) : "";
+
+  if(distanceEl && previousKmRaw!=="" && refillKmRaw!=="" && Number.isFinite(previousKm) && Number.isFinite(refillKm) && refillKm>=previousKm){
+    distanceEl.value=(refillKm-previousKm).toFixed(2);
+  }else if(distanceEl){
+    distanceEl.value="";
+  }
+
   if(daysEl && previousDate && date){
-    const diff=Math.round((new Date(date+"T00:00:00")-new Date(previousDate+"T00:00:00"))/86400000);
-    daysEl.value=diff>=0 ? diff : "";
-  }else if(daysEl) daysEl.value="";
+    const previous=new Date(previousDate+"T00:00:00");
+    const current=new Date(date+"T00:00:00");
+    const diff=Math.round((current-previous)/86400000);
+    daysEl.value=Number.isFinite(diff) && diff>=0 ? String(diff) : "";
+  }else if(daysEl){
+    daysEl.value="";
+  }
 }
+
+function autoFillPreviousRefill(){
+  const selection=document.getElementById("fVehicle")?.value||"";
+  const date=document.getElementById("fDate")?.value||"";
+  if(!selection || !date || selection.startsWith("generator:")) return;
+
+  // Current vehicle option values are the actual BIGINT IDs.
+  // Also accept the old "vehicle:123" format for compatibility.
+  let vehicleId=selection;
+  if(selection.startsWith("vehicle:")) vehicleId=selection.slice(8);
+  if(!/^\d+$/.test(String(vehicleId))) return;
+
+  const rows=(fuelRows||[])
+    .filter(x=>String(x.vehicle_id)===String(vehicleId) && x.fuel_date && x.fuel_date < date && x.current_km!=null)
+    .sort((a,b)=>String(b.fuel_date).localeCompare(String(a.fuel_date)));
+
+  const previous=rows[0];
+  const km=document.getElementById("fPreviousKm");
+  const pd=document.getElementById("fPreviousDate");
+
+  if(previous){
+    if(km) km.value=Number(previous.current_km).toString();
+    if(pd) pd.value=previous.fuel_date;
+  }else{
+    if(km) km.value="";
+    if(pd) pd.value="";
+  }
+  updateFuelDifferences();
+}
+
 ["fPreviousKm","fRefillKm","fPreviousDate","fDate"].forEach(id=>{
   const el=document.getElementById(id);
-  if(el) el.addEventListener("input",updateFuelDifferences);
-  if(el) el.addEventListener("change",updateFuelDifferences);
+  if(el){
+    el.addEventListener("input",updateFuelDifferences);
+    el.addEventListener("change",updateFuelDifferences);
+  }
 });
+
+const fuelVehicleSelect=document.getElementById("fVehicle");
+if(fuelVehicleSelect) fuelVehicleSelect.addEventListener("change",()=>{
+  autoFillPreviousRefill();
+  updateFuelDifferences();
+});
+
 
 async function saveFuel(){
  if(!allowedWrite())return;
@@ -609,19 +673,26 @@ async function saveFuel(){
  let selectedGenerator=null;
 
  if(isGenerator){
-   const parts=selection.split(":");
-   generatorIndex=Number(parts[1]);
-   selectedGenerator=Number.isInteger(generatorIndex) ? generators[generatorIndex] : null;
- }else if(selection.startsWith("vehicle:")){
-   const rawId=selection.slice(7).trim();
-   // Supabase bigint must receive a real integer, never a value such as ".1".
-   if(!/^\\d+$/.test(rawId)){
+   generatorIndex=Number(selection.slice("generator:".length));
+   if(!Number.isInteger(generatorIndex) || !generators[generatorIndex]){
+     msg("fuelMsg","Invalid generator selection. Please select the generator again.","error");
+     return;
+   }
+   selectedGenerator=generators[generatorIndex];
+ }else{
+   // Accept the new plain BIGINT ID format and the old vehicle:ID format.
+   const rawId=selection.startsWith("vehicle:") ? selection.slice(8).trim() : selection.trim();
+   if(!/^\d+$/.test(rawId)){
      msg("fuelMsg","Invalid vehicle selection. Please select the vehicle again.","error");
      return;
    }
    vehicle_id=Number(rawId);
-   if(!Number.isSafeInteger(vehicle_id)){
+   if(!Number.isSafeInteger(vehicle_id) || vehicle_id < 1){
      msg("fuelMsg","Invalid vehicle ID. Please select the vehicle again.","error");
+     return;
+   }
+   if(!vehicles.some(v=>String(v.id)===String(vehicle_id))){
+     msg("fuelMsg","Selected vehicle was not found. Please refresh and select it again.","error");
      return;
    }
  }
