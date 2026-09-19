@@ -163,6 +163,7 @@ th,td{padding:9px;border-bottom:1px solid #e6e9ee;text-align:left}
 <nav>
 <button id="navDashboard" onclick="showPage('dashboard')">Dashboard</button>
 <button id="navVehicles" onclick="showPage('vehicles')">Vehicles</button>
+<button id="navGenerators" onclick="showPage('generators')">Generators</button>
 <button id="navFuel" onclick="showPage('fuel')">Fuel Entry</button>
 <button id="navHistory" onclick="showPage('history')">History</button>
 <button id="navReports" onclick="showPage('reports')">Reports</button>
@@ -214,12 +215,28 @@ th,td{padding:9px;border-bottom:1px solid #e6e9ee;text-align:left}
 </div>
 </section>
 
+<section id="generators" class="page">
+<div class="card">
+<h2>Generators</h2>
+<div class="grid">
+<div><label>Generator Name</label><input id="gName" placeholder="e.g. Main Generator"></div>
+<div><label>Location</label><input id="gLocation" placeholder="e.g. Terminal / ARFF"></div>
+<div style="display:flex;align-items:end"><button onclick="addGenerator()">Add Generator</button></div>
+</div>
+<p id="generatorMsg" class="msg"></p>
+</div>
+<div class="card"><div class="tablebox">
+<table><thead><tr><th>Generator</th><th>Location</th><th>Action</th></tr></thead>
+<tbody id="generatorTable"></tbody></table>
+</div></div>
+</section>
+
 <section id="fuel" class="page">
 <div class="card">
 <h2>Fuel Entry</h2>
 <div id="fuelMsg" class="msg"></div>
 <div class="grid">
-<div><label>Vehicle</label><select id="fVehicle"></select></div>
+<div><label>Vehicle and Generator</label><select id="fVehicle"></select></div>
 <div><label>Date Filled</label><input id="fDate" type="date"></div>
 <div><label>Description</label><input id="fDescription" type="text" placeholder="Enter fuel refill description"></div>
 <div><label>Receipt No.</label><input id="fReceipt"></div>
@@ -245,7 +262,7 @@ th,td{padding:9px;border-bottom:1px solid #e6e9ee;text-align:left}
 <div class="card">
 <div class="tablebox">
 <table>
-<thead><tr><th>Date</th><th>Vehicle</th><th>Receipt</th><th>Fuel Amount (Birr)</th><th>Fuel Consumption (L)</th><th>KM Traveled</th><th>KM Reading at Refill</th><th>Days Before Refill</th></tr></thead>
+<thead><tr><th>Date</th><th>Vehicle / Generator</th><th>Receipt</th><th>Fuel Amount (Birr)</th><th>Fuel Consumption (L)</th><th>KM Traveled</th><th>KM Reading at Refill</th><th>Days Before Refill</th></tr></thead>
 <tbody id="historyTable"></tbody>
 </table>
 </div>
@@ -441,6 +458,7 @@ function showPage(id){
  if(n)n.classList.add("active");
 
  if(id==="dashboard")renderDashboard();
+ if(id==="generators")renderGenerators();
  if(id==="reports")renderReport();
  if(id==="official"){
    setOfficialDefaults();
@@ -473,6 +491,7 @@ async function loadAll(){
    if(!b.error&&b.data)currentBudget=Number(b.data.amount||0);
  }
 
+ loadGenerators();
  renderVehicles();
  fillVehicleSelect();
  renderHistory();
@@ -491,9 +510,35 @@ function renderVehicles(){
 }
 
 function fillVehicleSelect(){
- document.getElementById("fVehicle").innerHTML=
- '<option value="">Select vehicle</option>'+
- vehicles.map(v=>`<option value="${v.id}">${esc(v.plate)}</option>`).join("");
+ const el=document.getElementById("fVehicle");
+ if(!el)return;
+ let html='<option value="">Select vehicle or generator</option>';
+ if(vehicles.length)html+='<optgroup label="Vehicles">'+vehicles.map(v=>`<option value="vehicle:${v.id}">${esc(v.plate)}</option>`).join("")+'</optgroup>';
+ if(generators.length)html+='<optgroup label="Generators">'+generators.map((g,i)=>`<option value="generator:${i}">${esc(g.name)}${g.location?' — '+esc(g.location):''}</option>`).join("")+'</optgroup>';
+ el.innerHTML=html;
+}
+function loadGenerators(){
+ try{generators=JSON.parse(localStorage.getItem("semara_generators")||"[]");}catch(e){generators=[];}
+}
+function saveGenerators(){localStorage.setItem("semara_generators",JSON.stringify(generators));}
+function renderGenerators(){
+ const body=document.getElementById("generatorTable");
+ if(!body)return;
+ body.innerHTML=generators.map((g,i)=>`<tr><td>${esc(g.name)}</td><td>${esc(g.location||"")}</td><td>${currentRole==="admin"?`<button class="danger" onclick="deleteGenerator(${i})">Delete</button>`:"View only"}</td></tr>`).join("");
+}
+function addGenerator(){
+ if(!allowedWrite())return;
+ const name=document.getElementById("gName").value.trim();
+ const location=document.getElementById("gLocation").value.trim();
+ if(!name){msg("generatorMsg","Generator name is required.","error");return;}
+ generators.push({name,location});saveGenerators();
+ document.getElementById("gName").value="";document.getElementById("gLocation").value="";
+ msg("generatorMsg","Generator added successfully.","ok");renderGenerators();fillVehicleSelect();
+}
+function deleteGenerator(i){
+ if(currentRole!=="admin")return alert("Only Admin can delete generators.");
+ if(!confirm("Delete this generator?"))return;
+ generators.splice(i,1);saveGenerators();renderGenerators();fillVehicleSelect();
 }
 
 async function addVehicle(){
@@ -557,7 +602,11 @@ function updateFuelDifferences(){
 async function saveFuel(){
  if(!allowedWrite())return;
 
- const vehicle_id=document.getElementById("fVehicle").value;
+ const selection=document.getElementById("fVehicle").value;
+ const isGenerator=selection.startsWith("generator:");
+ const vehicle_id=isGenerator ? null : (selection.startsWith("vehicle:") ? selection.slice(7) : "");
+ const generatorIndex=isGenerator ? Number(selection.split(":")[1]) : -1;
+ const selectedGenerator=isGenerator ? generators[generatorIndex] : null;
  const date=document.getElementById("fDate").value;
  const receipt=document.getElementById("fReceipt").value.trim();
  const expense=Number(document.getElementById("fExpense").value);
@@ -567,7 +616,7 @@ async function saveFuel(){
  const previousKm=Number(document.getElementById("fPreviousKm").value);
  const previousDate=document.getElementById("fPreviousDate").value;
 
- if(!vehicle_id||!date||!expense||!liters||!price||refillKm<0||previousKm<0||!previousDate){
+ if((!vehicle_id&&!isGenerator)||!date||!expense||!liters||!price||refillKm<0||previousKm<0||!previousDate){
    msg("fuelMsg","Vehicle, date, liters, price per liter, total amount, previous KM, current KM and previous refill date are required.","error");
    return;
  }
@@ -618,7 +667,7 @@ async function saveFuel(){
 
  const {error}=await db.from("fuel_entries").insert({
    vehicle_id,
-   driver:null,
+   driver:isGenerator ? (selectedGenerator?.name||"Generator") : null,
    fuel_date:date,
    fuel_time:null,
    station:document.getElementById("fDescription").value.trim(),
@@ -651,7 +700,8 @@ function renderHistory(){
  document.getElementById("historyTable").innerHTML=[...fuelRows]
  .map(x=>{
    const v=vehicles.find(z=>String(z.id)===String(x.vehicle_id));
-   const key=String(x.vehicle_id);
+   const entityName=v?.plate||(x.vehicle_id==null?x.driver:"");
+   const key=String(x.vehicle_id)+"|"+String(x.driver||"");
    const prev=previousByVehicle[key];
    let days="";
    if(prev?.fuel_date && x.fuel_date){
@@ -660,7 +710,7 @@ function renderHistory(){
    previousByVehicle[key]=x;
    return `<tr>
    <td>${x.fuel_date||""}</td>
-   <td>${esc(v?.plate||"")}</td>
+   <td>${esc(entityName||"")}</td>
    <td>${esc(x.receipt||"")}</td>
    <td>${num(x.expense)}</td>
    <td>${num(x.liters)}</td>
