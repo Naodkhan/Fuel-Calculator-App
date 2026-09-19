@@ -604,9 +604,27 @@ async function saveFuel(){
 
  const selection=document.getElementById("fVehicle").value;
  const isGenerator=selection.startsWith("generator:");
- const vehicle_id=isGenerator ? null : (selection.startsWith("vehicle:") ? selection.slice(7) : "");
- const generatorIndex=isGenerator ? Number(selection.split(":")[1]) : -1;
- const selectedGenerator=isGenerator ? generators[generatorIndex] : null;
+ let vehicle_id=null;
+ let generatorIndex=-1;
+ let selectedGenerator=null;
+
+ if(isGenerator){
+   const parts=selection.split(":");
+   generatorIndex=Number(parts[1]);
+   selectedGenerator=Number.isInteger(generatorIndex) ? generators[generatorIndex] : null;
+ }else if(selection.startsWith("vehicle:")){
+   const rawId=selection.slice(7).trim();
+   // Supabase bigint must receive a real integer, never a value such as ".1".
+   if(!/^\\d+$/.test(rawId)){
+     msg("fuelMsg","Invalid vehicle selection. Please select the vehicle again.","error");
+     return;
+   }
+   vehicle_id=Number(rawId);
+   if(!Number.isSafeInteger(vehicle_id)){
+     msg("fuelMsg","Invalid vehicle ID. Please select the vehicle again.","error");
+     return;
+   }
+ }
  const date=document.getElementById("fDate").value;
  const receipt=document.getElementById("fReceipt").value.trim();
  const expense=Number(document.getElementById("fExpense").value);
@@ -645,24 +663,26 @@ async function saveFuel(){
    return;
  }
 
- const duplicateCheck=await db.from("fuel_entries")
-   .select("id")
-   .eq("vehicle_id",vehicle_id)
-   .eq("fuel_date",date)
-   .eq("liters",liters)
-   .eq("price",price)
-   .eq("expense",expense)
-   .eq("current_km",refillKm)
-   .eq("distance",distance)
-   .limit(1);
+ if(!isGenerator){
+   const duplicateCheck=await db.from("fuel_entries")
+     .select("id")
+     .eq("vehicle_id",vehicle_id)
+     .eq("fuel_date",date)
+     .eq("liters",liters)
+     .eq("price",price)
+     .eq("expense",expense)
+     .eq("current_km",refillKm)
+     .eq("distance",distance)
+     .limit(1);
 
- if(duplicateCheck.error){
-   msg("fuelMsg",duplicateCheck.error.message,"error");
-   return;
- }
- if((duplicateCheck.data||[]).length){
-   msg("fuelMsg","This fuel entry already exists. It was not added again.","error");
-   return;
+   if(duplicateCheck.error){
+     msg("fuelMsg",duplicateCheck.error.message,"error");
+     return;
+   }
+   if((duplicateCheck.data||[]).length){
+     msg("fuelMsg","This fuel entry already exists. It was not added again.","error");
+     return;
+   }
  }
 
  const {error}=await db.from("fuel_entries").insert({
