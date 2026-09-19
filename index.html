@@ -217,6 +217,7 @@ th,td{padding:9px;border-bottom:1px solid #e6e9ee;text-align:left}
 <div><label>Total Fuel Amount (Birr)</label><input id="fExpense" type="number" step="0.01" min="0" placeholder="e.g. 5000"></div>
 <div><label>Fuel Consumption (Liters)</label><input id="fLiters" type="number" step="0.01" min="0" placeholder="e.g. 80"></div>
 <div><label>KM Traveled Before Refill</label><input id="fDistance" type="number" step="0.01" min="0" placeholder="e.g. 450"></div>
+<div><label>KM Reading at Refill</label><input id="fRefillKm" type="number" step="0.01" min="0" placeholder="e.g. 12500"></div>
 <div><label>Days Before Refill</label><input id="fDays" type="number" step="1" min="0" placeholder="e.g. 7"></div>
 </div>
 <br>
@@ -232,7 +233,7 @@ th,td{padding:9px;border-bottom:1px solid #e6e9ee;text-align:left}
 <div class="card">
 <div class="tablebox">
 <table>
-<thead><tr><th>Date</th><th>Vehicle</th><th>Receipt</th><th>Fuel Amount (Birr)</th><th>Fuel Consumption (L)</th><th>KM Traveled</th><th>Days Before Refill</th></tr></thead>
+<thead><tr><th>Date</th><th>Vehicle</th><th>Receipt</th><th>Fuel Amount (Birr)</th><th>Fuel Consumption (L)</th><th>KM Traveled</th><th>KM Reading at Refill</th><th>Days Before Refill</th></tr></thead>
 <tbody id="historyTable"></tbody>
 </table>
 </div>
@@ -514,10 +515,11 @@ async function saveFuel(){
  const expense=Number(document.getElementById("fExpense").value);
  const liters=Number(document.getElementById("fLiters").value);
  const distance=Number(document.getElementById("fDistance").value);
+ const refillKm=Number(document.getElementById("fRefillKm").value);
  const days=Number(document.getElementById("fDays").value);
 
- if(!vehicle_id||!date||!expense||!liters||distance<0||days<0){
-   msg("fuelMsg","Vehicle, date, total fuel amount, liters, KM traveled and days are required.","error");
+ if(!vehicle_id||!date||!expense||!liters||distance<0||refillKm<0||days<0){
+   msg("fuelMsg","Vehicle, date, total fuel amount, liters, KM traveled, KM reading at refill and days are required.","error");
    return;
  }
 
@@ -531,7 +533,7 @@ async function saveFuel(){
    liters,
    price:liters ? expense/liters : 0,
    expense,
-   current_km:null,
+   current_km:refillKm,
    distance
  });
 
@@ -539,7 +541,7 @@ async function saveFuel(){
 
  msg("fuelMsg","Fuel entry saved successfully.","ok");
 
- ["fReceipt","fExpense","fLiters","fDistance","fDays"]
+ ["fReceipt","fExpense","fLiters","fDistance","fRefillKm","fDays"]
  .forEach(id=>document.getElementById(id).value="");
 
  await loadAll();
@@ -570,6 +572,7 @@ function renderHistory(){
    <td>${num(x.expense)}</td>
    <td>${num(x.liters)}</td>
    <td>${num(x.distance)}</td>
+   <td>${num(x.current_km)}</td>
    <td>${days}</td>
    </tr>`;
  }).join("");
@@ -945,7 +948,7 @@ function renderExpressNormal(){
 }
 
 function exportCSV(){
- const head=["Date","Vehicle","Receipt","Fuel Amount (Birr)","Fuel Consumption (Liters)","KM Traveled","Days Before Refill"];
+ const head=["Date","Vehicle","Receipt","Fuel Amount (Birr)","Fuel Consumption (Liters)","KM Traveled","KM Reading at Refill","Days Before Refill"];
 
  const rows=fuelRows.map((x,i)=>{
    const v=vehicles.find(z=>String(z.id)===String(x.vehicle_id));
@@ -955,7 +958,7 @@ function exportCSV(){
    const days=previous?.fuel_date
      ?Math.max(0,Math.round((new Date(x.fuel_date+"T00:00:00")-new Date(previous.fuel_date+"T00:00:00"))/86400000))
      :"";
-   return [x.fuel_date,v?.plate||"",x.receipt||"",x.expense,x.liters,x.distance,days];
+   return [x.fuel_date,v?.plate||"",x.receipt||"",x.expense,x.liters,x.distance,x.current_km,days];
  });
 
  const csv=[head,...rows]
