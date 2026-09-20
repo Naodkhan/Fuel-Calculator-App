@@ -9,8 +9,55 @@
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,sans-serif;background:#f3f6fa;color:#172033}
-header{background:#0b5ed7;color:white;padding:14px 18px;position:sticky;top:0;z-index:10}
-header h1{margin:0;font-size:20px}
+
+header{
+  background:#fff;
+  color:#172033;
+  border-bottom:4px solid #198754;
+  position:sticky;
+  top:0;
+  z-index:10;
+  box-shadow:0 2px 10px #00000018;
+}
+
+.header-inner{
+  max-width:1100px;
+  margin:auto;
+  padding:10px 18px;
+  display:flex;
+  align-items:center;
+  gap:16px;
+}
+
+.et-logo{
+  width:105px;
+  height:auto;
+  object-fit:contain;
+  flex-shrink:0;
+}
+
+.header-title{flex:1}
+
+.header-title h1{
+  margin:0;
+  font-size:20px;
+  font-weight:900;
+  letter-spacing:.3px;
+  color:#0b5d3b;
+}
+
+.airport-name{
+  margin-top:4px;
+  font-size:12px;
+  font-weight:bold;
+  color:#667085;
+}
+
+#userInfo{
+  color:#667085!important;
+  margin-top:4px;
+}
+
 .wrap{max-width:1100px;margin:auto;padding:18px}
 .card{background:white;border-radius:14px;padding:18px;margin-bottom:16px;box-shadow:0 3px 14px #00000012}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
@@ -66,9 +113,53 @@ th,td{padding:9px;border-bottom:1px solid #e6e9ee;text-align:left}
 .petty-summary-table th{font-weight:bold;background:#f3f6fa}
 .petty-summary-table td.amount{text-align:right;font-weight:bold;white-space:nowrap}
 
+/* FOOTER */
+.main-footer{
+  margin-top:30px;
+  background:#0b5d3b;
+  color:#fff;
+  border-top:5px solid #f5c400;
+}
+
+.footer-inner{
+  max-width:1100px;
+  margin:auto;
+  padding:16px 18px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:15px;
+  text-align:center;
+}
+
+.footer-logo{
+  width:90px;
+  height:auto;
+  background:#fff;
+  padding:4px;
+  border-radius:5px;
+}
+
+.footer-text{
+  font-size:12px;
+  line-height:1.6;
+}
+
+.footer-text strong{font-size:14px}
+
 @media print{
  body{background:#fff}
- header,nav,#loginPage,.no-print,.petty-inputs,.petty-actions,.petty-tabs{display:none!important}
+ nav,#loginPage,.no-print{display:none!important}
+ header{
+   position:static!important;
+   display:block!important;
+   border-bottom:3px solid #198754;
+ }
+ .main-footer{
+   display:block!important;
+   margin-top:15px;
+   page-break-inside:avoid;
+ }
  #app{display:block!important}
  .wrap{max-width:none;padding:0}
  .card{box-shadow:none;padding:0}
@@ -79,11 +170,16 @@ th,td{padding:9px;border-bottom:1px solid #e6e9ee;text-align:left}
 
 @media(max-width:700px){
  .wrap{padding:10px}
- header{padding:12px}
+ header{padding:0}
+ .header-inner{padding:9px 10px;gap:10px}
+ .et-logo{width:75px}
+ .header-title h1{font-size:15px}
+ .airport-name{font-size:10px}
  .grid{grid-template-columns:1fr 1fr}
  nav{grid-template-columns:repeat(2,1fr)}
  .petty-tabs{grid-template-columns:1fr 1fr}
  .petty-inputs{grid-template-columns:1fr 1fr}
+ .footer-inner{flex-direction:column}
 }
 </style>
 </head>
@@ -93,52 +189,50 @@ th,td{padding:9px;border-bottom:1px solid #e6e9ee;text-align:left}
 <!-- ================= LOGIN ================= -->
 
 <div id="loginPage">
-  <div class="login card">
+<div class="login card">
 
-    <h2>SEMERA AIRPORT FUEL MANAGEMENT SYSTEM</h2>
+<h2>SEMERA AIRPORT FUEL MANAGEMENT SYSTEM</h2>
 
-    <p class="small">
-      Secure staff login using Organization ID Number
-    </p>
+<p class="small">
+Secure staff login using Organization ID Number
+</p>
 
-    <div id="loginMsg" class="msg"></div>
+<div id="loginMsg" class="msg"></div>
 
-    <label>Organization ID Number</label>
-    <input
-      id="loginIdNumber"
-      type="text"
-      inputmode="numeric"
-      maxlength="6"
-      minlength="5"
-      pattern="[0-9]{5,6}"
-      placeholder="Enter 5–6 digit ID"
-      autocomplete="username"
-    >
+<label>Organization ID Number</label>
+<input
+ id="loginIdNumber"
+ type="text"
+ inputmode="numeric"
+ maxlength="6"
+ minlength="5"
+ pattern="[0-9]{5,6}"
+ placeholder="Enter 5–6 digit ID"
+ autocomplete="username">
 
-    <div class="small">
-      ID Number must contain 5–6 digits (0–9 only).
-    </div>
+<div class="small">
+ID Number must contain 5–6 digits (0–9 only).
+</div>
 
-    <br>
+<br>
 
-    <label>Password</label>
-    <input
-      id="loginPassword"
-      type="password"
-      minlength="6"
-      placeholder="Minimum 6 characters"
-      autocomplete="current-password"
-    >
+<label>Password</label>
+<input
+ id="loginPassword"
+ type="password"
+ minlength="6"
+ placeholder="Minimum 6 characters"
+ autocomplete="current-password">
 
-    <br>
+<br>
 
-    <button onclick="login()">Login</button>
+<button onclick="login()">Login</button>
 
-    <br><br>
+<br><br>
 
-    <button class="secondary" onclick="signup()">Create Account</button>
+<button class="secondary" onclick="signup()">Create Account</button>
 
-  </div>
+</div>
 </div>
 
 
@@ -147,73 +241,50 @@ th,td{padding:9px;border-bottom:1px solid #e6e9ee;text-align:left}
 <div id="app" style="display:none">
 
 <header>
-  <div class="wrap" style="padding:0">
-    <h1>SEMERA AIRPORT FUEL MANAGEMENT SYSTEM</h1>
-    <div
-      id="userInfo"
-      class="small"
-      style="color:#e7efff;margin-top:4px">
-    </div>
-  </div>
+<div class="header-inner">
+
+<img
+ class="et-logo"
+ src="https://corporate.ethiopianairlines.com/images/default-source/star-alliance-airlines/new-logo/et-logo-0326.png?sfvrsn=deb791c4_2"
+ alt="Ethiopian Airlines">
+
+<div class="header-title">
+
+<h1>SEMERA AIRPORT FUEL MANAGEMENT SYSTEM</h1>
+
+<div class="airport-name">
+SEMERA AIRPORT
+</div>
+
+<div id="userInfo" class="small"></div>
+
+</div>
+
+</div>
 </header>
 
 <div class="wrap">
 
 <nav>
 
-<button id="navDashboard"
-onclick="showPage('dashboard')">
-Dashboard
-</button>
-
-<button id="navVehicles"
-onclick="showPage('vehicles')">
-Vehicles
-</button>
-
-<button id="navGenerators"
-onclick="showPage('generators')">
-Generators
-</button>
-
-<button id="navFuel"
-onclick="showPage('fuel')">
-Fuel Entry
-</button>
-
-<button id="navHistory"
-onclick="showPage('history')">
-History
-</button>
-
-<button id="navReports"
-onclick="showPage('reports')">
-Reports
-</button>
-
-<button id="navOfficial"
-onclick="showPage('official')">
-Petty Cash Forms
-</button>
-
-<button id="navSettings"
-onclick="showPage('settings')">
-Settings
-</button>
-
-<button onclick="logout()">
-Logout
-</button>
+<button id="navDashboard" onclick="showPage('dashboard')">Dashboard</button>
+<button id="navVehicles" onclick="showPage('vehicles')">Vehicles</button>
+<button id="navGenerators" onclick="showPage('generators')">Generators</button>
+<button id="navFuel" onclick="showPage('fuel')">Fuel Entry</button>
+<button id="navHistory" onclick="showPage('history')">History</button>
+<button id="navReports" onclick="showPage('reports')">Reports</button>
+<button id="navOfficial" onclick="showPage('official')">Petty Cash Forms</button>
+<button id="navSettings" onclick="showPage('settings')">Settings</button>
+<button onclick="logout()">Logout</button>
 
 </nav>
 
 
-<!-- ================= DASHBOARD ================= -->
+<!-- DASHBOARD -->
 
 <section id="dashboard" class="page">
 
 <div class="card">
-
 <h2>Dashboard</h2>
 
 <div class="grid">
@@ -244,9 +315,7 @@ Liters
 </div>
 
 </div>
-
 </div>
-
 
 <div class="card">
 
@@ -277,7 +346,7 @@ Liters
 </section>
 
 
-<!-- ================= VEHICLES ================= -->
+<!-- VEHICLES -->
 
 <section id="vehicles" class="page">
 
@@ -289,16 +358,12 @@ Liters
 
 <div>
 <label>Plate Number</label>
-<input
-id="vPlate"
-placeholder="e.g. 3-12345">
+<input id="vPlate" placeholder="e.g. 3-12345">
 </div>
 
 <div>
 <label>Driver</label>
-<input
-id="vDriver"
-placeholder="Driver name">
+<input id="vDriver" placeholder="Driver name">
 </div>
 
 <div style="display:flex;align-items:end">
@@ -311,13 +376,10 @@ placeholder="Driver name">
 
 </div>
 
-
 <div class="card">
 
 <div class="tablebox">
-
 <table>
-
 <thead>
 <tr>
 <th>Plate</th>
@@ -325,11 +387,8 @@ placeholder="Driver name">
 <th>Action</th>
 </tr>
 </thead>
-
 <tbody id="vehicleTable"></tbody>
-
 </table>
-
 </div>
 
 </div>
@@ -337,7 +396,7 @@ placeholder="Driver name">
 </section>
 
 
-<!-- ================= GENERATORS ================= -->
+<!-- GENERATORS -->
 
 <section id="generators" class="page">
 
@@ -349,16 +408,12 @@ placeholder="Driver name">
 
 <div>
 <label>Generator Name</label>
-<input
-id="gName"
-placeholder="e.g. Main Generator">
+<input id="gName" placeholder="e.g. Main Generator">
 </div>
 
 <div>
 <label>Location</label>
-<input
-id="gLocation"
-placeholder="e.g. Terminal / ARFF">
+<input id="gLocation" placeholder="e.g. Terminal / ARFF">
 </div>
 
 <div style="display:flex;align-items:end">
@@ -370,7 +425,6 @@ placeholder="e.g. Terminal / ARFF">
 <p id="generatorMsg" class="msg"></p>
 
 </div>
-
 
 <div class="card">
 
@@ -397,7 +451,7 @@ placeholder="e.g. Terminal / ARFF">
 </section>
 
 
-<!-- ================= FUEL ENTRY ================= -->
+<!-- FUEL ENTRY -->
 
 <section id="fuel" class="page">
 
@@ -421,10 +475,7 @@ placeholder="e.g. Terminal / ARFF">
 
 <div>
 <label>Description</label>
-<input
-id="fDescription"
-type="text"
-placeholder="Enter fuel refill description">
+<input id="fDescription" type="text" placeholder="Enter fuel refill description">
 </div>
 
 <div>
@@ -434,61 +485,32 @@ placeholder="Enter fuel refill description">
 
 <div>
 <label>Fuel Refilled (Liters)</label>
-<input
-id="fLiters"
-type="number"
-step="0.01"
-min="0"
-placeholder="e.g. 80">
+<input id="fLiters" type="number" step="0.01" min="0">
 </div>
 
 <div>
 <label>Fuel Price per Liter (Birr)</label>
-<input
-id="fPrice"
-type="number"
-step="0.01"
-min="0"
-placeholder="e.g. 120">
+<input id="fPrice" type="number" step="0.01" min="0">
 </div>
 
 <div>
 <label>Total Amount of Price (Birr)</label>
-<input
-id="fExpense"
-type="number"
-step="0.01"
-min="0"
-placeholder="e.g. 9600">
+<input id="fExpense" type="number" step="0.01" min="0">
 </div>
 
 <div>
 <label>Previous KM Reading</label>
-<input
-id="fPreviousKm"
-type="number"
-step="0.01"
-min="0"
-placeholder="Previous refill KM">
+<input id="fPreviousKm" type="number" step="0.01" min="0">
 </div>
 
 <div>
 <label>KM Reading at Refill</label>
-<input
-id="fRefillKm"
-type="number"
-step="0.01"
-min="0"
-placeholder="Current refill KM">
+<input id="fRefillKm" type="number" step="0.01" min="0">
 </div>
 
 <div>
 <label>KM Difference at Refill</label>
-<input
-id="fDistance"
-type="number"
-step="0.01"
-readonly>
+<input id="fDistance" type="number" step="0.01" readonly>
 </div>
 
 <div>
@@ -498,27 +520,21 @@ readonly>
 
 <div>
 <label>Days Difference at Refill</label>
-<input
-id="fDays"
-type="number"
-step="1"
-readonly>
+<input id="fDays" type="number" step="1" readonly>
 </div>
 
 </div>
 
 <br>
 
-<button onclick="saveFuel()">
-Save Fuel Entry
-</button>
+<button onclick="saveFuel()">Save Fuel Entry</button>
 
 </div>
 
 </section>
 
 
-<!-- ================= HISTORY ================= -->
+<!-- HISTORY -->
 
 <section id="history" class="page">
 
@@ -526,12 +542,9 @@ Save Fuel Entry
 
 <h2>Fuel History</h2>
 
-<button onclick="exportCSV()">
-Export CSV
-</button>
+<button onclick="exportCSV()">Export CSV</button>
 
 </div>
-
 
 <div class="card">
 
@@ -540,7 +553,6 @@ Export CSV
 <table>
 
 <thead>
-
 <tr>
 <th>Date</th>
 <th>Vehicle / Generator</th>
@@ -551,7 +563,6 @@ Export CSV
 <th>KM Reading at Refill</th>
 <th>Days Before Refill</th>
 </tr>
-
 </thead>
 
 <tbody id="historyTable"></tbody>
@@ -565,7 +576,7 @@ Export CSV
 </section>
 
 
-<!-- ================= REPORTS ================= -->
+<!-- REPORTS -->
 
 <section id="reports" class="page">
 
@@ -577,340 +588,148 @@ Export CSV
 
 <br>
 
-<button onclick="window.print()">
-Print / Save PDF
-</button>
+<button onclick="window.print()">Print / Save PDF</button>
 
 </div>
 
 </section>
 
 
-<!-- ================= PETTY CASH ================= -->
+<!-- PETTY CASH -->
 
 <section id="official" class="page">
 
 <div class="card">
 
-<h2 class="no-print">
-Petty Cash Forms
-</h2>
-
+<h2 class="no-print">Petty Cash Forms</h2>
 
 <div class="petty-tabs no-print">
 
-<button
-id="tabAirport"
-onclick="showPettyForm('airport')">
+<button id="tabAirport" onclick="showPettyForm('airport')">
 AIRPORT FUEL PETTY CASH REPORT FORM
 </button>
 
-<button
-id="tabNormal"
-onclick="showPettyForm('normal')">
+<button id="tabNormal" onclick="showPettyForm('normal')">
 AIRPORT NORMAL PETTY CASH REPORT FORM
 </button>
 
-<button
-id="tabExpress"
-onclick="showPettyForm('express')">
+<button id="tabExpress" onclick="showPettyForm('express')">
 EXPRESS FUEL PETTY CASH REPORT FORM
 </button>
 
-<button
-id="tabExpressNormal"
-onclick="showPettyForm('expressNormal')">
+<button id="tabExpressNormal" onclick="showPettyForm('expressNormal')">
 EXPRESS NORMAL PETTY CASH REPORT FORM
 </button>
 
-<button
-id="tabBalance"
-onclick="showPettyForm('balance')">
+<button id="tabBalance" onclick="showPettyForm('balance')">
 Petty Cash Balance
 </button>
 
 </div>
 
-
 <div class="petty-inputs no-print">
 
-<div>
-<label>Report No.</label>
-<input id="rNo" class="report-input">
-</div>
-
-<div>
-<label>Date</label>
-<input id="rDate" type="date" class="report-input">
-</div>
-
-<div>
-<label>Petty Cash Holder Name</label>
-<input id="rName" class="report-input">
-</div>
-
-<div>
-<label>Bank Account</label>
-<input id="rBank" class="report-input">
-</div>
+<div><label>Report No.</label><input id="rNo" class="report-input"></div>
+<div><label>Date</label><input id="rDate" type="date" class="report-input"></div>
+<div><label>Petty Cash Holder Name</label><input id="rName" class="report-input"></div>
+<div><label>Bank Account</label><input id="rBank" class="report-input"></div>
 
 <div>
 <label>Department</label>
-<input
-id="rDept"
-class="report-input"
-value="Fuel Management">
+<input id="rDept" class="report-input" value="Fuel Management">
 </div>
 
 <div>
 <label>Location</label>
-<input
-id="rLoc"
-class="report-input"
-value="SEMERA AIRPORT">
+<input id="rLoc" class="report-input" value="SEMERA AIRPORT">
 </div>
 
-<div>
-<label>From</label>
-<input id="rFrom" type="date" class="report-input">
-</div>
-
-<div>
-<label>To</label>
-<input id="rTo" type="date" class="report-input">
-</div>
+<div><label>From</label><input id="rFrom" type="date" class="report-input"></div>
+<div><label>To</label><input id="rTo" type="date" class="report-input"></div>
 
 <div>
 <label>ID Number</label>
-<input
-id="rSignature"
-class="report-input"
-inputmode="numeric"
-maxlength="6">
+<input id="rSignature" class="report-input" inputmode="numeric" maxlength="6">
 </div>
 
 <div>
 <label>Budget Code / Dept. &amp; Loc.</label>
-<input
-id="rBudgetCode"
-class="report-input"
-value="SEMERA AIRPORT">
+<input id="rBudgetCode" class="report-input" value="SEMERA AIRPORT">
 </div>
 
 <div>
 <label>Cash Received This Period</label>
-<input
-id="rCash"
-type="number"
-step="0.01"
-class="report-input"
-value="0">
+<input id="rCash" type="number" step="0.01" class="report-input" value="0">
 </div>
 
 <div>
 <label>Cash Due From Previous Period</label>
-<input
-id="rPrevious"
-type="number"
-step="0.01"
-class="report-input"
-value="0">
+<input id="rPrevious" type="number" step="0.01" class="report-input" value="0">
 </div>
 
 <div>
 <label>Total Expense This Period</label>
-<input
-id="rExpenseDisplay"
-type="number"
-step="0.01"
-class="report-input"
-value="0">
+<input id="rExpenseDisplay" type="number" step="0.01" class="report-input" value="0">
 </div>
 
 <div>
 <label>Cash On Hand This Period</label>
-<input
-id="rCashOnHand"
-type="number"
-step="0.01"
-class="report-input"
-value="0">
+<input id="rCashOnHand" type="number" step="0.01" class="report-input" value="0">
 </div>
 
 <div>
 <label>Total Petty Cash Amount</label>
-<input
-id="rFund"
-type="number"
-step="0.01"
-class="report-input"
-value="0">
+<input id="rFund" type="number" step="0.01" class="report-input" value="0">
 </div>
 
-<div>
-<label>Approved By</label>
-<input id="rApproved" class="report-input">
-</div>
-
-<div>
-<label>Approval Date</label>
-<input id="rApprovedDate" type="date" class="report-input">
-</div>
+<div><label>Approved By</label><input id="rApproved" class="report-input"></div>
+<div><label>Approval Date</label><input id="rApprovedDate" type="date" class="report-input"></div>
 
 </div>
-
 
 <div class="petty-actions no-print">
 
-<button onclick="updateOfficialReport()">
-Update Form
-</button>
+<button onclick="updateOfficialReport()">Update Form</button>
 
-<button
-class="success"
-onclick="window.print()">
+<button class="success" onclick="window.print()">
 Print / Save PDF
 </button>
 
 </div>
 
-
 <div id="officialReport"></div>
 
+<div id="expressNormalInputs" class="petty-inputs no-print" style="display:none">
 
-<div
-id="expressNormalInputs"
-class="petty-inputs no-print"
-style="display:none">
-
-<div>
-<label>Report No.</label>
-<input id="enReportNo" class="report-input">
-</div>
-
-<div>
-<label>Date</label>
-<input id="enDate" type="date" class="report-input">
-</div>
-
-<div>
-<label>Petty Cash Holder Name</label>
-<input id="enName" class="report-input">
-</div>
+<div><label>Report No.</label><input id="enReportNo" class="report-input"></div>
+<div><label>Date</label><input id="enDate" type="date" class="report-input"></div>
+<div><label>Petty Cash Holder Name</label><input id="enName" class="report-input"></div>
 
 <div>
 <label>ID Number</label>
-<input
-id="enId"
-class="report-input"
-inputmode="numeric"
-maxlength="6">
+<input id="enId" class="report-input" inputmode="numeric" maxlength="6">
 </div>
 
-<div>
-<label>Department</label>
-<input
-id="enDept"
-class="report-input"
-value="SEMERA AIRPORT">
-</div>
+<div><label>Department</label><input id="enDept" class="report-input" value="SEMERA AIRPORT"></div>
+<div><label>Location</label><input id="enLoc" class="report-input" value="SEMERA AIRPORT"></div>
+<div><label>From</label><input id="enFrom" type="date" class="report-input"></div>
+<div><label>To</label><input id="enTo" type="date" class="report-input"></div>
 
-<div>
-<label>Location</label>
-<input
-id="enLoc"
-class="report-input"
-value="SEMERA AIRPORT">
-</div>
-
-<div>
-<label>From</label>
-<input id="enFrom" type="date" class="report-input">
-</div>
-
-<div>
-<label>To</label>
-<input id="enTo" type="date" class="report-input">
-</div>
-
-<div>
-<label>Cash Received This Period</label>
-<input
-id="enCash"
-type="number"
-step="0.01"
-class="report-input"
-value="0">
-</div>
-
-<div>
-<label>Cash Due From Previous Period</label>
-<input
-id="enPrevious"
-type="number"
-step="0.01"
-class="report-input"
-value="0">
-</div>
-
-<div>
-<label>Total Expense This Period</label>
-<input
-id="enExpense"
-type="number"
-step="0.01"
-class="report-input"
-value="0">
-</div>
-
-<div>
-<label>Cash On Hand This Period</label>
-<input
-id="enCashOnHand"
-type="number"
-step="0.01"
-class="report-input"
-value="0">
-</div>
-
-<div>
-<label>Total Petty Cash Amount</label>
-<input
-id="enFund"
-type="number"
-step="0.01"
-class="report-input"
-value="0">
-</div>
-
-<div>
-<label>Approved By</label>
-<input id="enApproved" class="report-input">
-</div>
-
-<div>
-<label>Approval Date</label>
-<input
-id="enApprovedDate"
-type="date"
-class="report-input">
-</div>
+<div><label>Cash Received This Period</label><input id="enCash" type="number" step="0.01" class="report-input" value="0"></div>
+<div><label>Cash Due From Previous Period</label><input id="enPrevious" type="number" step="0.01" class="report-input" value="0"></div>
+<div><label>Total Expense This Period</label><input id="enExpense" type="number" step="0.01" class="report-input" value="0"></div>
+<div><label>Cash On Hand This Period</label><input id="enCashOnHand" type="number" step="0.01" class="report-input" value="0"></div>
+<div><label>Total Petty Cash Amount</label><input id="enFund" type="number" step="0.01" class="report-input" value="0"></div>
+<div><label>Approved By</label><input id="enApproved" class="report-input"></div>
+<div><label>Approval Date</label><input id="enApprovedDate" type="date" class="report-input"></div>
 
 </div>
 
+<div id="expressNormalActions" class="petty-actions no-print" style="display:none">
 
-<div
-id="expressNormalActions"
-class="petty-actions no-print"
-style="display:none">
+<button onclick="renderExpressNormal()">Update Form</button>
 
-<button onclick="renderExpressNormal()">
-Update Form
-</button>
-
-<button
-class="success"
-onclick="window.print()">
+<button class="success" onclick="window.print()">
 Print / Save PDF
 </button>
 
@@ -921,7 +740,7 @@ Print / Save PDF
 </section>
 
 
-<!-- ================= SETTINGS ================= -->
+<!-- SETTINGS -->
 
 <section id="settings" class="page">
 
@@ -950,26 +769,53 @@ staff roles can add/update records.
 </section>
 
 </div>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer class="main-footer">
+
+<div class="footer-inner">
+
+<img
+ class="footer-logo"
+ src="https://corporate.ethiopianairlines.com/images/default-source/star-alliance-airlines/new-logo/et-logo-0326.png?sfvrsn=deb791c4_2"
+ alt="Ethiopian Airlines">
+
+<div class="footer-text">
+
+<strong>SEMERA AIRPORT FUEL MANAGEMENT SYSTEM</strong>
+
+<br>
+
+SEMERA AIRPORT • Fuel Management &amp; Monitoring System
+
+<br>
+
+Ethiopian Airlines
+
+</div>
+
+</div>
+
+</footer>
+
 </div>
 
 
 <script>
 
-/* =========================================================
-   SUPABASE
-========================================================= */
+/* ================= SUPABASE ================= */
 
-const SUPABASE_URL =
+const SUPABASE_URL=
 "https://cxoowkryvdjqesymqicu.supabase.co";
 
-const SUPABASE_KEY =
+const SUPABASE_KEY=
 "sb_publishable_ef9QG0gURhqWHNJ4WTdNsA_TR4DsJ2u";
-
 
 let db=null;
 let currentUser=null;
 let currentRole="viewer";
-
 let vehicles=[];
 let fuelRows=[];
 let generators=[];
@@ -977,72 +823,55 @@ let currentPeriod=null;
 let currentBudget=0;
 
 
-/* =========================================================
-   HELPERS
-========================================================= */
+/* ================= HELPERS ================= */
 
 function msg(id,text,type){
 
  const e=document.getElementById(id);
-
  if(!e)return;
 
  e.textContent=text;
+ e.className="msg show "+(type==="error"?"err":"ok");
 
- e.className=
- "msg show "+
- (type==="error"?"err":"ok");
 }
-
 
 function esc(v){
 
  return String(v??"")
  .replace(/[&<>"']/g,m=>({
-
    "&":"&amp;",
    "<":"&lt;",
    ">":"&gt;",
    '"':"&quot;",
    "'":"&#039;"
-
  }[m]));
 
 }
 
-
 function num(v){
-
- return v==null||v===""
- ? ""
- : Number(v).toFixed(2);
-
+ return v==null||v===""?"":Number(v).toFixed(2);
 }
-
 
 function validId(id){
-
  return /^[0-9]{5,6}$/.test(String(id||""));
-
 }
-
-
-/* =========================================================
-   INTERNAL AUTH EMAIL
-   Supabase Auth normally needs an email.
-   The user DOES NOT enter email.
-========================================================= */
 
 function authEmailFromId(id){
-
  return String(id).trim()+"@ptcash.local";
+}
+
+function cleanIdInput(el){
+
+ if(!el)return;
+
+ el.value=el.value
+ .replace(/[^0-9]/g,"")
+ .slice(0,6);
 
 }
 
 
-/* =========================================================
-   SUPABASE INIT
-========================================================= */
+/* ================= SUPABASE INIT ================= */
 
 function initSupabase(){
 
@@ -1071,67 +900,35 @@ function initSupabase(){
 }
 
 
-/* =========================================================
-   ID INPUT RESTRICTION
-========================================================= */
-
-function cleanIdInput(el){
-
- if(!el)return;
-
- el.value=
- el.value
- .replace(/[^0-9]/g,"")
- .slice(0,6);
-
-}
-
+/* ================= LOGIN ID INPUT ================= */
 
 document.addEventListener("DOMContentLoaded",()=>{
 
- const loginId=
- document.getElementById("loginIdNumber");
+ [
+  document.getElementById("loginIdNumber"),
+  document.getElementById("rSignature"),
+  document.getElementById("enId")
+ ].forEach(el=>{
 
- const reportId=
- document.getElementById("rSignature");
-
- const expressId=
- document.getElementById("enId");
-
- [loginId,reportId,expressId].forEach(el=>{
-
-   if(el){
-
-     el.addEventListener(
-       "input",
-       ()=>cleanIdInput(el)
-     );
-
-   }
+   if(el)
+   el.addEventListener("input",()=>cleanIdInput(el));
 
  });
 
 });
 
 
-/* =========================================================
-   LOGIN
-========================================================= */
+/* ================= LOGIN ================= */
 
 async function login(){
 
  if(!initSupabase())return;
 
  const idNumber=
- document.getElementById(
-   "loginIdNumber"
- ).value.trim();
+ document.getElementById("loginIdNumber").value.trim();
 
  const password=
- document.getElementById(
-   "loginPassword"
- ).value;
-
+ document.getElementById("loginPassword").value;
 
  if(!validId(idNumber)){
 
@@ -1145,19 +942,12 @@ async function login(){
 
  }
 
-
  if(!password){
 
-   msg(
-     "loginMsg",
-     "Please enter your password.",
-     "error"
-   );
-
+   msg("loginMsg","Please enter your password.","error");
    return;
 
  }
-
 
  if(password.length<6){
 
@@ -1171,28 +961,17 @@ async function login(){
 
  }
 
-
- msg(
-   "loginMsg",
-   "Logging in...",
-   "ok"
- );
-
-
- const internalEmail=
- authEmailFromId(idNumber);
-
+ msg("loginMsg","Logging in...","ok");
 
  const {data,error}=
  await db.auth.signInWithPassword({
-
-   email:internalEmail,
-   password:password
-
+   email:authEmailFromId(idNumber),
+   password
  });
 
-
  if(error){
+
+   console.log(error);
 
    msg(
      "loginMsg",
@@ -1200,12 +979,9 @@ async function login(){
      "error"
    );
 
-   console.log(error);
-
    return;
 
  }
-
 
  currentUser=data.user;
 
@@ -1214,25 +990,17 @@ async function login(){
 }
 
 
-/* =========================================================
-   CREATE ACCOUNT
-========================================================= */
+/* ================= CREATE ACCOUNT ================= */
 
 async function signup(){
 
  if(!initSupabase())return;
 
-
  const idNumber=
- document.getElementById(
-   "loginIdNumber"
- ).value.trim();
+ document.getElementById("loginIdNumber").value.trim();
 
  const password=
- document.getElementById(
-   "loginPassword"
- ).value;
-
+ document.getElementById("loginPassword").value;
 
  if(!validId(idNumber)){
 
@@ -1246,19 +1014,12 @@ async function signup(){
 
  }
 
-
  if(!password){
 
-   msg(
-     "loginMsg",
-     "Password is required.",
-     "error"
-   );
-
+   msg("loginMsg","Password is required.","error");
    return;
 
  }
-
 
  if(password.length<6){
 
@@ -1272,79 +1033,39 @@ async function signup(){
 
  }
 
-
- msg(
-   "loginMsg",
-   "Creating account...",
-   "ok"
- );
-
-
- const internalEmail=
- authEmailFromId(idNumber);
-
+ msg("loginMsg","Creating account...","ok");
 
  const {data,error}=
  await db.auth.signUp({
 
-   email:internalEmail,
+   email:authEmailFromId(idNumber),
 
-   password:password,
+   password,
 
    options:{
-
      data:{
-
        organization_id:idNumber,
-
        id_number:idNumber,
-
        full_name:"PT Cash User",
-
        role:"viewer"
-
      }
-
    }
 
  });
-
 
  if(error){
 
    console.log("SIGNUP ERROR:",error);
 
-   const text=
-   String(error.message||"").toLowerCase();
-
-
-   if(
-     text.includes("already registered") ||
-     text.includes("already exists") ||
-     text.includes("duplicate") ||
-     text.includes("unique")
-   ){
-
-     msg(
-       "loginMsg",
-       "This Organization ID Number is already registered.",
-       "error"
-     );
-
-   }else{
-
-     msg(
-       "loginMsg",
-       error.message,
-       "error"
-     );
-
-   }
+   msg(
+     "loginMsg",
+     error.message,
+     "error"
+   );
 
    return;
 
  }
-
 
  if(!data?.user){
 
@@ -1358,14 +1079,6 @@ async function signup(){
 
  }
 
-
- /*
-   Save the ID in profiles.
-
-   If RLS blocks this operation, Auth account
-   still exists and metadata keeps the ID.
- */
-
  if(data.session){
 
    currentUser=data.user;
@@ -1374,34 +1087,19 @@ async function signup(){
    await db
    .from("profiles")
    .upsert({
-
      id:data.user.id,
-
      id_number:idNumber,
-
      full_name:"PT Cash User",
-
      role:"viewer"
-
    },{
      onConflict:"id"
    });
 
-
-   if(profileError){
-
-     console.log(
-       "Profile save error:",
-       profileError.message
-     );
-
-     /*
-       Do not prevent login because of an RLS
-       profile error.
-     */
-
-   }
-
+   if(profileError)
+   console.log(
+     "Profile save error:",
+     profileError.message
+   );
 
    msg(
      "loginMsg",
@@ -1409,14 +1107,13 @@ async function signup(){
      "ok"
    );
 
-
    await startApp();
 
  }else{
 
    msg(
      "loginMsg",
-     "Account created. If Supabase email confirmation is enabled, disable Confirm Email in Supabase Authentication, then login using your 5–6 digit Organization ID.",
+     "Account created. Disable Supabase Confirm Email if you want direct ID/password login.",
      "ok"
    );
 
@@ -1425,41 +1122,30 @@ async function signup(){
 }
 
 
-/* =========================================================
-   LOGOUT
-========================================================= */
+/* ================= LOGOUT ================= */
 
 async function logout(){
 
- if(db){
-
-   await db.auth.signOut();
-
- }
+ if(db)
+ await db.auth.signOut();
 
  currentUser=null;
 
  document.getElementById("app").style.display="none";
-
  document.getElementById("loginPage").style.display="block";
 
  document.getElementById("loginIdNumber").value="";
-
  document.getElementById("loginPassword").value="";
 
 }
 
 
-/* =========================================================
-   START APP
-========================================================= */
+/* ================= START APP ================= */
 
 async function startApp(){
 
  document.getElementById("loginPage").style.display="none";
-
  document.getElementById("app").style.display="block";
-
 
  await loadProfile();
 
@@ -1468,17 +1154,10 @@ async function startApp(){
  currentUser?.user_metadata?.organization_id ||
  "Unknown";
 
-
- document.getElementById(
-   "userInfo"
- ).textContent=
+ document.getElementById("userInfo").textContent=
  "Organization ID: "+id;
 
-
- document.getElementById(
-   "settingsIdNumber"
- ).textContent=id;
-
+ document.getElementById("settingsIdNumber").textContent=id;
 
  await loadAll();
 
@@ -1487,14 +1166,11 @@ async function startApp(){
 }
 
 
-/* =========================================================
-   PROFILE
-========================================================= */
+/* ================= PROFILE ================= */
 
 async function loadProfile(){
 
  if(!currentUser)return;
-
 
  const {data,error}=
  await db
@@ -1503,28 +1179,16 @@ async function loadProfile(){
  .eq("id",currentUser.id)
  .maybeSingle();
 
-
- if(error){
-
-   console.log(
-     "Profile:",
-     error.message
-   );
-
- }
-
+ if(error)
+ console.log("Profile:",error.message);
 
  currentRole=
  data?.role ||
  currentUser?.user_metadata?.role ||
  "viewer";
 
-
- document.getElementById(
-   "settingsRole"
- ).textContent=
+ document.getElementById("settingsRole").textContent=
  currentRole;
-
 
  const id=
  data?.id_number ||
@@ -1532,52 +1196,12 @@ async function loadProfile(){
  currentUser?.user_metadata?.organization_id ||
  "Not registered";
 
-
- document.getElementById(
-   "settingsIdNumber"
- ).textContent=id;
-
-
- /*
-   If the profile row exists but ID is empty,
-   try to save metadata ID.
- */
-
- if(
-   data &&
-   !data.id_number &&
-   validId(
-     currentUser?.user_metadata?.id_number
-   )
- ){
-
-   const {error:idError}=
-   await db
-   .from("profiles")
-   .update({
-     id_number:
-     currentUser.user_metadata.id_number
-   })
-   .eq("id",currentUser.id);
-
-
-   if(idError){
-
-     console.log(
-       "ID profile update:",
-       idError.message
-     );
-
-   }
-
- }
+ document.getElementById("settingsIdNumber").textContent=id;
 
 }
 
 
-/* =========================================================
-   PERMISSION
-========================================================= */
+/* ================= PERMISSION ================= */
 
 function allowedWrite(){
 
@@ -1599,74 +1223,42 @@ function allowedWrite(){
 }
 
 
-/* =========================================================
-   NAVIGATION
-========================================================= */
+/* ================= NAVIGATION ================= */
 
 function showPage(id){
 
- document
- .querySelectorAll(".page")
- .forEach(x=>
-   x.classList.remove("active")
- );
+ document.querySelectorAll(".page")
+ .forEach(x=>x.classList.remove("active"));
 
+ const page=document.getElementById(id);
 
- const page=
- document.getElementById(id);
+ if(page)
+ page.classList.add("active");
 
-
- if(page){
-
-   page.classList.add("active");
-
- }
-
-
- document
- .querySelectorAll("nav button")
- .forEach(x=>
-   x.classList.remove("active")
- );
-
+ document.querySelectorAll("nav button")
+ .forEach(x=>x.classList.remove("active"));
 
  const n=
  document.getElementById(
-   "nav"+
-   id.charAt(0).toUpperCase()+
-   id.slice(1)
+   "nav"+id.charAt(0).toUpperCase()+id.slice(1)
  );
-
 
  if(n)n.classList.add("active");
 
-
- if(id==="dashboard")
- renderDashboard();
-
- if(id==="generators")
- renderGenerators();
-
- if(id==="history")
- renderHistory();
-
- if(id==="reports")
- renderReport();
+ if(id==="dashboard")renderDashboard();
+ if(id==="generators")renderGenerators();
+ if(id==="history")renderHistory();
+ if(id==="reports")renderReport();
 
  if(id==="official"){
-
    setOfficialDefaults();
-
    renderOfficial();
-
  }
 
 }
 
 
-/* =========================================================
-   LOAD DATABASE
-========================================================= */
+/* ================= LOAD DATABASE ================= */
 
 async function loadAll(){
 
@@ -1678,74 +1270,27 @@ async function loadAll(){
    .select("*")
    .order("plate");
 
-
-   if(v.error){
-
-     console.log(
-       "Vehicles:",
-       v.error.message
-     );
-
-   }
-
-
    vehicles=v.data||[];
-
 
    const f=
    await db
    .from("fuel_entries")
    .select("*")
-   .order(
-     "fuel_date",
-     {ascending:false}
-   )
-   .order(
-     "created_at",
-     {ascending:false}
-   );
-
-
-   if(f.error){
-
-     console.log(
-       "Fuel:",
-       f.error.message
-     );
-
-   }
-
+   .order("fuel_date",{ascending:false})
+   .order("created_at",{ascending:false});
 
    fuelRows=f.data||[];
-
 
    const p=
    await db
    .from("periods")
    .select("*")
-   .order(
-     "created_at",
-     {ascending:false}
-   )
+   .order("created_at",{ascending:false})
    .limit(1);
 
-
-   if(p.error){
-
-     console.log(
-       "Periods:",
-       p.error.message
-     );
-
-   }
-
-
-   currentPeriod=
-   p.data?.[0]||null;
-
+   currentPeriod=p.data?.[0]||null;
 
    currentBudget=0;
-
 
    if(currentPeriod){
 
@@ -1753,68 +1298,37 @@ async function loadAll(){
      await db
      .from("budgets")
      .select("amount")
-     .eq(
-       "period_start",
-       currentPeriod.start_date
-     )
-     .eq(
-       "period_end",
-       currentPeriod.end_date
-     )
-     .order(
-       "created_at",
-       {ascending:false}
-     )
+     .eq("period_start",currentPeriod.start_date)
+     .eq("period_end",currentPeriod.end_date)
+     .order("created_at",{ascending:false})
      .limit(1)
      .maybeSingle();
 
-
-     if(
-       !b.error &&
-       b.data
-     ){
-
-       currentBudget=
-       Number(b.data.amount||0);
-
-     }
+     if(!b.error&&b.data)
+     currentBudget=Number(b.data.amount||0);
 
    }
 
-
    loadGenerators();
-
    renderVehicles();
-
    fillVehicleSelect();
-
    renderHistory();
-
    renderDashboard();
 
  }catch(e){
 
-   console.log(
-     "loadAll error:",
-     e
-   );
+   console.log("loadAll error:",e);
 
  }
 
 }
 
 
-/* =========================================================
-   VEHICLES
-========================================================= */
+/* ================= VEHICLES ================= */
 
 function renderVehicles(){
 
- const body=
- document.getElementById(
-   "vehicleTable"
- );
-
+ const body=document.getElementById("vehicleTable");
 
  body.innerHTML=
  vehicles.map(v=>`
@@ -1828,15 +1342,14 @@ function renderVehicles(){
  <td>
 
  ${
-   currentRole==="admin"
-   ?
-   `<button
-      class="danger"
-      onclick="deleteVehicle(${Number(v.id)})">
-      Delete
-    </button>`
-   :
-   "View only"
+ currentRole==="admin"
+ ?
+ `<button class="danger"
+ onclick="deleteVehicle(${Number(v.id)})">
+ Delete
+ </button>`
+ :
+ "View only"
  }
 
  </td>
@@ -1850,53 +1363,39 @@ function renderVehicles(){
 
 function fillVehicleSelect(){
 
- const el=
- document.getElementById(
-   "fVehicle"
- );
-
+ const el=document.getElementById("fVehicle");
 
  if(!el)return;
 
-
  let html=
  '<option value="">Select vehicle or generator</option>';
-
 
  if(vehicles.length){
 
    html+=
    '<optgroup label="Vehicles">'+
-
    vehicles.map(v=>
      `<option value="vehicle:${esc(v.id)}">
        ${esc(v.plate)}
       </option>`
    ).join("")+
-
    "</optgroup>";
 
  }
-
 
  if(generators.length){
 
    html+=
    '<optgroup label="Generators">'+
-
    generators.map((g,i)=>
      `<option value="generator:${i}">
        ${esc(g.name)}
-       ${g.location
-         ?" — "+esc(g.location)
-         :""}
+       ${g.location?" — "+esc(g.location):""}
       </option>`
    ).join("")+
-
    "</optgroup>";
 
  }
-
 
  el.innerHTML=html;
 
@@ -1907,18 +1406,11 @@ async function addVehicle(){
 
  if(!allowedWrite())return;
 
-
  const plate=
- document.getElementById(
-   "vPlate"
- ).value.trim();
-
+ document.getElementById("vPlate").value.trim();
 
  const driver=
- document.getElementById(
-   "vDriver"
- ).value.trim();
-
+ document.getElementById("vDriver").value.trim();
 
  if(!plate){
 
@@ -1932,45 +1424,27 @@ async function addVehicle(){
 
  }
 
-
  const {error}=
- await db
- .from("vehicles")
- .insert({
+ await db.from("vehicles").insert({
    plate,
    driver
  });
 
-
  if(error){
 
-   msg(
-     "vehicleMsg",
-     error.message,
-     "error"
-   );
-
+   msg("vehicleMsg",error.message,"error");
    return;
 
  }
 
-
- document.getElementById(
-   "vPlate"
- ).value="";
-
-
- document.getElementById(
-   "vDriver"
- ).value="";
-
+ document.getElementById("vPlate").value="";
+ document.getElementById("vDriver").value="";
 
  msg(
    "vehicleMsg",
    "Vehicle added successfully.",
    "ok"
  );
-
 
  await loadAll();
 
@@ -1981,45 +1455,24 @@ async function deleteVehicle(id){
 
  if(currentRole!=="admin"){
 
-   alert(
-     "Only Admin can delete vehicles."
-   );
-
+   alert("Only Admin can delete vehicles.");
    return;
 
  }
 
-
- if(
-   !confirm(
-     "Delete this vehicle and related fuel records?"
-   )
- )return;
-
+ if(!confirm("Delete this vehicle and related fuel records?"))
+ return;
 
  const {error}=
- await db
- .from("vehicles")
- .delete()
- .eq("id",id);
+ await db.from("vehicles").delete().eq("id",id);
 
-
- if(error){
-
-   alert(error.message);
-
- }else{
-
-   await loadAll();
-
- }
+ if(error)alert(error.message);
+ else await loadAll();
 
 }
 
 
-/* =========================================================
-   GENERATORS
-========================================================= */
+/* ================= GENERATORS ================= */
 
 function loadGenerators(){
 
@@ -2027,9 +1480,7 @@ function loadGenerators(){
 
    generators=
    JSON.parse(
-     localStorage.getItem(
-       "semara_generators"
-     )||"[]"
+     localStorage.getItem("semara_generators")||"[]"
    );
 
  }catch(e){
@@ -2053,14 +1504,9 @@ function saveGenerators(){
 
 function renderGenerators(){
 
- const body=
- document.getElementById(
-   "generatorTable"
- );
-
+ const body=document.getElementById("generatorTable");
 
  if(!body)return;
-
 
  body.innerHTML=
  generators.map((g,i)=>`
@@ -2076,11 +1522,10 @@ function renderGenerators(){
  ${
  currentRole==="admin"
  ?
- `<button
-    class="danger"
-    onclick="deleteGenerator(${i})">
-    Delete
-  </button>`
+ `<button class="danger"
+ onclick="deleteGenerator(${i})">
+ Delete
+ </button>`
  :
  "View only"
  }
@@ -2098,18 +1543,11 @@ function addGenerator(){
 
  if(!allowedWrite())return;
 
-
  const name=
- document.getElementById(
-   "gName"
- ).value.trim();
-
+ document.getElementById("gName").value.trim();
 
  const location=
- document.getElementById(
-   "gLocation"
- ).value.trim();
-
+ document.getElementById("gLocation").value.trim();
 
  if(!name){
 
@@ -2123,25 +1561,12 @@ function addGenerator(){
 
  }
 
-
- generators.push({
-   name,
-   location
- });
-
+ generators.push({name,location});
 
  saveGenerators();
 
-
- document.getElementById(
-   "gName"
- ).value="";
-
-
- document.getElementById(
-   "gLocation"
- ).value="";
-
+ document.getElementById("gName").value="";
+ document.getElementById("gLocation").value="";
 
  msg(
    "generatorMsg",
@@ -2149,9 +1574,7 @@ function addGenerator(){
    "ok"
  );
 
-
  renderGenerators();
-
  fillVehicleSelect();
 
 }
@@ -2161,68 +1584,36 @@ function deleteGenerator(i){
 
  if(currentRole!=="admin"){
 
-   alert(
-     "Only Admin can delete generators."
-   );
-
+   alert("Only Admin can delete generators.");
    return;
 
  }
 
-
  if(!confirm("Delete this generator?"))
  return;
 
-
  generators.splice(i,1);
-
  saveGenerators();
-
  renderGenerators();
-
  fillVehicleSelect();
 
 }
 
 
-/* =========================================================
-   FUEL CALCULATION
-========================================================= */
+/* ================= FUEL ================= */
 
 function updateFuelTotal(){
 
  const liters=
- Number(
-   document.getElementById(
-     "fLiters"
-   )?.value||0
- );
-
+ Number(document.getElementById("fLiters")?.value||0);
 
  const price=
- Number(
-   document.getElementById(
-     "fPrice"
-   )?.value||0
- );
+ Number(document.getElementById("fPrice")?.value||0);
 
+ const expense=document.getElementById("fExpense");
 
- const expense=
- document.getElementById(
-   "fExpense"
- );
-
-
- if(
-   liters>0 &&
-   price>0 &&
-   expense
- ){
-
-   expense.value=
-   (liters*price).toFixed(2);
-
- }
+ if(liters>0&&price>0&&expense)
+ expense.value=(liters*price).toFixed(2);
 
 }
 
@@ -2230,70 +1621,30 @@ function updateFuelTotal(){
 function updateFuelDifferences(){
 
  const previousKm=
- Number(
-   document.getElementById(
-     "fPreviousKm"
-   )?.value||0
- );
-
+ Number(document.getElementById("fPreviousKm")?.value||0);
 
  const refillKm=
- Number(
-   document.getElementById(
-     "fRefillKm"
-   )?.value||0
- );
-
+ Number(document.getElementById("fRefillKm")?.value||0);
 
  const previousDate=
- document.getElementById(
-   "fPreviousDate"
- )?.value||"";
-
+ document.getElementById("fPreviousDate")?.value||"";
 
  const date=
- document.getElementById(
-   "fDate"
- )?.value||"";
+ document.getElementById("fDate")?.value||"";
 
-
- const distanceEl=
- document.getElementById(
-   "fDistance"
- );
-
-
- const daysEl=
- document.getElementById(
-   "fDays"
- );
-
+ const distanceEl=document.getElementById("fDistance");
+ const daysEl=document.getElementById("fDays");
 
  if(distanceEl){
 
-   if(
-     refillKm>=previousKm &&
-     (previousKm>0||refillKm>0)
-   ){
-
-     distanceEl.value=
-     (refillKm-previousKm)
-     .toFixed(2);
-
-   }else{
-
-     distanceEl.value="";
-
-   }
+   if(refillKm>=previousKm&&(previousKm>0||refillKm>0))
+   distanceEl.value=(refillKm-previousKm).toFixed(2);
+   else
+   distanceEl.value="";
 
  }
 
-
- if(
-   daysEl &&
-   previousDate &&
-   date
- ){
+ if(daysEl&&previousDate&&date){
 
    const diff=
    Math.round(
@@ -2303,9 +1654,7 @@ function updateFuelDifferences(){
      )/86400000
    );
 
-
-   daysEl.value=
-   diff>=0?diff:"";
+   daysEl.value=diff>=0?diff:"";
 
  }else if(daysEl){
 
@@ -2316,168 +1665,78 @@ function updateFuelDifferences(){
 }
 
 
-["fPreviousKm",
- "fRefillKm",
- "fPreviousDate",
- "fDate"]
+["fPreviousKm","fRefillKm","fPreviousDate","fDate"]
 .forEach(id=>{
 
- const el=
- document.getElementById(id);
+ const el=document.getElementById(id);
 
  if(el){
 
-   el.addEventListener(
-     "input",
-     updateFuelDifferences
-   );
-
-   el.addEventListener(
-     "change",
-     updateFuelDifferences
-   );
+   el.addEventListener("input",updateFuelDifferences);
+   el.addEventListener("change",updateFuelDifferences);
 
  }
 
 });
 
 
-document.addEventListener(
- "DOMContentLoaded",
- ()=>{
+document.addEventListener("DOMContentLoaded",()=>{
 
-   const liters=
-   document.getElementById(
-     "fLiters"
-   );
+ const liters=document.getElementById("fLiters");
+ const price=document.getElementById("fPrice");
 
-   const price=
-   document.getElementById(
-     "fPrice"
-   );
+ if(liters)
+ liters.addEventListener("input",updateFuelTotal);
 
+ if(price)
+ price.addEventListener("input",updateFuelTotal);
 
-   if(liters)
-   liters.addEventListener(
-     "input",
-     updateFuelTotal
-   );
+});
 
-
-   if(price)
-   price.addEventListener(
-     "input",
-     updateFuelTotal
-   );
-
- }
-);
-
-
-/* =========================================================
-   SAVE FUEL
-========================================================= */
 
 async function saveFuel(){
 
  if(!allowedWrite())return;
 
-
  const selection=
- document.getElementById(
-   "fVehicle"
- ).value;
-
+ document.getElementById("fVehicle").value;
 
  const isGenerator=
- selection.startsWith(
-   "generator:"
- );
-
+ selection.startsWith("generator:");
 
  const vehicle_id=
  isGenerator
- ? null
- : (
-   selection.startsWith(
-     "vehicle:"
-   )
+ ?null
+ :(selection.startsWith("vehicle:")
    ?selection.slice(7)
-   :""
- );
-
+   :"");
 
  const generatorIndex=
- isGenerator
- ?Number(
-   selection.split(":")[1]
- )
- :-1;
-
+ isGenerator?Number(selection.split(":")[1]):-1;
 
  const selectedGenerator=
- isGenerator
- ?generators[generatorIndex]
- :null;
+ isGenerator?generators[generatorIndex]:null;
 
-
- const date=
- document.getElementById(
-   "fDate"
- ).value;
-
-
- const receipt=
- document.getElementById(
-   "fReceipt"
- ).value.trim();
-
+ const date=document.getElementById("fDate").value;
+ const receipt=document.getElementById("fReceipt").value.trim();
 
  const expense=
- Number(
-   document.getElementById(
-     "fExpense"
-   ).value
- );
-
+ Number(document.getElementById("fExpense").value);
 
  const liters=
- Number(
-   document.getElementById(
-     "fLiters"
-   ).value
- );
-
+ Number(document.getElementById("fLiters").value);
 
  const price=
- Number(
-   document.getElementById(
-     "fPrice"
-   ).value
- );
-
+ Number(document.getElementById("fPrice").value);
 
  const refillKm=
- Number(
-   document.getElementById(
-     "fRefillKm"
-   ).value
- );
-
+ Number(document.getElementById("fRefillKm").value);
 
  const previousKm=
- Number(
-   document.getElementById(
-     "fPreviousKm"
-   ).value
- );
-
+ Number(document.getElementById("fPreviousKm").value);
 
  const previousDate=
- document.getElementById(
-   "fPreviousDate"
- ).value;
-
+ document.getElementById("fPreviousDate").value;
 
  if(
    (!vehicle_id&&!isGenerator)||
@@ -2500,7 +1759,6 @@ async function saveFuel(){
 
  }
 
-
  if(refillKm<previousKm){
 
    msg(
@@ -2513,28 +1771,12 @@ async function saveFuel(){
 
  }
 
+ const distance=refillKm-previousKm;
 
- const distance=
- refillKm-previousKm;
+ const d1=new Date(previousDate+"T00:00:00");
+ const d2=new Date(date+"T00:00:00");
 
-
- const d1=
- new Date(
-   previousDate+"T00:00:00"
- );
-
-
- const d2=
- new Date(
-   date+"T00:00:00"
- );
-
-
- const days=
- Math.round(
-   (d2-d1)/86400000
- );
-
+ const days=Math.round((d2-d1)/86400000);
 
  if(days<0){
 
@@ -2548,28 +1790,14 @@ async function saveFuel(){
 
  }
 
-
- document.getElementById(
-   "fDistance"
- ).value=
+ document.getElementById("fDistance").value=
  distance.toFixed(2);
 
+ document.getElementById("fDays").value=days;
 
- document.getElementById(
-   "fDays"
- ).value=
- days;
+ const calculatedTotal=liters*price;
 
-
- const calculatedTotal=
- liters*price;
-
-
- if(
-   Math.abs(
-     expense-calculatedTotal
-   )>0.01
- ){
+ if(Math.abs(expense-calculatedTotal)>0.01){
 
    msg(
      "fuelMsg",
@@ -2580,7 +1808,6 @@ async function saveFuel(){
    return;
 
  }
-
 
  const {data:existing,error:checkError}=
  await db
@@ -2595,23 +1822,14 @@ async function saveFuel(){
  .eq("distance",distance)
  .limit(1);
 
-
  if(checkError){
 
-   msg(
-     "fuelMsg",
-     checkError.message,
-     "error"
-   );
-
+   msg("fuelMsg",checkError.message,"error");
    return;
 
  }
 
-
- if(
-   (existing||[]).length
- ){
+ if((existing||[]).length){
 
    msg(
      "fuelMsg",
@@ -2623,7 +1841,6 @@ async function saveFuel(){
 
  }
 
-
  const {error}=
  await db
  .from("fuel_entries")
@@ -2633,55 +1850,36 @@ async function saveFuel(){
 
    driver:
    isGenerator
-   ?(
-      selectedGenerator?.name||
-      "Generator"
-    )
+   ?(selectedGenerator?.name||"Generator")
    :null,
 
    fuel_date:date,
-
    fuel_time:null,
 
    station:
-   document.getElementById(
-     "fDescription"
-   ).value.trim(),
+   document.getElementById("fDescription").value.trim(),
 
    receipt,
-
    liters,
-
    price,
-
    expense,
-
    current_km:refillKm,
-
    distance
 
  });
 
-
  if(error){
 
-   msg(
-     "fuelMsg",
-     error.message,
-     "error"
-   );
-
+   msg("fuelMsg",error.message,"error");
    return;
 
  }
-
 
  msg(
    "fuelMsg",
    "Fuel entry saved successfully.",
    "ok"
  );
-
 
  [
   "fReceipt",
@@ -2694,130 +1892,77 @@ async function saveFuel(){
   "fDistance",
   "fPreviousDate",
   "fDays"
- ]
- .forEach(id=>{
+ ].forEach(id=>{
 
-   const el=
-   document.getElementById(id);
-
+   const el=document.getElementById(id);
    if(el)el.value="";
 
  });
-
 
  await loadAll();
 
 }
 
 
-/* =========================================================
-   HISTORY
-========================================================= */
+/* ================= HISTORY ================= */
 
 function renderHistory(){
 
- const body=
- document.getElementById(
-   "historyTable"
+ const body=document.getElementById("historyTable");
+
+ const ordered=[...fuelRows].sort((a,b)=>
+   String(b.fuel_date||"")
+   .localeCompare(String(a.fuel_date||""))
  );
 
-
- const ordered=
- [...fuelRows].sort((a,b)=>{
-
-   const da=
-   String(a.fuel_date||"");
-
-   const dbb=
-   String(b.fuel_date||"");
-
-   return dbb.localeCompare(da);
-
- });
-
-
  const previousByVehicle={};
-
 
  body.innerHTML=
  ordered.map(x=>{
 
    const v=
-   vehicles.find(
-     z=>
-     String(z.id)===
-     String(x.vehicle_id)
+   vehicles.find(z=>
+     String(z.id)===String(x.vehicle_id)
    );
-
 
    const entityName=
    v?.plate||
-   (
-     x.vehicle_id==null
-     ?x.driver
-     :""
-   );
-
+   (x.vehicle_id==null?x.driver:"");
 
    const key=
-   String(x.vehicle_id)+
-   "|"+
-   String(x.driver||"");
+   String(x.vehicle_id)+"|"+String(x.driver||"");
 
-
-   const prev=
-   previousByVehicle[key];
-
+   const prev=previousByVehicle[key];
 
    let days="";
 
+   if(prev?.fuel_date&&x.fuel_date){
 
-   if(
-     prev?.fuel_date &&
-     x.fuel_date
-   ){
-
-     days=
-     Math.max(
+     days=Math.max(
        0,
        Math.round(
          (
-           new Date(
-             x.fuel_date+
-             "T00:00:00"
-           )-
-           new Date(
-             prev.fuel_date+
-             "T00:00:00"
-           )
+           new Date(x.fuel_date+"T00:00:00")-
+           new Date(prev.fuel_date+"T00:00:00")
          )/86400000
        )
      );
 
    }
 
-
    previousByVehicle[key]=x;
-
 
    return `
 
    <tr>
 
    <td>${esc(x.fuel_date||"")}</td>
-
    <td>${esc(entityName||"")}</td>
-
    <td>${esc(x.receipt||"")}</td>
-
    <td>${num(x.expense)}</td>
-
    <td>${num(x.liters)}</td>
-
    <td>${num(x.distance)}</td>
-
    <td>${num(x.current_km)}</td>
-
    <td>${days}</td>
 
    </tr>
@@ -2829,24 +1974,16 @@ function renderHistory(){
 }
 
 
-/* =========================================================
-   PERIOD
-========================================================= */
+/* ================= PERIOD ================= */
 
 function periodRows(){
 
  if(!currentPeriod)
  return fuelRows;
 
-
  return fuelRows.filter(x=>
-
-   x.fuel_date>=
-   currentPeriod.start_date &&
-
-   x.fuel_date<=
-   currentPeriod.end_date
-
+   x.fuel_date>=currentPeriod.start_date&&
+   x.fuel_date<=currentPeriod.end_date
  );
 
 }
@@ -2854,53 +1991,25 @@ function periodRows(){
 
 function totals(){
 
- const rows=
- periodRows();
-
+ const rows=periodRows();
 
  const expense=
- rows.reduce(
-   (a,x)=>
-   a+Number(x.expense||0),
-   0
- );
-
+ rows.reduce((a,x)=>a+Number(x.expense||0),0);
 
  const liters=
- rows.reduce(
-   (a,x)=>
-   a+Number(x.liters||0),
-   0
- );
-
+ rows.reduce((a,x)=>a+Number(x.liters||0),0);
 
  const km=
- rows.reduce(
-   (a,x)=>
-   a+Number(x.distance||0),
-   0
- );
+ rows.reduce((a,x)=>a+Number(x.distance||0),0);
 
+ const budget=Number(currentBudget||0);
 
- const budget=
- Number(
-   currentBudget||0
- );
-
-
- return {
-
+ return{
    expense,
-
    liters,
-
    km,
-
    budget,
-
-   remaining:
-   budget-expense
-
+   remaining:budget-expense
  };
 
 }
@@ -2910,18 +2019,8 @@ async function savePeriod(){
 
  if(!allowedWrite())return;
 
-
- const s=
- document.getElementById(
-   "periodStart"
- ).value;
-
-
- const e=
- document.getElementById(
-   "periodEnd"
- ).value;
-
+ const s=document.getElementById("periodStart").value;
+ const e=document.getElementById("periodEnd").value;
 
  if(!s||!e){
 
@@ -2935,20 +2034,10 @@ async function savePeriod(){
 
  }
 
+ const d1=new Date(s+"T00:00:00");
+ const d2=new Date(e+"T00:00:00");
 
- const d1=
- new Date(s+"T00:00:00");
-
-
- const d2=
- new Date(e+"T00:00:00");
-
-
- const days=
- Math.round(
-   (d2-d1)/86400000
- )+1;
-
+ const days=Math.round((d2-d1)/86400000)+1;
 
  if(days!==15){
 
@@ -2962,7 +2051,6 @@ async function savePeriod(){
 
  }
 
-
  const {error}=
  await db
  .from("periods")
@@ -2971,25 +2059,17 @@ async function savePeriod(){
    end_date:e
  });
 
-
  if(error){
 
-   msg(
-     "periodMsg",
-     error.message,
-     "error"
-   );
-
+   msg("periodMsg",error.message,"error");
    return;
 
  }
-
 
  currentPeriod={
    start_date:s,
    end_date:e
  };
-
 
  msg(
    "periodMsg",
@@ -2997,89 +2077,58 @@ async function savePeriod(){
    "ok"
  );
 
-
  await loadAll();
 
 }
 
 
-/* =========================================================
-   DASHBOARD
-========================================================= */
+/* ================= DASHBOARD ================= */
 
 function renderDashboard(){
 
  if(currentPeriod){
 
-   document.getElementById(
-     "periodStart"
-   ).value=
+   document.getElementById("periodStart").value=
    currentPeriod.start_date;
 
-
-   document.getElementById(
-     "periodEnd"
-   ).value=
+   document.getElementById("periodEnd").value=
    currentPeriod.end_date;
 
  }
 
-
  const t=totals();
 
-
- document.getElementById(
-   "dBudget"
- ).textContent=
+ document.getElementById("dBudget").textContent=
  t.budget.toFixed(2);
 
-
- document.getElementById(
-   "dExpense"
- ).textContent=
+ document.getElementById("dExpense").textContent=
  t.expense.toFixed(2);
 
-
- document.getElementById(
-   "dRemaining"
- ).textContent=
+ document.getElementById("dRemaining").textContent=
  t.remaining.toFixed(2);
 
-
- document.getElementById(
-   "dKm"
- ).textContent=
+ document.getElementById("dKm").textContent=
  t.km.toFixed(2);
 
-
- document.getElementById(
-   "dLiters"
- ).textContent=
+ document.getElementById("dLiters").textContent=
  t.liters.toFixed(2);
 
 }
 
 
-/* =========================================================
-   REPORT
-========================================================= */
+/* ================= REPORT ================= */
 
 function renderReport(){
 
  const t=totals();
 
-
- document.getElementById(
-   "reportText"
- ).innerHTML=`
+ document.getElementById("reportText").innerHTML=`
 
  <p>
  <b>Period:</b>
  ${
    currentPeriod
-   ?currentPeriod.start_date+
-    " to "+
-    currentPeriod.end_date
+   ?currentPeriod.start_date+" to "+currentPeriod.end_date
    :"Not set"
  }
  </p>
@@ -3118,86 +2167,41 @@ function renderReport(){
 }
 
 
-/* =========================================================
-   PETTY CASH
-========================================================= */
+/* ================= PETTY CASH ================= */
 
 let pettyFormType="airport";
 
-
 function todayString(){
-
- return new Date()
- .toISOString()
- .slice(0,10);
-
+ return new Date().toISOString().slice(0,10);
 }
 
 
 function setOfficialDefaults(){
 
- const dateIds=[
-   "rDate",
-   "rApprovedDate"
- ];
+ ["rDate","rApprovedDate"].forEach(id=>{
 
+   const el=document.getElementById(id);
 
- dateIds.forEach(id=>{
-
-   const el=
-   document.getElementById(id);
-
-   if(
-     el &&
-     !el.value
-   ){
-
-     el.value=
-     todayString();
-
-   }
+   if(el&&!el.value)
+   el.value=todayString();
 
  });
 
+ const name=document.getElementById("rName");
 
- const name=
- document.getElementById(
-   "rName"
- );
-
-
- if(
-   name &&
-   !name.value
- ){
-
-   name.value=
-   "Fuel Officer";
-
- }
-
+ if(name&&!name.value)
+ name.value="Fuel Officer";
 
  if(currentPeriod){
 
-   const f=
-   document.getElementById(
-     "rFrom"
-   );
-
-   const t=
-   document.getElementById(
-     "rTo"
-   );
-
+   const f=document.getElementById("rFrom");
+   const t=document.getElementById("rTo");
 
    if(f&&!f.value)
-   f.value=
-   currentPeriod.start_date;
-
+   f.value=currentPeriod.start_date;
 
    if(t&&!t.value)
-   t.value=
-   currentPeriod.end_date;
+   t.value=currentPeriod.end_date;
 
  }
 
@@ -3208,141 +2212,63 @@ function showPettyForm(type){
 
  pettyFormType=type;
 
-
  document
- .querySelectorAll(
-   ".petty-tabs button"
- )
- .forEach(
-   b=>b.classList.remove("active")
- );
-
+ .querySelectorAll(".petty-tabs button")
+ .forEach(b=>b.classList.remove("active"));
 
  const tab=
  document.getElementById(
-   "tab"+
-   type.charAt(0).toUpperCase()+
-   type.slice(1)
+   "tab"+type.charAt(0).toUpperCase()+type.slice(1)
  );
 
+ if(tab)tab.classList.add("active");
 
- if(tab)
- tab.classList.add("active");
-
-
- const shared=
- document.querySelector(
-   ".petty-inputs"
- );
-
-
- const sharedActions=
- document.querySelector(
-   ".petty-actions"
- );
-
-
- const enInputs=
- document.getElementById(
-   "expressNormalInputs"
- );
-
-
- const enActions=
- document.getElementById(
-   "expressNormalActions"
- );
-
+ const shared=document.querySelector(".petty-inputs");
+ const sharedActions=document.querySelector(".petty-actions");
+ const enInputs=document.getElementById("expressNormalInputs");
+ const enActions=document.getElementById("expressNormalActions");
 
  if(type==="expressNormal"){
 
-   if(shared)
-   shared.style.display="none";
+   if(shared)shared.style.display="none";
+   if(sharedActions)sharedActions.style.display="none";
+   if(enInputs)enInputs.style.display="grid";
+   if(enActions)enActions.style.display="grid";
 
+   const d=todayString();
 
-   if(sharedActions)
-   sharedActions.style.display="none";
+   ["enDate","enFrom","enTo"].forEach(id=>{
 
+     const e=document.getElementById(id);
 
-   if(enInputs)
-   enInputs.style.display="grid";
-
-
-   if(enActions)
-   enActions.style.display="grid";
-
-
-   const d=
-   todayString();
-
-
-   [
-     "enDate",
-     "enFrom",
-     "enTo"
-   ].forEach(id=>{
-
-     const e=
-     document.getElementById(id);
-
-     if(e&&!e.value)
-     e.value=d;
+     if(e&&!e.value)e.value=d;
 
    });
 
-
    renderExpressNormal();
-
    return;
 
  }
-
 
  if(type==="balance"){
 
-   if(shared)
-   shared.style.display="grid";
-
-
-   if(sharedActions)
-   sharedActions.style.display="grid";
-
-
-   if(enInputs)
-   enInputs.style.display="none";
-
-
-   if(enActions)
-   enActions.style.display="none";
-
+   if(shared)shared.style.display="grid";
+   if(sharedActions)sharedActions.style.display="grid";
+   if(enInputs)enInputs.style.display="none";
+   if(enActions)enActions.style.display="none";
 
    setOfficialDefaults();
-
    renderOfficial();
-
    return;
 
  }
 
-
- if(shared)
- shared.style.display="grid";
-
-
- if(sharedActions)
- sharedActions.style.display="grid";
-
-
- if(enInputs)
- enInputs.style.display="none";
-
-
- if(enActions)
- enActions.style.display="none";
-
+ if(shared)shared.style.display="grid";
+ if(sharedActions)sharedActions.style.display="grid";
+ if(enInputs)enInputs.style.display="none";
+ if(enActions)enActions.style.display="none";
 
  setOfficialDefaults();
-
  renderOfficial();
 
 }
@@ -3351,7 +2277,6 @@ function showPettyForm(type){
 function updateOfficialReport(){
 
  setOfficialDefaults();
-
  renderOfficial();
 
 }
@@ -3359,13 +2284,9 @@ function updateOfficialReport(){
 
 function field(id,fallback=""){
 
- const e=
- document.getElementById(id);
+ const e=document.getElementById(id);
 
- return esc(
-   e?.value||
-   fallback
- );
+ return esc(e?.value||fallback);
 
 }
 
@@ -3373,9 +2294,7 @@ function field(id,fallback=""){
 function reportExpense(){
 
  return Number(
-   document.getElementById(
-     "rExpenseDisplay"
-   )?.value||0
+   document.getElementById("rExpenseDisplay")?.value||0
  );
 
 }
@@ -3384,48 +2303,30 @@ function reportExpense(){
 function reportCashOnHand(){
 
  return Number(
-   document.getElementById(
-     "rCashOnHand"
-   )?.value||0
+   document.getElementById("rCashOnHand")?.value||0
  );
 
 }
 
 
-function pettyHeader(
- title,
- cols,
- content
-){
+function pettyHeader(title,cols,content){
 
  return `
-
  <div class="form-sheet">
-
  <div class="form-grid ${cols}">
-
  ${content}
-
  </div>
-
  </div>
-
  `;
 
 }
 
 
-/* =========================================================
-   FUEL REPORT ROWS
-========================================================= */
-
 function fuelRowsForReport(){
 
  const seen=new Set();
 
-
  return periodRows()
-
  .filter(x=>{
 
    const key=[
@@ -3434,60 +2335,40 @@ function fuelRowsForReport(){
      Number(x.liters||0),
      Number(x.price||0),
      Number(x.expense||0),
-     x.current_km==null
-       ?""
-       :Number(x.current_km),
+     x.current_km==null?"":Number(x.current_km),
      Number(x.distance||0)
    ].join("|");
-
 
    if(seen.has(key))
    return false;
 
-
    seen.add(key);
-
    return true;
 
  })
-
  .map(x=>{
 
    const v=
-   vehicles.find(
-     z=>
-     String(z.id)===
-     String(x.vehicle_id)
+   vehicles.find(z=>
+     String(z.id)===String(x.vehicle_id)
    );
 
-
-   return {
+   return{
 
      date:x.fuel_date||"",
 
      description:
      `Fuel - ${v?.plate||""}${
-       x.station
-       ?" / "+x.station
-       :""
+       x.station?" / "+x.station:""
      }`,
 
-     amount:
-     Number(x.expense||0),
-
-     liter:
-     Number(x.liters||0),
-
-     unit:
-     Number(x.price||0),
-
-     total:
-     Number(x.expense||0),
+     amount:Number(x.expense||0),
+     liter:Number(x.liters||0),
+     unit:Number(x.price||0),
+     total:Number(x.expense||0),
 
      code:
-     document.getElementById(
-       "rBudgetCode"
-     )?.value||
+     document.getElementById("rBudgetCode")?.value||
      "SEMERA AIRPORT"
 
    };
@@ -3497,30 +2378,20 @@ function fuelRowsForReport(){
 }
 
 
-/* =========================================================
-   AIRPORT FORM
-========================================================= */
+/* ================= AIRPORT FORM ================= */
 
 function renderAirportForm(){
 
  const t=totals();
 
- const enteredExpense=
- reportExpense();
+ const enteredExpense=reportExpense();
+ const enteredCashOnHand=reportCashOnHand();
 
- const enteredCashOnHand=
- reportCashOnHand();
-
-
- const rows=
- fuelRowsForReport()
- .slice(0,5);
-
+ const rows=fuelRowsForReport().slice(0,5);
 
  while(rows.length<5){
 
    rows.push({
-
      date:"",
      description:"",
      amount:"",
@@ -3528,116 +2399,82 @@ function renderAirportForm(){
      unit:"",
      total:"",
      code:""
-
    });
 
  }
 
-
  let cells=`
 
- <div class="fcell title"
- style="grid-column:span 9">
-
+ <div class="fcell title" style="grid-column:span 9">
  AIRPORT FUEL PETTY CASH REPORT FORM
-
  </div>
 
- <div class="fcell left"
- style="grid-column:span 2">
+ <div class="fcell left" style="grid-column:span 2">
  Report No.
  </div>
 
  <div class="fcell">
- ${field(
-   "rNo",
-   "SEMERA-"+todayString().replaceAll("-","")
- )}
+ ${field("rNo","SEMERA-"+todayString().replaceAll("-",""))}
  </div>
 
- <div class="fcell"
- style="grid-column:span 9"></div>
+ <div class="fcell" style="grid-column:span 9"></div>
 
- <div class="fcell left"
- style="grid-column:span 2">
+ <div class="fcell left" style="grid-column:span 2">
  DATE:
  </div>
 
- <div class="fcell">
- ${field("rDate")}
- </div>
+ <div class="fcell">${field("rDate")}</div>
 
- <div class="fcell left"
- style="grid-column:span 2">
+ <div class="fcell left" style="grid-column:span 2">
  Petty Cash Holder Name
  </div>
 
- <div class="fcell"
- style="grid-column:span 3">
+ <div class="fcell" style="grid-column:span 3">
  ${field("rName")}
  </div>
 
- <div class="fcell"
- style="grid-column:span 4">
- Department:
- ${field("rDept","Fuel Management")}
+ <div class="fcell" style="grid-column:span 4">
+ Department: ${field("rDept","Fuel Management")}
  </div>
 
- <div class="fcell left">
- Loc.
- </div>
+ <div class="fcell left">Loc.</div>
 
- <div class="fcell"
- style="grid-column:span 2">
+ <div class="fcell" style="grid-column:span 2">
  ${field("rLoc","SEMERA AIRPORT")}
  </div>
 
- <div class="fcell left"
- style="grid-column:span 2">
+ <div class="fcell left" style="grid-column:span 2">
  Bank Account
  </div>
 
- <div class="fcell"
- style="grid-column:span 3">
+ <div class="fcell" style="grid-column:span 3">
  ${field("rBank")}
  </div>
 
- <div class="fcell"
- style="grid-column:span 4"></div>
+ <div class="fcell" style="grid-column:span 4"></div>
+ <div class="fcell" style="grid-column:span 3"></div>
 
- <div class="fcell"
- style="grid-column:span 3"></div>
-
- <div class="fcell left"
- style="grid-column:span 2">
+ <div class="fcell left" style="grid-column:span 2">
  ID Number
  </div>
 
- <div class="fcell"
- style="grid-column:span 3">
+ <div class="fcell" style="grid-column:span 3">
  ${field("rSignature")}
  </div>
 
- <div class="fcell"
- style="grid-column:span 4">
+ <div class="fcell" style="grid-column:span 4">
  <b>From:</b> ${field("rFrom")}
  </div>
 
- <div class="fcell left">
- To
- </div>
+ <div class="fcell left">To</div>
 
- <div class="fcell"
- style="grid-column:span 2">
+ <div class="fcell" style="grid-column:span 2">
  ${field("rTo")}
  </div>
 
- <div class="fcell head">
- DATE
- </div>
+ <div class="fcell head">DATE</div>
 
- <div class="fcell head"
- style="grid-column:span 4">
+ <div class="fcell head" style="grid-column:span 4">
  Description
  </div>
 
@@ -3645,33 +2482,24 @@ function renderAirportForm(){
  Amount in<br>Local Currencies
  </div>
 
- <div class="fcell head">
- Liter
- </div>
+ <div class="fcell head">Liter</div>
 
  <div class="fcell head">
  Unit<br>Price/Lt
  </div>
 
- <div class="fcell head">
- Total Price
- </div>
+ <div class="fcell head">Total Price</div>
 
- <div class="fcell head"
- style="grid-column:span 3">
+ <div class="fcell head" style="grid-column:span 3">
  Budget Code/Dept. &amp; Loc.
  </div>
-
  `;
-
 
  rows.forEach(r=>{
 
    cells+=`
 
-   <div class="fcell row">
-   ${esc(r.date)}
-   </div>
+   <div class="fcell row">${esc(r.date)}</div>
 
    <div class="fcell row"
    style="grid-column:span 4;text-align:left;justify-content:flex-start">
@@ -3679,46 +2507,28 @@ function renderAirportForm(){
    </div>
 
    <div class="fcell row">
-   ${
-     r.amount===""
-     ?""
-     :Number(r.amount).toFixed(2)
-   }
+   ${r.amount===""?"":Number(r.amount).toFixed(2)}
    </div>
 
    <div class="fcell row">
-   ${
-     r.liter===""
-     ?""
-     :Number(r.liter).toFixed(2)
-   }
+   ${r.liter===""?"":Number(r.liter).toFixed(2)}
    </div>
 
    <div class="fcell row">
-   ${
-     r.unit===""
-     ?""
-     :Number(r.unit).toFixed(2)
-   }
+   ${r.unit===""?"":Number(r.unit).toFixed(2)}
    </div>
 
    <div class="fcell row">
-   ${
-     r.total===""
-     ?""
-     :Number(r.total).toFixed(2)
-   }
+   ${r.total===""?"":Number(r.total).toFixed(2)}
    </div>
 
-   <div class="fcell row"
-   style="grid-column:span 3">
+   <div class="fcell row" style="grid-column:span 3">
    ${esc(r.code)}
    </div>
 
    `;
 
  });
-
 
  cells+=`
 
@@ -3735,33 +2545,25 @@ function renderAirportForm(){
  ${t.liters.toFixed(2)}
  </div>
 
- <div class="fcell total">
- -
- </div>
+ <div class="fcell total">-</div>
 
  <div class="fcell total">
  ${t.expense.toFixed(2)}
  </div>
 
- <div class="fcell total"
- style="grid-column:span 3">
+ <div class="fcell total" style="grid-column:span 3">
  ${field("rBudgetCode","SEMERA AIRPORT")}
  </div>
 
- <div class="fcell big left"
- style="grid-column:span 7">
+ <div class="fcell big left" style="grid-column:span 7">
 
  Cash Received This Period:
- ${Number(
-   document.getElementById("rCash")?.value||0
- ).toFixed(2)}
+ ${Number(document.getElementById("rCash")?.value||0).toFixed(2)}
 
  <br>
 
  Cash Due From Previous Period:
- ${Number(
-   document.getElementById("rPrevious")?.value||0
- ).toFixed(2)}
+ ${Number(document.getElementById("rPrevious")?.value||0).toFixed(2)}
 
  <br>
 
@@ -3777,15 +2579,12 @@ function renderAirportForm(){
 
  <b>
  Total Petty Cash Amount:
- ${Number(
-   document.getElementById("rFund")?.value||0
- ).toFixed(2)}
+ ${Number(document.getElementById("rFund")?.value||0).toFixed(2)}
  </b>
 
  </div>
 
- <div class="fcell big left"
- style="grid-column:span 5">
+ <div class="fcell big left" style="grid-column:span 5">
 
  Approved:
  ${field("rApproved")}
@@ -3802,7 +2601,6 @@ function renderAirportForm(){
  </div>
 
  `;
-
 
  return pettyHeader(
    "AIRPORT FUEL PETTY CASH REPORT FORM",
@@ -3813,150 +2611,103 @@ function renderAirportForm(){
 }
 
 
-/* =========================================================
-   NORMAL FORM
-========================================================= */
+/* ================= NORMAL FORM ================= */
 
 function renderNormalForm(){
 
- const enteredExpense=
- reportExpense();
-
- const enteredCashOnHand=
- reportCashOnHand();
-
+ const enteredExpense=reportExpense();
+ const enteredCashOnHand=reportCashOnHand();
 
  const rows=
- Array.from(
-   {length:10},
-   (_,i)=>`
+ Array.from({length:10},(_,i)=>`
 
-   <div class="fcell row">
-   ${i===0?field("rFrom"):""}
-   </div>
+ <div class="fcell row">
+ ${i===0?field("rFrom"):""}
+ </div>
 
-   <div class="fcell row"
-   style="grid-column:span 4"></div>
+ <div class="fcell row" style="grid-column:span 4"></div>
 
-   <div class="fcell row">
-   ETB
-   </div>
+ <div class="fcell row">ETB</div>
+ <div class="fcell row">1 Pc</div>
+ <div class="fcell row"></div>
+ <div class="fcell row"></div>
 
-   <div class="fcell row">
-   1 Pc
-   </div>
+ <div class="fcell row" style="grid-column:span 3"></div>
 
-   <div class="fcell row"></div>
-
-   <div class="fcell row"></div>
-
-   <div class="fcell row"
-   style="grid-column:span 3"></div>
-
-   `
- ).join("");
-
+ `).join("");
 
  const cells=`
 
- <div class="fcell title"
- style="grid-column:span 9">
+ <div class="fcell title" style="grid-column:span 9">
  AIRPORT NORMAL PETTY CASH REPORT FORM
  </div>
 
- <div class="fcell left"
- style="grid-column:span 2">
+ <div class="fcell left" style="grid-column:span 2">
  Report No.
  </div>
 
  <div class="fcell">
- ${field(
-   "rNo",
-   "NORMAL-"+todayString().replaceAll("-","")
- )}
+ ${field("rNo","NORMAL-"+todayString().replaceAll("-",""))}
  </div>
 
- <div class="fcell"
- style="grid-column:span 9"></div>
+ <div class="fcell" style="grid-column:span 9"></div>
 
- <div class="fcell left"
- style="grid-column:span 2">
+ <div class="fcell left" style="grid-column:span 2">
  DATE:
  </div>
 
- <div class="fcell">
- ${field("rDate")}
- </div>
+ <div class="fcell">${field("rDate")}</div>
 
- <div class="fcell left"
- style="grid-column:span 2">
+ <div class="fcell left" style="grid-column:span 2">
  Petty Cash Holder Name
  </div>
 
- <div class="fcell"
- style="grid-column:span 3">
+ <div class="fcell" style="grid-column:span 3">
  ${field("rName")}
  </div>
 
- <div class="fcell"
- style="grid-column:span 4">
- Department:
- ${field("rDept","Finance")}
+ <div class="fcell" style="grid-column:span 4">
+ Department: ${field("rDept","Finance")}
  </div>
 
- <div class="fcell left">
- Loc.
- </div>
+ <div class="fcell left">Loc.</div>
 
- <div class="fcell"
- style="grid-column:span 2">
+ <div class="fcell" style="grid-column:span 2">
  ${field("rLoc","SEMERA AIRPORT")}
  </div>
 
- <div class="fcell left"
- style="grid-column:span 2">
+ <div class="fcell left" style="grid-column:span 2">
  Bank Account
  </div>
 
- <div class="fcell"
- style="grid-column:span 3">
+ <div class="fcell" style="grid-column:span 3">
  ${field("rBank")}
  </div>
 
- <div class="fcell"
- style="grid-column:span 4"></div>
+ <div class="fcell" style="grid-column:span 4"></div>
+ <div class="fcell" style="grid-column:span 3"></div>
 
- <div class="fcell"
- style="grid-column:span 3"></div>
-
- <div class="fcell left"
- style="grid-column:span 2">
+ <div class="fcell left" style="grid-column:span 2">
  ID Number
  </div>
 
- <div class="fcell"
- style="grid-column:span 3">
+ <div class="fcell" style="grid-column:span 3">
  ${field("rSignature")}
  </div>
 
- <div class="fcell"
- style="grid-column:span 4">
+ <div class="fcell" style="grid-column:span 4">
  <b>From:</b> ${field("rFrom")}
  </div>
 
- <div class="fcell left">
- To
- </div>
+ <div class="fcell left">To</div>
 
- <div class="fcell"
- style="grid-column:span 2">
+ <div class="fcell" style="grid-column:span 2">
  ${field("rTo")}
  </div>
 
  <div class="fcell head">DATE</div>
 
- <div class="fcell head"
- style="grid-column:span 4">
+ <div class="fcell head" style="grid-column:span 4">
  Description
  </div>
 
@@ -3964,9 +2715,7 @@ function renderNormalForm(){
  Amount in<br>Local Currencies
  </div>
 
- <div class="fcell head">
- Unit
- </div>
+ <div class="fcell head">Unit</div>
 
  <div class="fcell head">
  Unit Price<br>in ETB
@@ -3976,64 +2725,40 @@ function renderNormalForm(){
  Total Price<br>in ETB
  </div>
 
- <div class="fcell head"
- style="grid-column:span 3">
+ <div class="fcell head" style="grid-column:span 3">
  Budget Code/Dept. &amp; Loc.
  </div>
 
  ${rows}
 
- <div class="fcell total"
- style="grid-column:span 7;text-align:right">
+ <div class="fcell total" style="grid-column:span 7;text-align:right">
  Total
  </div>
 
- <div class="fcell total">
- ETB
- </div>
+ <div class="fcell total">ETB</div>
+ <div class="fcell total">1 Pc</div>
+ <div class="fcell total">-</div>
+ <div class="fcell total">0.00</div>
 
- <div class="fcell total">
- 1 Pc
- </div>
-
- <div class="fcell total">
- -
- </div>
-
- <div class="fcell total">
- 0.00
- </div>
-
- <div class="fcell total"
- style="grid-column:span 3">
+ <div class="fcell total" style="grid-column:span 3">
  ${field("rBudgetCode","SEMERA AIRPORT")}
  </div>
 
- <div class="fcell"
- style="grid-column:span 12">
-
- Total 0.00
- &nbsp;&nbsp;
- VAT (15%) 0.00
- &nbsp;&nbsp;
+ <div class="fcell" style="grid-column:span 12">
+ Total 0.00 &nbsp;&nbsp;
+ VAT (15%) 0.00 &nbsp;&nbsp;
  Total (Including VAT) 0.00
-
  </div>
 
- <div class="fcell big left"
- style="grid-column:span 7">
+ <div class="fcell big left" style="grid-column:span 7">
 
  Cash Received This Period:
- ${Number(
-   document.getElementById("rCash")?.value||0
- ).toFixed(2)}
+ ${Number(document.getElementById("rCash")?.value||0).toFixed(2)}
 
  <br>
 
  Cash Due From Previous Period:
- ${Number(
-   document.getElementById("rPrevious")?.value||0
- ).toFixed(2)}
+ ${Number(document.getElementById("rPrevious")?.value||0).toFixed(2)}
 
  <br>
 
@@ -4049,15 +2774,12 @@ function renderNormalForm(){
 
  <b>
  Total Petty Cash Amount:
- ${Number(
-   document.getElementById("rFund")?.value||0
- ).toFixed(2)}
+ ${Number(document.getElementById("rFund")?.value||0).toFixed(2)}
  </b>
 
  </div>
 
- <div class="fcell big left"
- style="grid-column:span 5">
+ <div class="fcell big left" style="grid-column:span 5">
 
  Approved:
  ${field("rApproved")}
@@ -4075,7 +2797,6 @@ function renderNormalForm(){
 
  `;
 
-
  return pettyHeader(
    "AIRPORT NORMAL PETTY CASH REPORT FORM",
    "normal",
@@ -4085,136 +2806,89 @@ function renderNormalForm(){
 }
 
 
-/* =========================================================
-   EXPRESS FORM
-========================================================= */
+/* ================= EXPRESS FORM ================= */
 
 function renderExpressForm(){
 
  const cash=
- Number(
-   document.getElementById(
-     "rCash"
-   )?.value||0
- );
-
+ Number(document.getElementById("rCash")?.value||0);
 
  const previous=
- Number(
-   document.getElementById(
-     "rPrevious"
-   )?.value||0
- );
+ Number(document.getElementById("rPrevious")?.value||0);
 
-
- const enteredExpense=
- reportExpense();
-
-
- const enteredCashOnHand=
- reportCashOnHand();
-
+ const enteredExpense=reportExpense();
+ const enteredCashOnHand=reportCashOnHand();
 
  const cells=`
 
- <div class="fcell title"
- style="grid-column:span 7">
+ <div class="fcell title" style="grid-column:span 7">
  EXPRESS FUEL PETTY CASH REPORT FORM
  </div>
 
- <div class="fcell left"
- style="grid-column:span 2">
+ <div class="fcell left" style="grid-column:span 2">
  Report No.
  </div>
 
  <div class="fcell">
- ${field(
-   "rNo",
-   "EXPRESS-"+todayString().replaceAll("-","")
- )}
+ ${field("rNo","EXPRESS-"+todayString().replaceAll("-",""))}
  </div>
 
- <div class="fcell"
- style="grid-column:span 2"></div>
+ <div class="fcell" style="grid-column:span 2"></div>
+ <div class="fcell" style="grid-column:span 7"></div>
 
- <div class="fcell"
- style="grid-column:span 7"></div>
+ <div class="fcell left">DATE:</div>
 
- <div class="fcell left">
- DATE:
- </div>
-
- <div class="fcell"
- style="grid-column:span 2">
+ <div class="fcell" style="grid-column:span 2">
  ${field("rDate")}
  </div>
 
- <div class="fcell left"
- style="grid-column:span 2">
+ <div class="fcell left" style="grid-column:span 2">
  Petty Cash Holder Name
  </div>
 
- <div class="fcell"
- style="grid-column:span 3">
+ <div class="fcell" style="grid-column:span 3">
  ${field("rName")}
  </div>
 
- <div class="fcell"
- style="grid-column:span 2">
- Department:
- ${field("rDept")}
+ <div class="fcell" style="grid-column:span 2">
+ Department: ${field("rDept")}
  </div>
 
- <div class="fcell left">
- Loc.
- </div>
+ <div class="fcell left">Loc.</div>
 
- <div class="fcell"
- style="grid-column:span 2">
+ <div class="fcell" style="grid-column:span 2">
  ${field("rLoc")}
  </div>
 
- <div class="fcell left"
- style="grid-column:span 2">
+ <div class="fcell left" style="grid-column:span 2">
  Bank Account
  </div>
 
- <div class="fcell"
- style="grid-column:span 3">
+ <div class="fcell" style="grid-column:span 3">
  ${field("rBank")}
  </div>
 
- <div class="fcell"
- style="grid-column:span 2">
- <b>From:</b>
- ${field("rFrom")}
+ <div class="fcell" style="grid-column:span 2">
+ <b>From:</b> ${field("rFrom")}
  </div>
 
- <div class="fcell left">
- To
- </div>
+ <div class="fcell left">To</div>
 
- <div class="fcell"
- style="grid-column:span 2">
+ <div class="fcell" style="grid-column:span 2">
  ${field("rTo")}
  </div>
 
- <div class="fcell left"
- style="grid-column:span 2">
+ <div class="fcell left" style="grid-column:span 2">
  ID Number
  </div>
 
- <div class="fcell"
- style="grid-column:span 3">
+ <div class="fcell" style="grid-column:span 3">
  ${field("rSignature")}
  </div>
 
- <div class="fcell head">
- DATE
- </div>
+ <div class="fcell head">DATE</div>
 
- <div class="fcell head"
- style="grid-column:span 4">
+ <div class="fcell head" style="grid-column:span 4">
  Description
  </div>
 
@@ -4226,50 +2900,32 @@ function renderExpressForm(){
  Amount in ETB
  </div>
 
- <div class="fcell head"
- style="grid-column:span 2">
+ <div class="fcell head" style="grid-column:span 2">
  Budget Code/Dept. &amp; Loc.
  </div>
 
  <div class="fcell row"></div>
-
- <div class="fcell row"
- style="grid-column:span 4"></div>
-
- <div class="fcell row">
- ETB
- </div>
-
+ <div class="fcell row" style="grid-column:span 4"></div>
+ <div class="fcell row">ETB</div>
  <div class="fcell row"></div>
 
- <div class="fcell row"
- style="grid-column:span 2">
+ <div class="fcell row" style="grid-column:span 2">
  ${field("rBudgetCode","SEMERA AIRPORT")}
  </div>
 
- <div class="fcell total"
- style="grid-column:span 6;text-align:right">
+ <div class="fcell total" style="grid-column:span 6;text-align:right">
  Total
  </div>
 
- <div class="fcell total">
- ETB
- </div>
+ <div class="fcell total">ETB</div>
+ <div class="fcell total">0.00</div>
+ <div class="fcell total" style="grid-column:span 2"></div>
 
- <div class="fcell total">
- 0.00
- </div>
-
- <div class="fcell total"
- style="grid-column:span 2"></div>
-
- <div class="fcell"
- style="grid-column:span 10">
+ <div class="fcell" style="grid-column:span 10">
  Foreign Currency
  </div>
 
- <div class="fcell big left"
- style="grid-column:span 6">
+ <div class="fcell big left" style="grid-column:span 6">
 
  Cash Received This Period:
  ${cash.toFixed(2)}
@@ -4293,27 +2949,20 @@ function renderExpressForm(){
 
  <b>
  Total Petty Cash Amount:
- ${Number(
-   document.getElementById("rFund")?.value||0
- ).toFixed(2)}
+ ${Number(document.getElementById("rFund")?.value||0).toFixed(2)}
  </b>
 
  </div>
 
- <div class="fcell"
- style="grid-column:span 7">
- Approved:
- ${field("rApproved")}
+ <div class="fcell" style="grid-column:span 7">
+ Approved: ${field("rApproved")}
  </div>
 
- <div class="fcell"
- style="grid-column:span 3">
- Date:
- ${field("rApprovedDate")}
+ <div class="fcell" style="grid-column:span 3">
+ Date: ${field("rApprovedDate")}
  </div>
 
  `;
-
 
  return pettyHeader(
    "EXPRESS FUEL PETTY CASH REPORT FORM",
@@ -4324,54 +2973,26 @@ function renderExpressForm(){
 }
 
 
-/* =========================================================
-   BALANCE
-========================================================= */
+/* ================= BALANCE ================= */
 
 function renderBalanceForm(){
 
  const t=totals();
 
-
  const cash=
- Number(
-   document.getElementById(
-     "rCash"
-   )?.value||0
- );
-
+ Number(document.getElementById("rCash")?.value||0);
 
  const previous=
- Number(
-   document.getElementById(
-     "rPrevious"
-   )?.value||0
- );
-
+ Number(document.getElementById("rPrevious")?.value||0);
 
  const normal=
- Number(
-   localStorage.getItem(
-     "normalPettyCashFund"
-   )||0
- );
-
+ Number(localStorage.getItem("normalPettyCashFund")||0);
 
  const airport=
- Number(
-   document.getElementById(
-     "rFund"
-   )?.value||0
- );
-
+ Number(document.getElementById("rFund")?.value||0);
 
  const express=
- Number(
-   localStorage.getItem(
-     "expressPettyCashFund"
-   )||0
- );
-
+ Number(localStorage.getItem("expressPettyCashFund")||0);
 
  const rows=[
 
@@ -4398,13 +3019,8 @@ function renderBalanceForm(){
 
  ];
 
-
  const total=
- rows.reduce(
-   (a,r)=>a+r[1],
-   0
- );
-
+ rows.reduce((a,r)=>a+r[1],0);
 
  return `
 
@@ -4413,19 +3029,12 @@ function renderBalanceForm(){
  <table class="balance-table">
 
  <thead>
-
  <tr>
-
  <th>Fund Type</th>
-
  <th>Total Amount Petty Cash Fund</th>
-
  <th>Cash on Hand</th>
-
  <th>Expenses from Fund</th>
-
  </tr>
-
  </thead>
 
  <tbody>
@@ -4434,15 +3043,10 @@ function renderBalanceForm(){
  rows.map(r=>`
 
  <tr>
-
  <td>${esc(r[0])}</td>
-
  <td>${r[1].toFixed(2)}</td>
-
  <td>${r[2].toFixed(2)}</td>
-
  <td>${r[3].toFixed(2)}</td>
-
  </tr>
 
  `).join("")
@@ -4456,19 +3060,13 @@ function renderBalanceForm(){
 
  <th>
  ${
-   rows.reduce(
-     (a,r)=>a+r[2],
-     0
-   ).toFixed(2)
+ rows.reduce((a,r)=>a+r[2],0).toFixed(2)
  }
  </th>
 
  <th>
  ${
-   rows.reduce(
-     (a,r)=>a+r[3],
-     0
-   ).toFixed(2)
+ rows.reduce((a,r)=>a+r[3],0).toFixed(2)
  }
  </th>
 
@@ -4485,262 +3083,150 @@ function renderBalanceForm(){
 }
 
 
-/* =========================================================
-   RENDER OFFICIAL
-========================================================= */
+/* ================= RENDER OFFICIAL ================= */
 
 function renderOfficial(){
 
- const target=
- document.getElementById(
-   "officialReport"
- );
+ const target=document.getElementById("officialReport");
 
+ if(pettyFormType==="airport")
+ target.innerHTML=renderAirportForm();
 
- if(pettyFormType==="airport"){
+ else if(pettyFormType==="normal")
+ target.innerHTML=renderNormalForm();
 
-   target.innerHTML=
-   renderAirportForm();
+ else if(pettyFormType==="express")
+ target.innerHTML=renderExpressForm();
 
- }else if(
-   pettyFormType==="normal"
- ){
-
-   target.innerHTML=
-   renderNormalForm();
-
- }else if(
-   pettyFormType==="express"
- ){
-
-   target.innerHTML=
-   renderExpressForm();
-
- }else if(
-   pettyFormType==="balance"
- ){
-
-   target.innerHTML=
-   renderBalanceForm();
-
- }
+ else if(pettyFormType==="balance")
+ target.innerHTML=renderBalanceForm();
 
 }
 
 
-/* =========================================================
-   EXPRESS NORMAL
-========================================================= */
+/* ================= EXPRESS NORMAL ================= */
 
 function renderExpressNormal(){
 
- const v=
- id=>
+ const v=id=>
  document.getElementById(id)?.value||"";
-
 
  const no=
  v("enReportNo")||
- "SEMERA-EXP-NORMAL-"+
- todayString().replaceAll("-","");
+ "SEMERA-EXP-NORMAL-"+todayString().replaceAll("-","");
 
+ const date=v("enDate")||todayString();
 
- const date=
- v("enDate")||
- todayString();
+ const cash=Number(v("enCash")||0);
+ const previous=Number(v("enPrevious")||0);
+ const expense=Number(v("enExpense")||0);
+ const balance=Number(v("enCashOnHand")||0);
+ const fund=Number(v("enFund")||0);
 
+ const dept=v("enDept")||"SEMERA AIRPORT";
+ const loc=v("enLoc")||"SEMERA AIRPORT";
+ const name=v("enName");
+ const idNo=v("enId");
+ const from=v("enFrom");
+ const to=v("enTo");
+ const approved=v("enApproved");
+ const approvedDate=v("enApprovedDate");
 
- const cash=
- Number(v("enCash")||0);
-
-
- const previous=
- Number(v("enPrevious")||0);
-
-
- const expense=
- Number(v("enExpense")||0);
-
-
- const balance=
- Number(v("enCashOnHand")||0);
-
-
- const fund=
- Number(v("enFund")||0);
-
-
- const dept=
- v("enDept")||
- "SEMERA AIRPORT";
-
-
- const loc=
- v("enLoc")||
- "SEMERA AIRPORT";
-
-
- const name=
- v("enName");
-
-
- const idNo=
- v("enId");
-
-
- const from=
- v("enFrom");
-
-
- const to=
- v("enTo");
-
-
- const approved=
- v("enApproved");
-
-
- const approvedDate=
- v("enApprovedDate");
-
-
- document.getElementById(
-   "officialReport"
- ).innerHTML=`
+ document.getElementById("officialReport").innerHTML=`
 
  <div class="form-sheet">
 
  <div class="form-grid airport">
 
- <div class="fcell title"
- style="grid-column:span 9">
+ <div class="fcell title" style="grid-column:span 9">
  EXPRESS NORMAL PETTY CASH REPORT FORM
  </div>
 
- <div class="fcell left"
- style="grid-column:span 2">
+ <div class="fcell left" style="grid-column:span 2">
  Report No.
  </div>
 
- <div class="fcell">
- ${esc(no)}
- </div>
+ <div class="fcell">${esc(no)}</div>
 
- <div class="fcell"
- style="grid-column:span 2">
+ <div class="fcell" style="grid-column:span 2">
  DATE
  </div>
 
- <div class="fcell">
- ${esc(date)}
- </div>
+ <div class="fcell">${esc(date)}</div>
 
- <div class="fcell left"
- style="grid-column:span 2">
+ <div class="fcell left" style="grid-column:span 2">
  Petty Cash Holder Name
  </div>
 
- <div class="fcell"
- style="grid-column:span 2">
+ <div class="fcell" style="grid-column:span 2">
  ${esc(name)}
  </div>
 
- <div class="fcell left"
- style="grid-column:span 2">
+ <div class="fcell left" style="grid-column:span 2">
  ID Number
  </div>
 
- <div class="fcell"
- style="grid-column:span 2">
+ <div class="fcell" style="grid-column:span 2">
  ${esc(idNo)}
  </div>
 
- <div class="fcell left"
- style="grid-column:span 2">
+ <div class="fcell left" style="grid-column:span 2">
  Department
  </div>
 
- <div class="fcell"
- style="grid-column:span 2">
+ <div class="fcell" style="grid-column:span 2">
  ${esc(dept)}
  </div>
 
- <div class="fcell left"
- style="grid-column:span 2">
+ <div class="fcell left" style="grid-column:span 2">
  Location
  </div>
 
- <div class="fcell"
- style="grid-column:span 2">
+ <div class="fcell" style="grid-column:span 2">
  ${esc(loc)}
  </div>
 
- <div class="fcell left"
- style="grid-column:span 2">
+ <div class="fcell left" style="grid-column:span 2">
  Period From
  </div>
 
- <div class="fcell">
- ${esc(from)}
- </div>
+ <div class="fcell">${esc(from)}</div>
 
- <div class="fcell left"
- style="grid-column:span 2">
+ <div class="fcell left" style="grid-column:span 2">
  Period To
  </div>
 
- <div class="fcell">
- ${esc(to)}
- </div>
+ <div class="fcell">${esc(to)}</div>
 
- <div class="fcell head"
- style="grid-column:span 9">
+ <div class="fcell head" style="grid-column:span 9">
  PETTY CASH EXPENDITURE
  </div>
 
- <div class="fcell head">
- Date
- </div>
+ <div class="fcell head">Date</div>
 
- <div class="fcell head"
- style="grid-column:span 4">
+ <div class="fcell head" style="grid-column:span 4">
  Description / Purpose
  </div>
 
- <div class="fcell head">
- Amount
- </div>
-
- <div class="fcell head">
- Receipt / Ref.
- </div>
-
- <div class="fcell head">
- Code
- </div>
+ <div class="fcell head">Amount</div>
+ <div class="fcell head">Receipt / Ref.</div>
+ <div class="fcell head">Code</div>
 
  ${
-   Array.from(
-     {length:8},
-     ()=>`
+   Array.from({length:8},()=>`
 
-     <div class="fcell row"></div>
+   <div class="fcell row"></div>
 
-     <div class="fcell row"
-     style="grid-column:span 4"></div>
+   <div class="fcell row" style="grid-column:span 4"></div>
 
-     <div class="fcell row"></div>
+   <div class="fcell row"></div>
+   <div class="fcell row"></div>
+   <div class="fcell row"></div>
 
-     <div class="fcell row"></div>
-
-     <div class="fcell row"></div>
-
-     `
-   ).join("")
+   `).join("")
  }
 
- <div class="fcell big"
- style="grid-column:span 9">
+ <div class="fcell big" style="grid-column:span 9">
 
  <table class="petty-summary-table">
 
@@ -4748,37 +3234,27 @@ function renderExpressNormal(){
 
  <tr>
  <th>Cash Received This Period</th>
- <td class="amount">
- ${cash.toFixed(2)} ETB
- </td>
+ <td class="amount">${cash.toFixed(2)} ETB</td>
  </tr>
 
  <tr>
  <th>Cash Due From Previous Period</th>
- <td class="amount">
- ${previous.toFixed(2)} ETB
- </td>
+ <td class="amount">${previous.toFixed(2)} ETB</td>
  </tr>
 
  <tr>
  <th>Total Expense This Period</th>
- <td class="amount">
- ${expense.toFixed(2)} ETB
- </td>
+ <td class="amount">${expense.toFixed(2)} ETB</td>
  </tr>
 
  <tr>
  <th>Cash On Hand This Period</th>
- <td class="amount">
- ${balance.toFixed(2)} ETB
- </td>
+ <td class="amount">${balance.toFixed(2)} ETB</td>
  </tr>
 
  <tr>
  <th>Total Petty Cash Amount</th>
- <td class="amount">
- ${fund.toFixed(2)} ETB
- </td>
+ <td class="amount">${fund.toFixed(2)} ETB</td>
  </tr>
 
  </tbody>
@@ -4787,8 +3263,7 @@ function renderExpressNormal(){
 
  </div>
 
- <div class="fcell big left"
- style="grid-column:span 5">
+ <div class="fcell big left" style="grid-column:span 5">
 
  Approved By:
  ${esc(approved)}
@@ -4800,8 +3275,7 @@ function renderExpressNormal(){
 
  </div>
 
- <div class="fcell big left"
- style="grid-column:span 4">
+ <div class="fcell big left" style="grid-column:span 4">
 
  Prepared By:
  ${esc(name)}
@@ -4822,9 +3296,7 @@ function renderExpressNormal(){
 }
 
 
-/* =========================================================
-   CSV
-========================================================= */
+/* ================= CSV ================= */
 
 function exportCSV(){
 
@@ -4839,31 +3311,23 @@ function exportCSV(){
    "Days Before Refill"
  ];
 
-
- const rows=
- fuelRows.map(x=>{
+ const rows=fuelRows.map(x=>{
 
    const v=
-   vehicles.find(
-     z=>
-     String(z.id)===
-     String(x.vehicle_id)
+   vehicles.find(z=>
+     String(z.id)===String(x.vehicle_id)
    );
-
 
    const previous=
    fuelRows
    .filter(y=>
-     String(y.vehicle_id)===
-     String(x.vehicle_id)&&
+     String(y.vehicle_id)===String(x.vehicle_id)&&
      y.fuel_date<x.fuel_date
    )
    .sort(
      (a,b)=>
-     new Date(b.fuel_date)-
-     new Date(a.fuel_date)
+     new Date(b.fuel_date)-new Date(a.fuel_date)
    )[0];
-
 
    const days=
    previous?.fuel_date
@@ -4872,132 +3336,83 @@ function exportCSV(){
      0,
      Math.round(
        (
-         new Date(
-           x.fuel_date+
-           "T00:00:00"
-         )-
-         new Date(
-           previous.fuel_date+
-           "T00:00:00"
-         )
+         new Date(x.fuel_date+"T00:00:00")-
+         new Date(previous.fuel_date+"T00:00:00")
        )/86400000
      )
    )
    :"";
 
-
-   return [
-
+   return[
      x.fuel_date,
-
      v?.plate||
-     (
-       x.vehicle_id==null
-       ?x.driver||"Generator"
-       :""
-     ),
-
+     (x.vehicle_id==null?x.driver||"Generator":""),
      x.receipt||"",
-
      x.expense,
-
      x.liters,
-
      x.distance,
-
      x.current_km,
-
      days
-
    ];
 
  });
 
-
  const csv=
  [head,...rows]
-
  .map(r=>
    r.map(v=>
-     `"${String(v??"")
-       .replaceAll('"','""')}"`
+     `"${String(v??"").replaceAll('"','""')}"`
    ).join(",")
  )
-
  .join("\n");
 
-
- const a=
- document.createElement("a");
-
+ const a=document.createElement("a");
 
  a.href=
  URL.createObjectURL(
-   new Blob(
-     [csv],
-     {type:"text/csv"}
-   )
+   new Blob([csv],{type:"text/csv"})
  );
 
-
- a.download=
- "semara-airport-fuel-report.csv";
-
+ a.download="semara-airport-fuel-report.csv";
 
  a.click();
-
 
  URL.revokeObjectURL(a.href);
 
 }
 
 
-/* =========================================================
-   AUTO LOGIN SESSION
-========================================================= */
+/* ================= AUTO LOGIN ================= */
 
-window.addEventListener(
- "load",
- async()=>{
+window.addEventListener("load",async()=>{
 
-   if(!initSupabase())
-   return;
+ if(!initSupabase())
+ return;
 
+ const {data}=await db.auth.getSession();
 
-   const {data}=
-   await db.auth.getSession();
+ if(data?.session){
 
+   currentUser=data.session.user;
 
-   if(data?.session){
+   await startApp();
 
-     currentUser=
-     data.session.user;
+ }
+
+ db.auth.onAuthStateChange(
+ async(_event,session)=>{
+
+   if(session&&!currentUser){
+
+     currentUser=session.user;
 
      await startApp();
 
    }
 
+ });
 
-   db.auth.onAuthStateChange(
-     async(_event,session)=>{
-
-       if(
-         session &&
-         !currentUser
-       ){
-
-         currentUser=
-         session.user;
-
-         await startApp();
-
-       }
-
-     }
-   );
-
- }
-);
+});
 
 </script>
 
