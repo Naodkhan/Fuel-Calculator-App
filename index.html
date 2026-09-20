@@ -3,15 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>SEMERA AIRPORT FUEL MANAGEMENT SYSTEM</title>
+<title>15-Day Fuel & KM Manager</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <style>
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:#f3f6fa;color:#172033}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f3f6fa;color:#172033}
 header{background:#0b5ed7;color:white;padding:14px 18px;position:sticky;top:0;z-index:10}
-header h1{margin:0;font-size:20px}
-.wrap{max-width:1100px;margin:auto;padding:18px}
+header h1{margin:0;font-size:20px}.wrap{max-width:1050px;margin:auto;padding:18px}
 .card{background:white;border-radius:14px;padding:18px;margin-bottom:16px;box-shadow:0 3px 14px #00000012}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
 input,select,button{width:100%;padding:11px;border:1px solid #ccd4df;border-radius:8px;font-size:15px}
@@ -23,129 +20,39 @@ nav button{font-size:12px;padding:10px;background:#e7eef8;color:#174ea6}
 nav button.active{background:#0b5ed7;color:white}
 .page{display:none}.page.active{display:block}
 .stat{padding:15px;border-radius:12px;background:#eef5ff}.stat b{display:block;font-size:23px;margin-top:5px}
-table{width:100%;border-collapse:collapse;font-size:13px}
-th,td{padding:9px;border-bottom:1px solid #e6e9ee;text-align:left}
-.tablebox{overflow:auto}
-.msg{padding:10px;border-radius:8px;margin:10px 0;display:none}
-.msg.show{display:block}.ok{background:#d1e7dd;color:#0f5132}.err{background:#f8d7da;color:#842029}
-.login{max-width:430px;margin:60px auto}
-.small{font-size:12px;color:#667085}.right{text-align:right}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:9px;border-bottom:1px solid #e6e9ee;text-align:left}
+.tablebox{overflow:auto}.msg{padding:10px;border-radius:8px;margin:10px 0;display:none}.msg.show{display:block}.ok{background:#d1e7dd;color:#0f5132}.err{background:#f8d7da;color:#842029}
+.login{max-width:430px;margin:60px auto}.small{font-size:12px;color:#667085}.right{text-align:right}
+.modal{display:none;position:fixed;inset:0;background:#0008;z-index:20;align-items:center;justify-content:center;padding:15px}.modal.show{display:flex}.modalbox{background:white;padding:20px;border-radius:14px;width:min(500px,100%)}
+@media(max-width:600px){.wrap{padding:10px}header{padding:12px}.grid{grid-template-columns:1fr 1fr}table{min-width:650px}}
 
-/* Exact Airport petty-cash form */
-.report-form{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px}
-.report-form .wide{grid-column:span 2}
-.report-input{border:1px solid #aaa;border-radius:5px;padding:6px;width:100%;font-size:13px}
-.airport-form{background:#fff;color:#000;border:2px solid #000;margin-top:15px;overflow:auto}
-.airport-grid{min-width:1050px;display:grid;grid-template-columns:1.1fr 1.55fr 1.55fr 1.55fr 1.55fr 1.05fr 0.75fr 0.95fr 1.05fr 1.45fr 0.8fr 0.8fr;}
-.af{border-right:2px solid #000;border-bottom:2px solid #000;padding:6px;min-height:38px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:12px}
-.af.left{text-align:left;justify-content:flex-start;font-weight:700}
-.af.title{font-size:24px;font-weight:900;min-height:60px}
-.af.head{font-weight:900;min-height:52px}
-.af.smallhead{font-size:11px;font-weight:900;min-height:24px}
-.af.row{min-height:30px}
-.af.total{font-weight:900;min-height:32px}
-.af.bottom{min-height:28px;text-align:left;justify-content:flex-start}
-.af.blank{min-height:26px}
-.af.no-right{border-right:0}
-.af.no-bottom{border-bottom:0}
-.af.input{display:block;text-align:left;justify-content:flex-start}
-.af.signature{font-family:monospace;color:#333}
-.airport-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
-.no-print{display:block}
+/* NORMAL PETTY CASH ENTRY INTERFACE */
+.normal-petty-entry{display:none}
+.normal-petty-entry .entry-card{background:#fff;border-radius:14px;padding:18px;margin:14px 0;box-shadow:0 3px 14px #00000012}
+.normal-petty-entry .entry-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.normal-petty-entry .entry-grid .wide{grid-column:span 2}
+.normal-petty-entry .npc-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.normal-petty-entry .history-total{margin-top:12px;font-weight:800;text-align:right}
+@media(max-width:700px){.normal-petty-entry .entry-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.normal-petty-entry .entry-grid{grid-template-columns:1fr}}
 @media print{
- body{background:#fff}
- header,nav,#loginPage,.no-print,.report-form{display:none!important}
- #app{display:block!important}
- .wrap{max-width:none;padding:0}
- .card{box-shadow:none;padding:0}
- #official{display:block!important}
- .airport-form{border:2px solid #000;margin:0}
- @page{size:A4 landscape;margin:6mm}
-}
-@media(max-width:700px){
- .wrap{padding:10px}
- header{padding:12px}
- .grid{grid-template-columns:1fr 1fr}
- nav{grid-template-columns:repeat(2,1fr)}
- .report-form{grid-template-columns:1fr 1fr}
- .report-form .wide{grid-column:span 2}
- .petty-meta{grid-template-columns:1fr 1fr}
-}
-@media print{
- body{background:#fff}
- header,nav,#loginPage,.no-print,.report-form{display:none!important}
- #app{display:block!important}
- .wrap{max-width:none;padding:0}
- .card{box-shadow:none;padding:0}
- #official{display:block!important}
- .petty-report{border:2px solid #000;margin:0}
- .petty-title{font-size:20px}
- @page{size:A4 landscape;margin:8mm}
+  .normal-petty-entry .no-print{display:none!important}
+  .normal-petty-entry{display:block!important}
+  .normal-petty-entry .entry-card{box-shadow:none;padding:0}
 }
 
-/* Three petty-cash forms based on the supplied Excel workbook */
-.petty-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0 14px}
-.petty-tabs button{background:#e7eef8;color:#174ea6}
-.petty-tabs button.active{background:#0b5ed7;color:#fff}
-.petty-inputs{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px}
-.petty-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0 16px}
-.form-sheet{background:#fff;color:#000;border:3px solid #000;overflow:auto;margin-top:10px}
-.form-grid{min-width:1050px;display:grid}
-.form-grid.airport{grid-template-columns:1.1fr 1.55fr 1.55fr 1.55fr 1.55fr 1.05fr .75fr .95fr 1.05fr 1.45fr .8fr .8fr}
-.form-grid.normal{grid-template-columns:1.1fr 1.55fr 1.55fr 1.55fr 1.55fr 1.05fr .8fr 1fr 1.15fr 1.45fr .8fr .8fr}
-.form-grid.express{grid-template-columns:1.1fr 1.55fr 1.55fr 1.55fr 1.55fr 1.2fr 1.2fr 1.6fr .8fr .8fr}
-.fcell{border-right:2px solid #000;border-bottom:2px solid #000;min-height:34px;padding:6px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:12px}
-.fcell.left{justify-content:flex-start;text-align:left;font-weight:700}
-.fcell.title{font-size:24px;font-weight:900;min-height:60px}
-.fcell.head{font-weight:900;min-height:54px}
-.fcell.row{min-height:32px}
-.fcell.total{font-weight:900;min-height:34px}
-.fcell.big{min-height:80px}
-.balance-sheet{border:3px solid #000;background:#fff;color:#000;overflow:auto}
-.balance-table{width:100%;min-width:700px;border-collapse:collapse}
-.balance-table th,.balance-table td{border:2px solid #000;padding:12px;text-align:center;color:#000}
-.balance-table th{font-weight:900}
-.manual-lines{display:grid;grid-template-columns:1fr 2fr 1fr 1fr 1fr 1.4fr;gap:0;min-width:900px}
-.manual-lines>div{border:1px solid #000;padding:6px;min-height:32px}
-@media print{
- header,nav,#loginPage,.no-print,.petty-inputs,.petty-actions,.petty-tabs{display:none!important}
- #app{display:block!important}
- .wrap{max-width:none;padding:0}
- .card{box-shadow:none;padding:0}
- #official{display:block!important}
- .form-sheet,.balance-sheet{margin:0;border:2px solid #000}
- @page{size:A4 landscape;margin:5mm}
-}
-@media(max-width:700px){
- .petty-tabs{grid-template-columns:1fr 1fr}
- .petty-inputs{grid-template-columns:1fr 1fr}
-}
-
-.report-input{background:#fff;color:#172033;cursor:text;}
-.report-input:read-only{background:#fff;color:#172033;}
-
-.petty-summary-table{width:100%;border-collapse:collapse;margin:0;font-size:14px;table-layout:fixed}
-.petty-summary-table th,.petty-summary-table td{border:1px solid #222;padding:10px;text-align:left;vertical-align:middle}
-.petty-summary-table th{width:72%;font-weight:bold;background:#f3f6fa}
-.petty-summary-table td.amount{width:28%;text-align:right;font-weight:bold;white-space:nowrap}
-.petty-summary-block{grid-column:1 / -1;width:100%;margin-top:0}
-.petty-approval-block{grid-column:1 / -1;width:100%;margin-top:0;border-top:2px solid #222;padding:12px 10px}
-.petty-report .petty-summary-table + .duplicate-summary,.petty-report .duplicate-summary{display:none!important}
 </style>
 </head>
-
 <body>
 
 <div id="loginPage">
   <div class="login card">
-    <h2>SEMERA AIRPORT FUEL MANAGEMENT SYSTEM</h2>
+    <h2>15-Day Fuel & KM Manager</h2>
     <p class="small">Secure staff login</p>
     <div id="loginMsg" class="msg"></div>
-    <label>Email</label>
-    <input id="loginEmail" type="email" placeholder="name@example.com">
+    <label>Email</label><input id="loginEmail" type="email" placeholder="name@example.com">
     <br>
-    <label>Password</label>
-    <input id="loginPassword" type="password" placeholder="Minimum 6 characters">
+    <label>Password</label><input id="loginPassword" type="password" placeholder="Minimum 6 characters">
     <br>
     <button onclick="login()">Login</button>
     <br><br>
@@ -154,234 +61,148 @@ th,td{padding:9px;border-bottom:1px solid #e6e9ee;text-align:left}
 </div>
 
 <div id="app" style="display:none">
-<header>
-  <div class="wrap" style="padding:0">
-    <h1>SEMERA AIRPORT FUEL MANAGEMENT SYSTEM</h1>
-    <div id="userInfo" class="small" style="color:#e7efff;margin-top:4px"></div>
-  </div>
-</header>
+<header><div class="wrap" style="padding:0"><h1>15-Day Fuel & KM Manager</h1><div id="userInfo" class="small" style="color:#e7efff;margin-top:4px"></div></div></header>
 
 <div class="wrap">
-
 <nav>
 <button id="navDashboard" onclick="showPage('dashboard')">Dashboard</button>
 <button id="navVehicles" onclick="showPage('vehicles')">Vehicles</button>
-<button id="navGenerators" onclick="showPage('generators')">Generators</button>
 <button id="navFuel" onclick="showPage('fuel')">Fuel Entry</button>
 <button id="navHistory" onclick="showPage('history')">History</button>
-<button id="navReports" onclick="showPage('reports')">Reports</button>
-<button id="navOfficial" onclick="showPage('official')">Petty Cash Forms</button>
-<button id="navSettings" onclick="showPage('settings')">Settings</button>
-<button id="navContact" onclick="showPage('contact')">Contact Us</button>
+<button onclick="showPage('reports')">Reports</button>
+<button onclick="showPage('official')">Official Report</button>
+<button onclick="showPage('settings')">Settings</button>
 <button onclick="logout()">Logout</button>
 </nav>
 
 <section id="dashboard" class="page">
-<div class="card">
-<h2>Dashboard</h2>
-<div class="grid">
+<div class="card"><h2>Dashboard</h2><div class="grid">
 <div class="stat">15-Day Budget<b id="dBudget">0.00</b></div>
 <div class="stat">Fuel Expense<b id="dExpense">0.00</b></div>
 <div class="stat">Remaining<b id="dRemaining">0.00</b></div>
 <div class="stat">Total KM<b id="dKm">0.00</b></div>
 <div class="stat">Liters<b id="dLiters">0.00</b></div>
-</div>
-</div>
-
-<div class="card">
-<h3>Current 15-Day Period</h3>
-<div class="grid">
-<div><label>Start Date</label><input id="periodStart" type="date"></div>
+</div></div>
+<div class="card"><h3>Current 15-Day Period</h3>
+<div class="grid"><div><label>Start Date</label><input id="periodStart" type="date"></div>
 <div><label>End Date</label><input id="periodEnd" type="date"></div>
-<div style="display:flex;align-items:end"><button onclick="savePeriod()">Save Period</button></div>
-</div>
-<p id="periodMsg" class="msg"></p>
-</div>
+<div style="display:flex;align-items:end"><button onclick="savePeriod()">Save Period</button></div></div>
+<p id="periodMsg" class="msg"></p></div>
 </section>
 
 <section id="vehicles" class="page">
-<div class="card">
-<h2>Vehicles</h2>
-<div class="grid">
-<div><label>Plate Number</label><input id="vPlate" placeholder="e.g. 3-12345"></div>
+<div class="card"><h2>Vehicles</h2>
+<div class="grid"><div><label>Plate Number</label><input id="vPlate" placeholder="e.g. 3-12345"></div>
 <div><label>Driver</label><input id="vDriver" placeholder="Driver name"></div>
-<div style="display:flex;align-items:end"><button onclick="addVehicle()">Add Vehicle</button></div>
-</div>
-<p id="vehicleMsg" class="msg"></p>
-</div>
-<div class="card">
-<div class="tablebox">
-<table>
-<thead><tr><th>Plate</th><th>Driver</th><th>Action</th></tr></thead>
-<tbody id="vehicleTable"></tbody>
-</table>
-</div>
-</div>
-</section>
-
-<section id="generators" class="page">
-<div class="card">
-<h2>Generators</h2>
-<div class="grid">
-<div><label>Generator Name</label><input id="gName" placeholder="e.g. Main Generator"></div>
-<div><label>Location</label><input id="gLocation" placeholder="e.g. Terminal / ARFF"></div>
-<div style="display:flex;align-items:end"><button onclick="addGenerator()">Add Generator</button></div>
-</div>
-<p id="generatorMsg" class="msg"></p>
-</div>
-<div class="card"><div class="tablebox">
-<table><thead><tr><th>Generator</th><th>Location</th><th>Action</th></tr></thead>
-<tbody id="generatorTable"></tbody></table>
-</div></div>
+<div style="display:flex;align-items:end"><button onclick="addVehicle()">Add Vehicle</button></div></div>
+<p id="vehicleMsg" class="msg"></p></div>
+<div class="card"><div class="tablebox"><table><thead><tr><th>Plate</th><th>Driver</th><th>Action</th></tr></thead><tbody id="vehicleTable"></tbody></table></div></div>
 </section>
 
 <section id="fuel" class="page">
-<div class="card">
-<h2>Fuel Entry</h2>
-<div id="fuelMsg" class="msg"></div>
+<div class="card"><h2>Fuel Entry</h2><div id="fuelMsg" class="msg"></div>
 <div class="grid">
-<div><label>Vehicle and Generator</label><select id="fVehicle"></select></div>
-<div><label>Date Filled</label><input id="fDate" type="date"></div>
-<div><label>Description</label><input id="fDescription" type="text" placeholder="Enter fuel refill description"></div>
+<div><label>Vehicle</label><select id="fVehicle"></select></div>
+<div><label>Driver</label><input id="fDriver"></div>
+<div><label>Date</label><input id="fDate" type="date"></div>
+<div><label>Time</label><input id="fTime" type="time"></div>
+<div><label>Fuel Station</label><input id="fStation"></div>
 <div><label>Receipt No.</label><input id="fReceipt"></div>
-<div><label>Fuel Refilled (Liters)</label><input id="fLiters" type="number" step="0.01" min="0" placeholder="e.g. 80"></div>
-<div><label>Fuel Price per Liter (Birr)</label><input id="fPrice" type="number" step="0.01" min="0" placeholder="e.g. 120"></div>
-<div><label>Total Amount of Price (Birr)</label><input id="fExpense" type="number" step="0.01" min="0" placeholder="e.g. 9600"></div>
-<div><label>Previous KM Reading</label><input id="fPreviousKm" type="number" step="0.01" min="0" placeholder="Previous refill KM"></div>
-<div><label>KM Reading at Refill</label><input id="fRefillKm" type="number" step="0.01" min="0" placeholder="Current refill KM"></div>
-<div><label>KM Difference at Refill</label><input id="fDistance" type="number" step="0.01" readonly placeholder="Calculated automatically"></div>
-<div><label>Previous Refill Date</label><input id="fPreviousDate" type="date"></div>
-<div><label>Days Difference at Refill</label><input id="fDays" type="number" step="1" readonly placeholder="Calculated automatically"></div>
-</div>
-<br>
-<button onclick="saveFuel()">Save Fuel Entry</button>
-</div>
+<div><label>Liters</label><input id="fLiters" type="number" step="0.01"></div>
+<div><label>Price / Liter</label><input id="fPrice" type="number" step="0.01"></div>
+<div><label>Current KM</label><input id="fKm" type="number" step="0.01"></div>
+</div><br><button onclick="saveFuel()">Save Fuel Entry</button></div>
 </section>
 
 <section id="history" class="page">
-<div class="card">
-<h2>Fuel History</h2>
-<button onclick="exportCSV()">Export CSV</button>
-</div>
-<div class="card">
-<div class="tablebox">
-<table>
-<thead><tr><th>Date</th><th>Vehicle / Generator</th><th>Receipt</th><th>Fuel Amount (Birr)</th><th>Fuel Consumption (L)</th><th>KM Traveled</th><th>KM Reading at Refill</th><th>Days Before Refill</th></tr></thead>
-<tbody id="historyTable"></tbody>
-</table>
-</div>
-</div>
+<div class="card"><h2>Fuel History</h2><button onclick="exportCSV()">Export CSV</button></div>
+<div class="card"><div class="tablebox"><table><thead><tr><th>Date</th><th>Vehicle</th><th>Driver</th><th>Station</th><th>Receipt</th><th>Liters</th><th>Price</th><th>Expense</th><th>KM</th><th>Distance</th></tr></thead><tbody id="historyTable"></tbody></table></div></div>
 </section>
 
 <section id="reports" class="page">
-<div class="card">
-<h2>15-Day Fuel Management Report</h2>
-<div id="reportText"></div>
-<br>
-<button onclick="window.print()">Print / Save PDF</button>
-</div>
+<div class="card"><h2>15-Day Report</h2><div id="reportText"></div><br><button onclick="window.print()">Print / Save PDF</button></div>
 </section>
 
 <section id="official" class="page">
-<div class="card">
-<h2 class="no-print">Petty Cash Forms</h2>
+<div class="card"><h2>Official Fuel & KM Report</h2><p class="small">Generated from the current database records.</p>
 
-<div class="petty-tabs no-print">
-<button id="tabAirport" onclick="showPettyForm('airport')">AIRPORT FUEL PETTY CASH REPORT FORM</button>
-<button id="tabNormal" onclick="showPettyForm('normal')">AIRPORT NORMAL PETTY CASH REPORT FORM</button>
-<button id="tabExpress" onclick="showPettyForm('express')">EXPRESS FUEL PETTY CASH REPORT FORM</button>
-<button id="tabExpressNormal" onclick="showPettyForm('expressNormal')">EXPRESS NORMAL PETTY CASH REPORT FORM</button>
-<button id="tabBalance" onclick="showPettyForm('balance')">Petty Cash Balance</button>
+<div id="normalPettyEntryInterface" class="normal-petty-entry">
+  <div class="entry-card">
+    <h3 id="normalPettyEntryTitle">AIRPORT NORMAL PETTY CASH ENTRY</h3>
+    <div class="grid entry-grid">
+      <div><label>Date</label><input id="npcDate" type="date"></div>
+      <div class="wide"><label>Description / Purpose</label><input id="npcDescription" placeholder="Enter expense description"></div>
+      <div><label>Amount</label><input id="npcAmount" type="number" min="0" step="0.01"></div>
+      <div><label>Unit</label><input id="npcUnit" placeholder="Pc"></div>
+      <div><label>Unit Price in ETB</label><input id="npcUnitPrice" type="number" min="0" step="0.01"></div>
+      <div><label>Total Price in ETB</label><input id="npcTotal" type="number" readonly></div>
+      <div class="wide"><label>Budget Code / Department & Location</label><input id="npcBudget"></div>
+    </div>
+    <div id="npcMsg" class="msg"></div>
+    <div class="npc-actions no-print">
+      <button onclick="addNormalPettyEntry()">Add Entry</button>
+      <button class="secondary" onclick="clearNormalPettyInputs()">Clear</button>
+    </div>
+  </div>
+
+  <div class="entry-card">
+    <h3>Normal Petty Cash History</h3>
+    <div class="tablebox">
+      <table>
+        <thead><tr>
+          <th>Date</th><th>Description / Purpose</th><th>Amount</th><th>Unit</th>
+          <th>Unit Price ETB</th><th>Total Price ETB</th><th>Budget Code / Dept. & Loc.</th><th>Action</th>
+        </tr></thead>
+        <tbody id="normalPettyHistory"></tbody>
+      </table>
+    </div>
+    <div class="history-total">Total Expense: <span id="npcHistoryTotal">0.00</span> ETB</div>
+  </div>
+
+  <div class="entry-card">
+    <h3>Normal Petty Cash Summary</h3>
+    <table class="petty-summary-table">
+      <tbody>
+        <tr><th>Cash Received This Period</th><td class="amount"><input id="npcCashReceived" type="number" step="0.01" value="0"></td></tr>
+        <tr><th>Cash Due From Previous Period</th><td class="amount"><input id="npcPreviousCash" type="number" step="0.01" value="0"></td></tr>
+        <tr><th>Total Expense This Period</th><td class="amount"><input id="npcTotalExpense" type="number" step="0.01" value="0"></td></tr>
+        <tr><th>Cash On Hand This Period</th><td class="amount"><input id="npcCashOnHand" type="number" step="0.01" value="0"></td></tr>
+        <tr><th>Total Petty Cash Amount</th><td class="amount"><input id="npcTotalFund" type="number" step="0.01" value="0"></td></tr>
+      </tbody>
+    </table>
+    <br>
+    <div class="grid">
+      <div><label>Approved By</label><input id="npcApprovedBy"></div>
+      <div><label>Approval Date</label><input id="npcApprovalDate" type="date"></div>
+    </div>
+    <br>
+    <div class="npc-actions no-print">
+      <button onclick="renderNormalPettyReport()">Update Normal Petty Cash Report</button>
+      <button class="success" onclick="window.print()">Print / Save PDF</button>
+    </div>
+  </div>
 </div>
 
-<div class="petty-inputs no-print">
-<div><label>Report No.</label><input id="rNo" class="report-input"></div>
-<div><label>Date</label><input id="rDate" type="date" class="report-input"></div>
-<div><label>Petty Cash Holder Name</label><input id="rName" class="report-input"></div>
-<div><label>Bank Account</label><input id="rBank" class="report-input"></div>
-<div><label>Department</label><input id="rDept" class="report-input" value="Fuel Management"></div>
-<div><label>Location</label><input id="rLoc" class="report-input" value="SEMERA AIRPORT"></div>
-<div><label>From</label><input id="rFrom" type="date" class="report-input"></div>
-<div><label>To</label><input id="rTo" type="date" class="report-input"></div>
-<div><label>ID Number</label><input id="rSignature" class="report-input"></div>
-<div><label>Budget Code / Dept. &amp; Loc.</label><input id="rBudgetCode" class="report-input" value="SEMERA AIRPORT"></div>
-<div><label>Cash Received This Period</label><input id="rCash" type="number" step="0.01" class="report-input" value="0"></div>
-<div><label>Cash Due From Previous Period</label><input id="rPrevious" type="number" step="0.01" class="report-input" value="0"></div>
-<div><label>Total Expense This Period</label><input id="rExpenseDisplay" type="number" step="0.01" class="report-input" value="0"></div>
-<div><label>Cash On Hand This Period</label><input id="rCashOnHand" type="number" step="0.01" class="report-input" value="0"></div>
-<div><label>Total Petty Cash Amount</label><input id="rFund" type="number" step="0.01" class="report-input" value="0"></div>
-<div><label>Approved By</label><input id="rApproved" class="report-input"></div>
-<div><label>Approval Date</label><input id="rApprovedDate" type="date" class="report-input"></div>
-</div>
-
-<div class="petty-actions no-print">
-<button onclick="updateOfficialReport()">Update Form</button>
-<button class="success" onclick="window.print()">Print / Save PDF</button>
-</div>
-
-<div id="officialReport"></div>
-
-<div id="expressNormalInputs" class="petty-inputs no-print" style="display:none">
-<div><label>Report No.</label><input id="enReportNo" class="report-input"></div>
-<div><label>Date</label><input id="enDate" type="date" class="report-input"></div>
-<div><label>Petty Cash Holder Name</label><input id="enName" class="report-input"></div>
-<div><label>ID Number</label><input id="enId" class="report-input"></div>
-<div><label>Department</label><input id="enDept" class="report-input" value="SEMERA AIRPORT"></div>
-<div><label>Location</label><input id="enLoc" class="report-input" value="SEMERA AIRPORT"></div>
-<div><label>From</label><input id="enFrom" type="date" class="report-input"></div>
-<div><label>To</label><input id="enTo" type="date" class="report-input"></div>
-<div><label>Cash Received This Period</label><input id="enCash" type="number" step="0.01" class="report-input" value="0"></div>
-<div><label>Cash Due From Previous Period</label><input id="enPrevious" type="number" step="0.01" class="report-input" value="0"></div>
-<div><label>Total Expense This Period</label><input id="enExpense" type="number" step="0.01" class="report-input" value="0"></div>
-<div><label>Cash On Hand This Period</label><input id="enCashOnHand" type="number" step="0.01" class="report-input" value="0"></div>
-<div><label>Total Petty Cash Amount</label><input id="enFund" type="number" step="0.01" class="report-input" value="0"></div>
-<div><label>Approved By</label><input id="enApproved" class="report-input"></div>
-<div><label>Approval Date</label><input id="enApprovedDate" type="date" class="report-input"></div>
-</div>
-
-<div id="expressNormalActions" class="petty-actions no-print" style="display:none">
-<button onclick="renderExpressNormal()">Update Form</button>
-<button class="success" onclick="window.print()">Print / Save PDF</button>
-</div>
-</div>
+<div id="officialReport"></div><br><button onclick="window.print()">Print Official Report</button></div>
 </section>
 
 <section id="settings" class="page">
-<div class="card">
-<h2>Settings</h2>
-<p>Logged in as: <b id="settingsEmail"></b></p>
-<p>Role: <b id="settingsRole"></b></p>
-<p class="small">Roles: admin, fuel_officer, viewer. Viewer accounts can read records; staff roles can add/update records.</p>
-</div>
+<div class="card"><h2>Settings</h2><p>Logged in as: <b id="settingsEmail"></b></p><p>Role: <b id="settingsRole"></b></p>
+<p class="small">Roles: admin, fuel_officer, viewer. Viewer accounts can read records; staff roles can add/update records.</p></div>
 </section>
-
-<section id="contact" class="page">
-<div class="card">
-<h2>Contact Us</h2>
-<div class="grid">
-<div class="stat"><span>Developed By</span><b>Naod Engida</b></div>
-<div class="stat"><span>Email</span><b style="font-size:18px;word-break:break-word"><a href="mailto:Naodengida@gmail.com">Naodengida@gmail.com</a></b></div>
-<div class="stat"><span>Phone</span><b><a href="tel:0967164969">0967164969</a></b></div>
-</div>
-</div>
-</section>
-
 </div>
 </div>
 
 <script>
 const SUPABASE_URL="https://cxoowkryvdjqesymqicu.supabase.co";
 const SUPABASE_KEY="sb_publishable_ef9QG0gURhqWHNJ4WTdNsA_TR4DsJ2u";
-
-let db=null,currentUser=null,currentRole="viewer";
-let vehicles=[],fuelRows=[],currentPeriod=null,currentBudget=0;
+let db=null,currentUser=null,currentRole="viewer",vehicles=[],fuelRows=[],currentPeriod=null,currentBudget=0;
 
 function msg(id,text,type){
- const e=document.getElementById(id);
- if(!e)return;
- e.textContent=text;
- e.className="msg show "+(type==="error"?"err":"ok");
+ const e=document.getElementById(id); if(!e)return;
+ e.textContent=text;e.className="msg show "+(type==="error"?"err":"ok");
 }
+function clearMsg(id){const e=document.getElementById(id);if(e)e.className="msg";}
 
 function initSupabase(){
  if(!window.supabase){
@@ -411,14 +232,11 @@ async function signup(){
  if(!email||!password){msg("loginMsg","Please enter email and password.","error");return;}
  if(password.length<6){msg("loginMsg","Password must be at least 6 characters.","error");return;}
  msg("loginMsg","Creating account...","ok");
-
  const {data,error}=await db.auth.signUp({
    email,password,
    options:{data:{full_name:email.split("@")[0]}}
  });
-
  if(error){msg("loginMsg",error.message,"error");return;}
-
  if(data.user){
    if(data.session){
      currentUser=data.user;
@@ -426,9 +244,7 @@ async function signup(){
    }else{
      msg("loginMsg","Account created. Check your email, confirm the account, then Login.","ok");
    }
- }else{
-   msg("loginMsg","Account could not be created.","error");
- }
+ }else msg("loginMsg","Account could not be created.","error");
 }
 
 async function logout(){
@@ -465,367 +281,82 @@ function allowedWrite(){
 
 function showPage(id){
  document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
- const page=document.getElementById(id);
- if(page)page.classList.add("active");
-
+ document.getElementById(id).classList.add("active");
  document.querySelectorAll("nav button").forEach(x=>x.classList.remove("active"));
  const n=document.getElementById("nav"+id.charAt(0).toUpperCase()+id.slice(1));
  if(n)n.classList.add("active");
-
  if(id==="dashboard")renderDashboard();
- if(id==="generators")renderGenerators();
  if(id==="reports")renderReport();
- if(id==="official"){
-   setOfficialDefaults();
-   renderOfficial();
- }
+ if(id==="official")renderOfficial();
 }
 
 async function loadAll(){
  const v=await db.from("vehicles").select("*").order("plate");
+ if(v.error)console.log(v.error);
  vehicles=v.data||[];
-
- const f=await db.from("fuel_entries").select("*")
-   .order("fuel_date",{ascending:false})
-   .order("created_at",{ascending:false});
+ const f=await db.from("fuel_entries").select("*").order("fuel_date",{ascending:false}).order("created_at",{ascending:false});
+ if(f.error)console.log(f.error);
  fuelRows=f.data||[];
-
- const p=await db.from("periods").select("*")
-   .order("created_at",{ascending:false}).limit(1);
+ const p=await db.from("periods").select("*").order("created_at",{ascending:false}).limit(1);
  currentPeriod=p.data?.[0]||null;
-
  currentBudget=0;
-
  if(currentPeriod){
-   const b=await db.from("budgets").select("amount")
-     .eq("period_start",currentPeriod.start_date)
-     .eq("period_end",currentPeriod.end_date)
-     .order("created_at",{ascending:false})
-     .limit(1).maybeSingle();
-
-   if(!b.error&&b.data)currentBudget=Number(b.data.amount||0);
+   const b=await db.from("budgets").select("amount").eq("period_start",currentPeriod.start_date).eq("period_end",currentPeriod.end_date).order("created_at",{ascending:false}).limit(1).maybeSingle();
+   if(!b.error && b.data) currentBudget=Number(b.data.amount||0);
  }
-
- loadGenerators();
- renderVehicles();
- fillVehicleSelect();
- renderHistory();
- renderDashboard();
+ renderVehicles();fillVehicleSelect();renderHistory();renderDashboard();
 }
 
 function renderVehicles(){
- document.getElementById("vehicleTable").innerHTML=vehicles.map(v=>
- `<tr>
- <td>${esc(v.plate)}</td>
- <td>${esc(v.driver||"")}</td>
- <td>${currentRole==="admin"
- ?`<button class="danger" onclick="deleteVehicle(${v.id})">Delete</button>`
- :"View only"}</td>
- </tr>`).join("");
+ document.getElementById("vehicleTable").innerHTML=vehicles.map(v=>`<tr><td>${esc(v.plate)}</td><td>${esc(v.driver||"")}</td><td>${currentRole==="admin"?`<button class="danger" onclick="deleteVehicle(${v.id})">Delete</button>`:"View only"}</td></tr>`).join("");
 }
-
 function fillVehicleSelect(){
- const el=document.getElementById("fVehicle");
- if(!el)return;
- let html='<option value="">Select vehicle or generator</option>';
- // Vehicle option value is the actual Supabase BIGINT id.
- // This avoids passing a malformed string such as ".1" to the database.
- if(vehicles.length){
-   html+='<optgroup label="Vehicles">'+vehicles.map(v=>{
-     const id=String(v.id);
-     return `<option value="${esc(id)}">${esc(v.plate)}</option>`;
-   }).join("")+'</optgroup>';
- }
- if(generators.length){
-   html+='<optgroup label="Generators">'+generators.map((g,i)=>
-     `<option value="generator:${i}">${esc(g.name)}${g.location?' — '+esc(g.location):''}</option>`
-   ).join("")+'</optgroup>';
- }
- el.innerHTML=html;
- autoFillPreviousRefill();
- updateFuelDifferences();
+ document.getElementById("fVehicle").innerHTML='<option value="">Select vehicle</option>'+vehicles.map(v=>`<option value="${v.id}">${esc(v.plate)}</option>`).join("");
 }
-function loadGenerators(){
- try{generators=JSON.parse(localStorage.getItem("semara_generators")||"[]");}catch(e){generators=[];}
-}
-function saveGenerators(){localStorage.setItem("semara_generators",JSON.stringify(generators));}
-function renderGenerators(){
- const body=document.getElementById("generatorTable");
- if(!body)return;
- body.innerHTML=generators.map((g,i)=>`<tr><td>${esc(g.name)}</td><td>${esc(g.location||"")}</td><td>${currentRole==="admin"?`<button class="danger" onclick="deleteGenerator(${i})">Delete</button>`:"View only"}</td></tr>`).join("");
-}
-function addGenerator(){
- if(!allowedWrite())return;
- const name=document.getElementById("gName").value.trim();
- const location=document.getElementById("gLocation").value.trim();
- if(!name){msg("generatorMsg","Generator name is required.","error");return;}
- generators.push({name,location});saveGenerators();
- document.getElementById("gName").value="";document.getElementById("gLocation").value="";
- msg("generatorMsg","Generator added successfully.","ok");renderGenerators();fillVehicleSelect();
-}
-function deleteGenerator(i){
- if(currentRole!=="admin")return alert("Only Admin can delete generators.");
- if(!confirm("Delete this generator?"))return;
- generators.splice(i,1);saveGenerators();renderGenerators();fillVehicleSelect();
-}
-
 async function addVehicle(){
  if(!allowedWrite())return;
-
- const plate=document.getElementById("vPlate").value.trim();
- const driver=document.getElementById("vDriver").value.trim();
-
+ const plate=document.getElementById("vPlate").value.trim(),driver=document.getElementById("vDriver").value.trim();
  if(!plate){msg("vehicleMsg","Plate number is required.","error");return;}
-
  const {error}=await db.from("vehicles").insert({plate,driver});
-
  if(error){msg("vehicleMsg",error.message,"error");return;}
-
  msg("vehicleMsg","Vehicle added successfully.","ok");
- document.getElementById("vPlate").value="";
- document.getElementById("vDriver").value="";
+ document.getElementById("vPlate").value="";document.getElementById("vDriver").value="";
  await loadAll();
 }
-
 async function deleteVehicle(id){
  if(currentRole!=="admin")return alert("Only Admin can delete vehicles.");
  if(!confirm("Delete this vehicle and related fuel records?"))return;
-
  const {error}=await db.from("vehicles").delete().eq("id",id);
- if(error)alert(error.message);
- else await loadAll();
+ if(error)alert(error.message); else await loadAll();
 }
-
-
-const litersInput=document.getElementById("fLiters");
-const priceInput=document.getElementById("fPrice");
-const expenseInput=document.getElementById("fExpense");
-function updateFuelTotal(){
-  const liters=Number(litersInput?.value||0);
-  const price=Number(priceInput?.value||0);
-  if(liters>0 && price>0 && expenseInput) expenseInput.value=(liters*price).toFixed(2);
-}
-if(litersInput) litersInput.addEventListener("input",updateFuelTotal);
-if(priceInput) priceInput.addEventListener("input",updateFuelTotal);
-
-function updateFuelDifferences(){
-  const previousKmRaw=document.getElementById("fPreviousKm")?.value||"";
-  const refillKmRaw=document.getElementById("fRefillKm")?.value||"";
-  const previousKm=Number(previousKmRaw);
-  const refillKm=Number(refillKmRaw);
-  const previousDate=document.getElementById("fPreviousDate")?.value||"";
-  const date=document.getElementById("fDate")?.value||"";
-  const distanceEl=document.getElementById("fDistance");
-  const daysEl=document.getElementById("fDays");
-
-  if(distanceEl && previousKmRaw!=="" && refillKmRaw!=="" && Number.isFinite(previousKm) && Number.isFinite(refillKm) && refillKm>=previousKm){
-    distanceEl.value=(refillKm-previousKm).toFixed(2);
-  }else if(distanceEl){
-    distanceEl.value="";
-  }
-
-  if(daysEl && previousDate && date){
-    const previous=new Date(previousDate+"T00:00:00");
-    const current=new Date(date+"T00:00:00");
-    const diff=Math.round((current-previous)/86400000);
-    daysEl.value=Number.isFinite(diff) && diff>=0 ? String(diff) : "";
-  }else if(daysEl){
-    daysEl.value="";
-  }
-}
-
-function autoFillPreviousRefill(){
-  const selection=document.getElementById("fVehicle")?.value||"";
-  const date=document.getElementById("fDate")?.value||"";
-  if(!selection || !date || selection.startsWith("generator:")) return;
-
-  // Current vehicle option values are the actual BIGINT IDs.
-  // Also accept the old "vehicle:123" format for compatibility.
-  let vehicleId=selection;
-  if(selection.startsWith("vehicle:")) vehicleId=selection.slice(8);
-  if(!/^\d+$/.test(String(vehicleId))) return;
-
-  const rows=(fuelRows||[])
-    .filter(x=>String(x.vehicle_id)===String(vehicleId) && x.fuel_date && x.fuel_date < date && x.current_km!=null)
-    .sort((a,b)=>String(b.fuel_date).localeCompare(String(a.fuel_date)));
-
-  const previous=rows[0];
-  const km=document.getElementById("fPreviousKm");
-  const pd=document.getElementById("fPreviousDate");
-
-  if(previous){
-    if(km) km.value=Number(previous.current_km).toString();
-    if(pd) pd.value=previous.fuel_date;
-  }else{
-    if(km) km.value="";
-    if(pd) pd.value="";
-  }
-  updateFuelDifferences();
-}
-
-["fPreviousKm","fRefillKm","fPreviousDate"].forEach(id=>{
-  const el=document.getElementById(id);
-  if(el){
-    el.addEventListener("input",updateFuelDifferences);
-    el.addEventListener("change",updateFuelDifferences);
-  }
-});
-
-const fuelVehicleSelect=document.getElementById("fVehicle");
-if(fuelVehicleSelect) fuelVehicleSelect.addEventListener("change",()=>{
-  autoFillPreviousRefill();
-  updateFuelDifferences();
-});
-
-const fuelDateInput=document.getElementById("fDate");
-if(fuelDateInput){
-  fuelDateInput.addEventListener("change",()=>{
-    // Recalculate the previous refill whenever the refill date changes.
-    // This prevents an old later date from remaining in the form.
-    autoFillPreviousRefill();
-    updateFuelDifferences();
-  });
-  fuelDateInput.addEventListener("input",()=>{
-    autoFillPreviousRefill();
-    updateFuelDifferences();
-  });
-}
-
 
 async function saveFuel(){
  if(!allowedWrite())return;
-
- const selection=document.getElementById("fVehicle").value;
- const isGenerator=selection.startsWith("generator:");
- let vehicle_id=null;
- let generatorIndex=-1;
- let selectedGenerator=null;
-
- if(isGenerator){
-   generatorIndex=Number(selection.slice("generator:".length));
-   if(!Number.isInteger(generatorIndex) || !generators[generatorIndex]){
-     msg("fuelMsg","Invalid generator selection. Please select the generator again.","error");
-     return;
-   }
-   selectedGenerator=generators[generatorIndex];
- }else{
-   // Accept the new plain BIGINT ID format and the old vehicle:ID format.
-   const rawId=selection.startsWith("vehicle:") ? selection.slice(8).trim() : selection.trim();
-   if(!/^\d+$/.test(rawId)){
-     msg("fuelMsg","Invalid vehicle selection. Please select the vehicle again.","error");
-     return;
-   }
-   vehicle_id=Number(rawId);
-   if(!Number.isSafeInteger(vehicle_id) || vehicle_id < 1){
-     msg("fuelMsg","Invalid vehicle ID. Please select the vehicle again.","error");
-     return;
-   }
-   if(!vehicles.some(v=>String(v.id)===String(vehicle_id))){
-     msg("fuelMsg","Selected vehicle was not found. Please refresh and select it again.","error");
-     return;
-   }
- }
- const date=document.getElementById("fDate").value;
- const receipt=document.getElementById("fReceipt").value.trim();
- const expense=Number(document.getElementById("fExpense").value);
+ const vehicle_id=document.getElementById("fVehicle").value;
  const liters=Number(document.getElementById("fLiters").value);
  const price=Number(document.getElementById("fPrice").value);
- const refillKm=Number(document.getElementById("fRefillKm").value);
- const previousKm=Number(document.getElementById("fPreviousKm").value);
- const previousDate=document.getElementById("fPreviousDate").value;
-
- if((!vehicle_id&&!isGenerator)||!date||!expense||!liters||!price||refillKm<0||previousKm<0||!previousDate){
-   msg("fuelMsg","Vehicle, date, liters, price per liter, total amount, previous KM, current KM and previous refill date are required.","error");
-   return;
- }
-
- if(refillKm<previousKm){
-   msg("fuelMsg","Current refill KM cannot be less than previous KM.","error");
-   return;
- }
-
- const distance=refillKm-previousKm;
- const d1=new Date(previousDate+"T00:00:00");
- const d2=new Date(date+"T00:00:00");
- const days=Math.round((d2-d1)/86400000);
-
- if(days<0){
-   msg("fuelMsg","Current refill date cannot be earlier than previous refill date.","error");
-   return;
- }
-
- document.getElementById("fDistance").value=distance.toFixed(2);
- document.getElementById("fDays").value=days;
-
- const calculatedTotal=liters*price;
- if(Math.abs(expense-calculatedTotal)>0.01){
-   msg("fuelMsg","Total Amount of Price must equal liters × price per liter.","error");
-   return;
- }
-
- if(!isGenerator){
-   const duplicateCheck=await db.from("fuel_entries")
-     .select("id")
-     .eq("vehicle_id",vehicle_id)
-     .eq("fuel_date",date)
-     .eq("liters",liters)
-     .eq("price",price)
-     .eq("expense",expense)
-     .eq("current_km",refillKm)
-     .eq("distance",distance)
-     .limit(1);
-
-   if(duplicateCheck.error){
-     msg("fuelMsg",duplicateCheck.error.message,"error");
-     return;
-   }
-   if((duplicateCheck.data||[]).length){
-     msg("fuelMsg","This fuel entry already exists. It was not added again.","error");
-     return;
-   }
- }
-
+ const km=document.getElementById("fKm").value===""?null:Number(document.getElementById("fKm").value);
+ const date=document.getElementById("fDate").value;
+ if(!vehicle_id||!liters||!price||!date){msg("fuelMsg","Vehicle, date, liters and price are required.","error");return;}
+ const previous=fuelRows.filter(x=>String(x.vehicle_id)===String(vehicle_id)&&x.current_km!=null&&x.fuel_date<=date).sort((a,b)=>new Date(b.fuel_date)-new Date(a.fuel_date))[0];
+ const distance=(km!=null&&previous?.current_km!=null)?Math.max(0,km-Number(previous.current_km)):0;
  const {error}=await db.from("fuel_entries").insert({
-   vehicle_id,
-   driver:isGenerator ? (selectedGenerator?.name||"Generator") : null,
-   fuel_date:date,
-   fuel_time:null,
-   station:document.getElementById("fDescription").value.trim(),
-   receipt,
-   liters,
-   price,
-   expense,
-   current_km:refillKm,
-   distance
+   vehicle_id,driver:document.getElementById("fDriver").value.trim(),
+   fuel_date:date,fuel_time:document.getElementById("fTime").value||null,
+   station:document.getElementById("fStation").value.trim(),
+   receipt:document.getElementById("fReceipt").value.trim(),
+   liters,price,expense:liters*price,current_km:km,distance
  });
-
  if(error){msg("fuelMsg",error.message,"error");return;}
-
  msg("fuelMsg","Fuel entry saved successfully.","ok");
-
- ["fReceipt","fDescription","fExpense","fLiters","fPrice","fPreviousKm","fRefillKm","fDistance","fPreviousDate","fDays"]
- .forEach(id=>document.getElementById(id).value="");
-
+ ["fDriver","fTime","fStation","fReceipt","fLiters","fPrice","fKm"].forEach(id=>document.getElementById(id).value="");
  await loadAll();
 }
 
 function renderHistory(){
- // Fuel History displays only the most recently saved refill.
- // Older records remain safely stored in Supabase and are not deleted.
- const latest=fuelRows.length ? [fuelRows[0]] : [];
- document.getElementById("historyTable").innerHTML=latest.map(x=>{
-   const v=vehicles.find(z=>String(z.id)===String(x.vehicle_id));
-   const entityName=v?.plate||(x.vehicle_id==null?x.driver:"");
-   return `<tr>
-   <td>${x.fuel_date||""}</td>
-   <td>${esc(entityName||"")}</td>
-   <td>${esc(x.receipt||"")}</td>
-   <td>${num(x.expense)}</td>
-   <td>${num(x.liters)}</td>
-   <td>${num(x.distance)}</td>
-   <td>${num(x.current_km)}</td>
-   <td>-</td>
-   </tr>`;
+ document.getElementById("historyTable").innerHTML=fuelRows.map(x=>{
+  const v=vehicles.find(z=>String(z.id)===String(x.vehicle_id));
+  return `<tr><td>${x.fuel_date||""}</td><td>${esc(v?.plate||"")}</td><td>${esc(x.driver||"")}</td><td>${esc(x.station||"")}</td><td>${esc(x.receipt||"")}</td><td>${num(x.liters)}</td><td>${num(x.price)}</td><td>${num(x.expense)}</td><td>${num(x.current_km)}</td><td>${num(x.distance)}</td></tr>`;
  }).join("");
 }
 
@@ -833,453 +364,182 @@ function periodRows(){
  if(!currentPeriod)return fuelRows;
  return fuelRows.filter(x=>x.fuel_date>=currentPeriod.start_date&&x.fuel_date<=currentPeriod.end_date);
 }
-
 function totals(){
  const rows=periodRows();
-
  const expense=rows.reduce((a,x)=>a+Number(x.expense||0),0);
  const liters=rows.reduce((a,x)=>a+Number(x.liters||0),0);
  const km=rows.reduce((a,x)=>a+Number(x.distance||0),0);
  const budget=Number(currentBudget||0);
-
  return {expense,liters,km,budget,remaining:budget-expense};
 }
-
 async function savePeriod(){
  if(!allowedWrite())return;
-
- const s=document.getElementById("periodStart").value;
- const e=document.getElementById("periodEnd").value;
-
- if(!s||!e){
-   msg("periodMsg","Enter start and end dates.","error");
-   return;
- }
-
- const d1=new Date(s+"T00:00:00");
- const d2=new Date(e+"T00:00:00");
+ const s=document.getElementById("periodStart").value,e=document.getElementById("periodEnd").value;
+ if(!s||!e){msg("periodMsg","Enter start and end dates.","error");return;}
+ const d1=new Date(s+"T00:00:00"),d2=new Date(e+"T00:00:00");
  const days=Math.round((d2-d1)/86400000)+1;
-
- if(days!==15){
-   msg("periodMsg","The period must contain exactly 15 days.","error");
-   return;
- }
-
+ if(days!==15){msg("periodMsg","The period must contain exactly 15 days.","error");return;}
  const {error}=await db.from("periods").insert({start_date:s,end_date:e});
-
- if(error){
-   msg("periodMsg",error.message,"error");
-   return;
- }
-
+ if(error){msg("periodMsg",error.message,"error");return;}
  currentPeriod={start_date:s,end_date:e};
  msg("periodMsg","15-day period saved.","ok");
  await loadAll();
 }
-
 function renderDashboard(){
- if(currentPeriod){
-   document.getElementById("periodStart").value=currentPeriod.start_date;
-   document.getElementById("periodEnd").value=currentPeriod.end_date;
- }
-
+ if(currentPeriod){document.getElementById("periodStart").value=currentPeriod.start_date;document.getElementById("periodEnd").value=currentPeriod.end_date;}
  const t=totals();
-
- ["dBudget","dExpense","dRemaining","dKm","dLiters"]
- .forEach((id,i)=>
- document.getElementById(id).textContent=
- [t.budget,t.expense,t.remaining,t.km,t.liters][i].toFixed(2));
+ ["dBudget","dExpense","dRemaining","dKm","dLiters"].forEach((id,i)=>document.getElementById(id).textContent=[t.budget,t.expense,t.remaining,t.km,t.liters][i].toFixed(2));
 }
-
 function renderReport(){
  const t=totals();
-
- document.getElementById("reportText").innerHTML=
- `<p><b>Period:</b> ${
- currentPeriod?currentPeriod.start_date+" to "+currentPeriod.end_date:"Not set"
- }</p>
- <div class="grid">
- <div class="stat">Budget<b>${t.budget.toFixed(2)}</b></div>
- <div class="stat">Expense<b>${t.expense.toFixed(2)}</b></div>
- <div class="stat">Remaining<b>${t.remaining.toFixed(2)}</b></div>
- <div class="stat">KM<b>${t.km.toFixed(2)}</b></div>
- <div class="stat">Liters<b>${t.liters.toFixed(2)}</b></div>
- </div>`;
+ document.getElementById("reportText").innerHTML=`<p><b>Period:</b> ${currentPeriod?currentPeriod.start_date+" to "+currentPeriod.end_date:"Not set"}</p>
+ <div class="grid"><div class="stat">Budget<b>${t.budget.toFixed(2)}</b></div><div class="stat">Expense<b>${t.expense.toFixed(2)}</b></div><div class="stat">Remaining<b>${t.remaining.toFixed(2)}</b></div><div class="stat">KM<b>${t.km.toFixed(2)}</b></div><div class="stat">Liters<b>${t.liters.toFixed(2)}</b></div></div>`;
 }
-
-/* ---------- PETTY CASH REPORT ---------- */
-
-function todayString(){
- const d=new Date();
- return d.toISOString().slice(0,10);
-}
-
-let pettyFormType="airport";
-
-function setOfficialDefaults(){
- const ids=["rDate","rApprovedDate"];
- ids.forEach(id=>{
-   const el=document.getElementById(id);
-   if(el&&!el.value)el.value=todayString();
- });
- const name=document.getElementById("rName");
- if(name&&!name.value)name.value=currentUser?.email?.split("@")[0]||"";
- if(currentPeriod){
-   const f=document.getElementById("rFrom"),t=document.getElementById("rTo");
-   if(f&&!f.value)f.value=currentPeriod.start_date;
-   if(t&&!t.value)t.value=currentPeriod.end_date;
- }
-}
-
-function showPettyForm(type){
- pettyFormType=type;
- document.querySelectorAll(".petty-tabs button").forEach(b=>b.classList.remove("active"));
- const tab=document.getElementById("tab"+type.charAt(0).toUpperCase()+type.slice(1));
- if(tab)tab.classList.add("active");
-
- const shared=document.querySelector(".petty-inputs");
- const sharedActions=document.querySelector(".petty-actions");
- const enInputs=document.getElementById("expressNormalInputs");
- const enActions=document.getElementById("expressNormalActions");
-
- if(type==="expressNormal"){
-   if(shared)shared.style.display="none";
-   if(sharedActions)sharedActions.style.display="none";
-   if(enInputs)enInputs.style.display="grid";
-   if(enActions)enActions.style.display="grid";
-   const d=new Date().toISOString().slice(0,10);
-   ["enDate","enFrom","enTo"].forEach(id=>{const e=document.getElementById(id);if(e&&!e.value)e.value=d;});
-   renderExpressNormal();
-   return;
- }
-
- if(shared)shared.style.display="grid";
- if(sharedActions)sharedActions.style.display="grid";
- if(enInputs)enInputs.style.display="none";
- if(enActions)enActions.style.display="none";
- setOfficialDefaults();
- renderOfficial();
-}
-
-function updateOfficialReport(){
- setOfficialDefaults();
- renderOfficial();
-}
-
-function pettyHeader(title,cols,content){
- return `<div class="form-sheet"><div class="form-grid ${cols}">
- ${content}
- </div></div>`;
-}
-
-function field(id,fallback=""){
- const e=document.getElementById(id);
- return esc(e?.value||fallback);
-}
-function reportExpense(){
- return Number(document.getElementById("rExpenseDisplay")?.value||0);
-}
-function reportCashOnHand(){
- return Number(document.getElementById("rCashOnHand")?.value||0);
-}
-
-
-function fuelRowsForReport(){
- const seen=new Set();
- return periodRows().filter(x=>{
-   const key=[
-     x.fuel_date||"",
-     x.vehicle_id||"",
-     Number(x.liters||0),
-     Number(x.price||0),
-     Number(x.expense||0),
-     x.current_km==null?"":Number(x.current_km),
-     Number(x.distance||0)
-   ].join("|");
-   if(seen.has(key)) return false;
-   seen.add(key);
-   return true;
- }).map(x=>{
-   const v=vehicles.find(z=>String(z.id)===String(x.vehicle_id));
-   return {
-     date:x.fuel_date||"",
-     description:`Fuel - ${v?.plate||""}${x.station?" / "+x.station:""}`,
-     amount:Number(x.expense||0),
-     liter:Number(x.liters||0),
-     unit:Number(x.price||0),
-     total:Number(x.expense||0),
-     code:document.getElementById("rBudgetCode")?.value||"SEMERA AIRPORT"
-   };
- });
-}
-
-function renderAirportForm(){
- const t=totals();
- const enteredExpense=reportExpense();
- const enteredCashOnHand=reportCashOnHand();
- const rows=fuelRowsForReport().slice(0,5);
- while(rows.length<5)rows.push({date:"",description:"",amount:"",liter:"",unit:"",total:"",code:""});
-
- let cells=`
- <div class="fcell title" style="grid-column:span 9">AIRPORT FUEL PETTY CASH REPORT FORM</div>
- <div class="fcell left" style="grid-column:span 2">Report No.</div><div class="fcell">${field("rNo","SEMERA-"+todayString().replaceAll("-",""))}</div>
- <div class="fcell" style="grid-column:span 9"></div><div class="fcell left" style="grid-column:span 2">DATE:</div><div class="fcell">${field("rDate")}</div>
- <div class="fcell left" style="grid-column:span 2">Petty Cash Holder Name</div><div class="fcell" style="grid-column:span 3">${field("rName")}</div>
- <div class="fcell" style="grid-column:span 4">Department: ${field("rDept","Fuel Management")}</div><div class="fcell left">Loc.</div><div class="fcell" style="grid-column:span 2">${field("rLoc","SEMERA AIRPORT")}</div>
- <div class="fcell left" style="grid-column:span 2">Bank Account</div><div class="fcell" style="grid-column:span 3">${field("rBank")}</div><div class="fcell" style="grid-column:span 4"></div><div class="fcell" style="grid-column:span 3"></div>
- <div class="fcell left" style="grid-column:span 2">ID Number</div><div class="fcell" style="grid-column:span 3">${field("rSignature","-----------------------")}</div>
- <div class="fcell" style="grid-column:span 4"><b>From:</b>&nbsp; ${field("rFrom")}</div><div class="fcell left">To</div><div class="fcell" style="grid-column:span 2">${field("rTo")}</div>
- <div class="fcell head">DATE</div><div class="fcell head" style="grid-column:span 4">Description</div>
- <div class="fcell head">Amount in<br>Local Currencies</div><div class="fcell head">Liter</div><div class="fcell head">Unit<br>Price/Lt</div><div class="fcell head">Total Price</div>
- <div class="fcell head" style="grid-column:span 3">Budget Code/Dept. &amp; Loc.</div>`;
-
- rows.forEach(r=>{
-  cells+=`<div class="fcell row">${esc(r.date)}</div>
-  <div class="fcell row" style="grid-column:span 4;text-align:left;justify-content:flex-start">${esc(r.description)}</div>
-  <div class="fcell row">${r.amount===""?"":Number(r.amount).toFixed(2)}</div>
-  <div class="fcell row">${r.liter===""?"":Number(r.liter).toFixed(2)}</div>
-  <div class="fcell row">${r.unit===""?"":Number(r.unit).toFixed(2)}</div>
-  <div class="fcell row">${r.total===""?"":Number(r.total).toFixed(2)}</div>
-  <div class="fcell row" style="grid-column:span 3">${esc(r.code)}</div>`;
- });
-
- cells+=`
- <div class="fcell total" style="grid-column:span 5;text-align:right;justify-content:flex-end">Total</div>
- <div class="fcell total">ETB ${t.expense.toFixed(2)}</div><div class="fcell total">${t.liters.toFixed(2)}</div>
- <div class="fcell total">-</div><div class="fcell total">${t.expense.toFixed(2)}</div>
- <div class="fcell total" style="grid-column:span 3">${field("rBudgetCode","SEMERA AIRPORT")}</div>
- <div class="fcell big petty-summary-block" style="grid-column:span 12">
- <table class="petty-summary-table">
-  <tbody>
-   <tr><th>Cash Received This Period</th><td class="amount">${Number(document.getElementById("rCash")?.value||0).toFixed(2)} ETB</td></tr>
-   <tr><th>Cash Due From Previous Period</th><td class="amount">${Number(document.getElementById("rPrevious")?.value||0).toFixed(2)} ETB</td></tr>
-   <tr><th>Total Expense This Period</th><td class="amount">${enteredExpense.toFixed(2)} ETB</td></tr>
-   <tr><th>Cash On Hand This Period</th><td class="amount">${enteredCashOnHand.toFixed(2)} ETB</td></tr>
-   <tr><th>Total Petty Cash Amount</th><td class="amount">${(Number(document.getElementById("rFund")?.value||0) || (Number(document.getElementById("rCash")?.value||0)+Number(document.getElementById("rPrevious")?.value||0))).toFixed(2)} ETB</td></tr>
-  </tbody>
- </table>
- </div>
- <div class="fcell big left petty-approval-block" style="grid-column:span 12">
-   <b>Approved By:</b> ${field("rApproved")}<br><br>
-   <b>Approval Date:</b> ${field("rApprovedDate")}
- </div>`;
- return pettyHeader("AIRPORT FUEL PETTY CASH REPORT FORM","airport",cells);
-}
-
-function renderNormalForm(){
- const t=totals();
- const enteredExpense=reportExpense();
- const enteredCashOnHand=reportCashOnHand();
- const rows=Array.from({length:10},(_,i)=>`<div class="fcell row">${i===0?field("rFrom"): ""}</div>
- <div class="fcell row" style="grid-column:span 4;text-align:left"></div>
- <div class="fcell row">ETB</div><div class="fcell row">1 Pc</div><div class="fcell row"></div><div class="fcell row"></div><div class="fcell row" style="grid-column:span 3"></div>`).join("");
- const totalId="normalTotal";
- let cells=`
- <div class="fcell title" style="grid-column:span 9">AIRPORT NORMAL PETTY CASH REPORT FORM</div>
- <div class="fcell left" style="grid-column:span 2">Report No.</div><div class="fcell">${field("rNo","NORMAL-"+todayString().replaceAll("-",""))}</div>
- <div class="fcell" style="grid-column:span 9"></div><div class="fcell left" style="grid-column:span 2">DATE:</div><div class="fcell">${field("rDate")}</div>
- <div class="fcell left" style="grid-column:span 2">Petty Cash Holder Name</div><div class="fcell" style="grid-column:span 3">${field("rName")}</div>
- <div class="fcell" style="grid-column:span 4">Department: ${field("rDept","Finance")}</div><div class="fcell left">Loc.</div><div class="fcell" style="grid-column:span 2">${field("rLoc","SEMERA AIRPORT")}</div>
- <div class="fcell left" style="grid-column:span 2">Bank Account</div><div class="fcell" style="grid-column:span 3">${field("rBank")}</div><div class="fcell" style="grid-column:span 4"></div><div class="fcell" style="grid-column:span 3"></div>
- <div class="fcell left" style="grid-column:span 2">ID Number</div><div class="fcell" style="grid-column:span 3">${field("rSignature","-----------------------")}</div>
- <div class="fcell" style="grid-column:span 4"><b>From:</b>&nbsp; ${field("rFrom")}</div><div class="fcell left">To</div><div class="fcell" style="grid-column:span 2">${field("rTo")}</div>
- <div class="fcell head">DATE</div><div class="fcell head" style="grid-column:span 4">Description</div><div class="fcell head">Amount in<br>Local Currencies</div>
- <div class="fcell head">Unit</div><div class="fcell head">Unit Price<br>in ETB</div><div class="fcell head">Total Price<br>in ETB</div><div class="fcell head" style="grid-column:span 3">Budget Code/Dept. &amp; Loc.</div>
- ${rows}
- <div class="fcell total" style="grid-column:span 7;text-align:right">Total</div>
- <div class="fcell total">ETB</div><div class="fcell total">1 Pc</div><div class="fcell total">-</div><div class="fcell total">0.00</div><div class="fcell total" style="grid-column:span 3">${field("rBudgetCode","SEMERA AIRPORT")}</div>
- <div class="fcell" style="grid-column:span 12">Total &nbsp; 0.00 &nbsp;&nbsp; VAT (15%) &nbsp; 0.00 &nbsp;&nbsp; Total (Including VAT) &nbsp; 0.00</div>
- <div class="fcell big petty-summary-block" style="grid-column:span 12">
- <table class="petty-summary-table">
-  <tbody>
-   <tr><th>Cash Received This Period</th><td class="amount">${Number(document.getElementById("rCash")?.value||0).toFixed(2)} ETB</td></tr>
-   <tr><th>Cash Due From Previous Period</th><td class="amount">${Number(document.getElementById("rPrevious")?.value||0).toFixed(2)} ETB</td></tr>
-   <tr><th>Total Expense This Period</th><td class="amount">${enteredExpense.toFixed(2)} ETB</td></tr>
-   <tr><th>Cash On Hand This Period</th><td class="amount">${enteredCashOnHand.toFixed(2)} ETB</td></tr>
-   <tr><th>Total Petty Cash Amount</th><td class="amount">${(Number(document.getElementById("rFund")?.value||0) || (Number(document.getElementById("rCash")?.value||0)+Number(document.getElementById("rPrevious")?.value||0))).toFixed(2)} ETB</td></tr>
-  </tbody>
- </table>
- </div>
- <div class="fcell big left petty-approval-block" style="grid-column:span 12">
-   <b>Approved By:</b> ${field("rApproved")}<br><br>
-   <b>Approval Date:</b> ${field("rApprovedDate")}
- </div>`;
- return pettyHeader("AIRPORT NORMAL PETTY CASH REPORT FORM","normal",cells);
-}
-
-function renderExpressForm(){
- const cash=Number(document.getElementById("rCash")?.value||0);
- const previous=Number(document.getElementById("rPrevious")?.value||0);
- const enteredExpense=reportExpense();
- const enteredCashOnHand=reportCashOnHand();
- const cells=`
- <div class="fcell title" style="grid-column:span 7">EXPRESS FUEL PETTY CASH REPORT FORM</div>
- <div class="fcell left" style="grid-column:span 2">Report No.</div><div class="fcell">${field("rNo","EXPRESS-"+todayString().replaceAll("-",""))}</div><div class="fcell" style="grid-column:span 2"></div>
- <div class="fcell" style="grid-column:span 7"></div><div class="fcell left">DATE:</div><div class="fcell" style="grid-column:span 2">${field("rDate")}</div>
- <div class="fcell left" style="grid-column:span 2">Petty Cash Holder Name</div><div class="fcell" style="grid-column:span 3">${field("rName")}</div><div class="fcell" style="grid-column:span 2">Department: ${field("rDept")}</div><div class="fcell left">Loc.</div><div class="fcell" style="grid-column:span 2">${field("rLoc")}</div>
- <div class="fcell left" style="grid-column:span 2">Bank Account</div><div class="fcell" style="grid-column:span 3">${field("rBank")}</div><div class="fcell" style="grid-column:span 2"><b>From:</b> ${field("rFrom")}</div><div class="fcell left">To</div><div class="fcell" style="grid-column:span 2">${field("rTo")}</div>
- <div class="fcell left" style="grid-column:span 2">ID Number</div><div class="fcell" style="grid-column:span 3">${field("rSignature","-----------------------")}</div>
- <div class="fcell head">DATE</div><div class="fcell head" style="grid-column:span 4">Description</div><div class="fcell head">Amount in Local Currencies</div><div class="fcell head">Amount in ETB</div><div class="fcell head" style="grid-column:span 2">Budget Code/Dept. &amp; Loc.</div>
- <div class="fcell row"></div><div class="fcell row" style="grid-column:span 4"></div><div class="fcell row">ETB</div><div class="fcell row"></div><div class="fcell row" style="grid-column:span 2">${field("rBudgetCode","SEMERA AIRPORT")}</div>
- <div class="fcell total" style="grid-column:span 6;text-align:right">Total</div><div class="fcell total">ETB</div><div class="fcell total">0.00</div><div class="fcell total" style="grid-column:span 2"></div>
- <div class="fcell" style="grid-column:span 10">Foreign Currency</div>
- <div class="fcell big petty-summary-block" style="grid-column:span 10">
- <table class="petty-summary-table">
-  <tbody>
-   <tr><th>Cash Received This Period</th><td class="amount">${cash.toFixed(2)} ETB</td></tr>
-   <tr><th>Cash Due From Previous Period</th><td class="amount">${previous.toFixed(2)} ETB</td></tr>
-   <tr><th>Total Expense This Period</th><td class="amount">${enteredExpense.toFixed(2)} ETB</td></tr>
-   <tr><th>Cash On Hand This Period</th><td class="amount">${enteredCashOnHand.toFixed(2)} ETB</td></tr>
-   <tr><th>Total Petty Cash Amount</th><td class="amount">${(Number(document.getElementById("rFund")?.value||0) || (cash+previous)).toFixed(2)} ETB</td></tr>
-  </tbody>
- </table>
- </div>
- <div class="fcell big left petty-approval-block" style="grid-column:span 10">
-   <b>Approved By:</b> ${field("rApproved")}<br><br>
-   <b>Approval Date:</b> ${field("rApprovedDate")}
- </div>`;
- return pettyHeader("EXPRESS FUEL PETTY CASH REPORT FORM","express",cells);
-}
-
-function renderBalanceForm(){
- const t=totals();
- const cash=Number(document.getElementById("rCash")?.value||0);
- const previous=Number(document.getElementById("rPrevious")?.value||0);
- const normal=Number(localStorage.getItem("normalPettyCashFund")||0);
- const airport=Number(document.getElementById("rFund")?.value||0);
- const express=Number(localStorage.getItem("expressPettyCashFund")||0);
- const rows=[
- ["AIRPORT NORMAL PETTY CASH REPORT FORM",normal,normal,0],
- ["AIRPORT FUEL PETTY CASH REPORT FORM",airport,cash+previous,t.expense],
- ["EXPRESS FUEL PETTY CASH REPORT FORM",express,express,0]
- ];
- const total=rows.reduce((a,r)=>a+r[1],0);
- return `<div class="balance-sheet">
- <table class="balance-table">
- <thead><tr><th>Fund Type</th><th>Total Amount Petty Cash Fund</th><th>Cash on Hand</th><th>Expenses from Fund</th></tr></thead>
- <tbody>${rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1].toFixed(2)}</td><td>${r[2].toFixed(2)}</td><td>${r[3].toFixed(2)}</td></tr>`).join("")}
- <tr><th>Total</th><th>${total.toFixed(2)}</th><th>${rows.reduce((a,r)=>a+r[2],0).toFixed(2)}</th><th>${rows.reduce((a,r)=>a+r[3],0).toFixed(2)}</th></tr></tbody>
- </table></div>`;
-}
-
 function renderOfficial(){
- if(pettyFormType==="airport")document.getElementById("officialReport").innerHTML=renderAirportForm();
- else if(pettyFormType==="normal")document.getElementById("officialReport").innerHTML=renderNormalForm();
- else if(pettyFormType==="express")document.getElementById("officialReport").innerHTML=renderExpressForm();
- else document.getElementById("officialReport").innerHTML=renderBalanceForm();
+ const t=totals();
+ document.getElementById("officialReport").innerHTML=`<h3>15-DAY FUEL & KILOMETER REPORT</h3>
+ <p><b>Period:</b> ${currentPeriod?currentPeriod.start_date+" — "+currentPeriod.end_date:"Not configured"}</p>
+ <table><tr><th>Total Budget</th><td>${t.budget.toFixed(2)}</td></tr><tr><th>Total Fuel Expense</th><td>${t.expense.toFixed(2)}</td></tr><tr><th>Remaining Balance</th><td>${t.remaining.toFixed(2)}</td></tr><tr><th>Total Liters</th><td>${t.liters.toFixed(2)}</td></tr><tr><th>Total KM</th><td>${t.km.toFixed(2)}</td></tr></table>
+ <br><p>Prepared from the records stored in the Fuel & KM Manager database.</p>`;
 }
 
+/* ---------- NORMAL PETTY CASH ENTRY ---------- */
+let normalPettyType="airport";
+let airportNormalEntries=[];
+let expressNormalEntries=[];
 
-function renderExpressNormal(){
- const v=id=>document.getElementById(id)?.value||"";
- const no=v("enReportNo")||("SEMERA-EXP-NORMAL-"+new Date().toISOString().slice(0,10).replaceAll("-",""));
- const date=v("enDate")||new Date().toISOString().slice(0,10);
- const cash=Number(v("enCash")||0);
- const previous=Number(v("enPrevious")||0);
- const expense=Number(v("enExpense")||0);
- const balance=Number(v("enCashOnHand")||0);
- const fund=Number(v("enFund")||0);
- const dept=v("enDept")||"SEMERA AIRPORT";
- const loc=v("enLoc")||"SEMERA AIRPORT";
- const name=v("enName");
- const idNo=v("enId");
- const from=v("enFrom");
- const to=v("enTo");
- const approved=v("enApproved");
- const approvedDate=v("enApprovedDate");
-
- document.getElementById("officialReport").innerHTML=`
- <div class="form-sheet">
-   <div class="form-grid airport">
-     <div class="fcell title" style="grid-column:span 9">EXPRESS NORMAL PETTY CASH REPORT FORM</div>
-     <div class="fcell left" style="grid-column:span 2">Report No.</div><div class="fcell">${esc(no)}</div>
-     <div class="fcell" style="grid-column:span 2">DATE</div><div class="fcell">${esc(date)}</div>
-     <div class="fcell left" style="grid-column:span 2">Petty Cash Holder Name</div><div class="fcell" style="grid-column:span 2">${esc(name)}</div>
-     <div class="fcell left" style="grid-column:span 2">ID Number</div><div class="fcell" style="grid-column:span 2">${esc(idNo)}</div>
-     <div class="fcell left" style="grid-column:span 2">Department</div><div class="fcell" style="grid-column:span 2">${esc(dept)}</div>
-     <div class="fcell left" style="grid-column:span 2">Location</div><div class="fcell" style="grid-column:span 2">${esc(loc)}</div>
-     <div class="fcell left" style="grid-column:span 2">Period From</div><div class="fcell">${esc(from)}</div>
-     <div class="fcell left" style="grid-column:span 2">Period To</div><div class="fcell">${esc(to)}</div>
-
-     <div class="fcell head" style="grid-column:span 9">PETTY CASH EXPENDITURE</div>
-     <div class="fcell head">Date</div><div class="fcell head" style="grid-column:span 4">Description / Purpose</div>
-     <div class="fcell head">Amount</div><div class="fcell head">Receipt / Ref.</div><div class="fcell head">Code</div>
-     ${Array.from({length:8},()=>`
-       <div class="fcell row"></div>
-       <div class="fcell row" style="grid-column:span 4"></div>
-       <div class="fcell row"></div><div class="fcell row"></div><div class="fcell row"></div>
-     `).join("")}
-
-     <div class="fcell big petty-summary-block" style="grid-column:span 9">
-       <table class="petty-summary-table">
-        <tbody>
-         <tr><th>Cash Received This Period</th><td class="amount">${cash.toFixed(2)} ETB</td></tr>
-         <tr><th>Cash Due From Previous Period</th><td class="amount">${previous.toFixed(2)} ETB</td></tr>
-         <tr><th>Total Expense This Period</th><td class="amount">${expense.toFixed(2)} ETB</td></tr>
-         <tr><th>Cash On Hand This Period</th><td class="amount">${balance.toFixed(2)} ETB</td></tr>
-         <tr><th>Total Petty Cash Amount</th><td class="amount">${fund.toFixed(2)} ETB</td></tr>
-        </tbody>
-       </table>
-     </div>
-
-     <div class="fcell big left petty-approval-block" style="grid-column:span 9">
-       <b>Approved By:</b> ${esc(approved)}<br><br>
-       <b>Approval Date:</b> ${esc(approvedDate)}<br><br>
-       <b>Prepared By:</b> ${esc(name)} &nbsp;&nbsp; <b>ID Number:</b> ${esc(idNo)}
-     </div>
-   </div>
- </div>`;
+function loadNormalPettyEntries(){
+  try{
+    airportNormalEntries=JSON.parse(localStorage.getItem("airportNormalPettyEntries")||"[]");
+    expressNormalEntries=JSON.parse(localStorage.getItem("expressNormalPettyEntries")||"[]");
+  }catch(e){airportNormalEntries=[];expressNormalEntries=[];}
 }
+
+function saveNormalPettyEntries(){
+  localStorage.setItem("airportNormalPettyEntries",JSON.stringify(airportNormalEntries));
+  localStorage.setItem("expressNormalPettyEntries",JSON.stringify(expressNormalEntries));
+}
+
+function normalPettyList(){
+  return normalPettyType==="airport"?airportNormalEntries:expressNormalEntries;
+}
+
+function showNormalPettyEntry(type){
+  normalPettyType=type;
+  document.getElementById("officialReport").style.display="none";
+  document.getElementById("expressNormalInputs").style.display="none";
+  document.getElementById("expressNormalActions").style.display="none";
+  document.getElementById("normalPettyEntryInterface").style.display="block";
+  document.getElementById("normalPettyEntryTitle").textContent=
+    type==="airport" ? "AIRPORT NORMAL PETTY CASH ENTRY" : "EXPRESS NORMAL PETTY CASH ENTRY";
+  document.querySelectorAll(".petty-tabs button").forEach(b=>b.classList.remove("active"));
+  const tab=document.getElementById(type==="airport"?"tabAirportNormalEntry":"tabExpressNormalEntry");
+  if(tab)tab.classList.add("active");
+  const d=new Date().toISOString().slice(0,10);
+  if(!document.getElementById("npcDate").value)document.getElementById("npcDate").value=d;
+  if(!document.getElementById("npcApprovalDate").value)document.getElementById("npcApprovalDate").value=d;
+  renderNormalPettyHistory();
+  updateNormalPettySummary();
+}
+
+function normalPettyTotal(){
+  const a=Number(document.getElementById("npcAmount").value||0);
+  const p=Number(document.getElementById("npcUnitPrice").value||0);
+  document.getElementById("npcTotal").value=(a*p).toFixed(2);
+}
+document.getElementById("npcAmount")?.addEventListener("input",normalPettyTotal);
+document.getElementById("npcUnitPrice")?.addEventListener("input",normalPettyTotal);
+
+function addNormalPettyEntry(){
+  if(currentRole!=="admin"&&currentRole!=="fuel_officer"){
+    msg("npcMsg","Admin or Fuel Officer permission is required.","error");return;
+  }
+  const date=document.getElementById("npcDate").value;
+  const description=document.getElementById("npcDescription").value.trim();
+  const amount=Number(document.getElementById("npcAmount").value||0);
+  const unit=document.getElementById("npcUnit").value.trim();
+  const unitPrice=Number(document.getElementById("npcUnitPrice").value||0);
+  const budget=document.getElementById("npcBudget").value.trim();
+  const total=amount*unitPrice;
+  if(!date||!description||amount<=0||unitPrice<0){
+    msg("npcMsg","Date, Description, Amount and Unit Price are required.","error");return;
+  }
+  normalPettyList().push({date,description,amount,unit,unitPrice,total,budget});
+  saveNormalPettyEntries();
+  clearNormalPettyInputs(false);
+  msg("npcMsg","Normal petty cash entry added successfully.","ok");
+  renderNormalPettyHistory();
+  updateNormalPettySummary();
+}
+
+function clearNormalPettyInputs(show=true){
+  ["npcDescription","npcAmount","npcUnit","npcUnitPrice","npcTotal","npcBudget"]
+    .forEach(id=>document.getElementById(id).value="");
+  if(show)document.getElementById("npcMsg").className="msg";
+}
+
+function renderNormalPettyHistory(){
+  const body=document.getElementById("normalPettyHistory");
+  if(!body)return;
+  const rows=normalPettyList();
+  body.innerHTML=rows.map((x,i)=>`<tr>
+    <td>${esc(x.date)}</td>
+    <td>${esc(x.description)}</td>
+    <td>${Number(x.amount||0).toFixed(2)}</td>
+    <td>${esc(x.unit)}</td>
+    <td>${Number(x.unitPrice||0).toFixed(2)}</td>
+    <td>${Number(x.total||0).toFixed(2)}</td>
+    <td>${esc(x.budget)}</td>
+    <td><button class="danger" onclick="deleteNormalPettyEntry(${i})">Delete</button></td>
+  </tr>`).join("");
+  const total=rows.reduce((s,x)=>s+Number(x.total||0),0);
+  document.getElementById("npcHistoryTotal").textContent=total.toFixed(2);
+}
+
+function deleteNormalPettyEntry(i){
+  if(currentRole!=="admin"&&currentRole!=="fuel_officer")return;
+  if(!confirm("Delete this petty cash entry?"))return;
+  normalPettyList().splice(i,1);
+  saveNormalPettyEntries();
+  renderNormalPettyHistory();
+  updateNormalPettySummary();
+}
+
+function updateNormalPettySummary(){
+  const total=normalPettyList().reduce((s,x)=>s+Number(x.total||0),0);
+  document.getElementById("npcTotalExpense").value=total.toFixed(2);
+}
+
+function renderNormalPettyReport(){
+  updateNormalPettySummary();
+  alert("Normal Petty Cash report updated. Use Print / Save PDF to print it.");
+}
+
+/* Make the existing Petty Cash tabs work with the new entry interface. */
+const originalShowPettyForm=showPettyForm;
+showPettyForm=function(type){
+  document.getElementById("normalPettyEntryInterface").style.display="none";
+  document.getElementById("officialReport").style.display="";
+  originalShowPettyForm(type);
+};
+
 
 function exportCSV(){
- const head=["Date","Vehicle","Receipt","Fuel Amount (Birr)","Fuel Consumption (Liters)","KM Traveled","KM Reading at Refill","Days Before Refill"];
-
- const rows=fuelRows.map((x,i)=>{
-   const v=vehicles.find(z=>String(z.id)===String(x.vehicle_id));
-   const previous=fuelRows
-     .filter(y=>String(y.vehicle_id)===String(x.vehicle_id)&&y.fuel_date<x.fuel_date)
-     .sort((a,b)=>new Date(b.fuel_date)-new Date(a.fuel_date))[0];
-   const days=previous?.fuel_date
-     ?Math.max(0,Math.round((new Date(x.fuel_date+"T00:00:00")-new Date(previous.fuel_date+"T00:00:00"))/86400000))
-     :"";
-   return [x.fuel_date,v?.plate||"",x.receipt||"",x.expense,x.liters,x.distance,x.current_km,days];
- });
-
- const csv=[head,...rows]
- .map(r=>r.map(v=>`"${String(v??"").replaceAll('"','""')}"`).join(","))
- .join("\n");
-
- const a=document.createElement("a");
- a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));
- a.download="semara-airport-fuel-report.csv";
- a.click();
+ const head=["Date","Vehicle","Driver","Station","Receipt","Liters","Price","Expense","Current KM","Distance"];
+ const rows=fuelRows.map(x=>{const v=vehicles.find(z=>String(z.id)===String(x.vehicle_id));return [x.fuel_date,v?.plate||"",x.driver||"",x.station||"",x.receipt||"",x.liters,x.price,x.expense,x.current_km,x.distance]});
+ const csv=[head,...rows].map(r=>r.map(v=>`"${String(v??"").replaceAll('"','""')}"`).join(",")).join("\n");
+ const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));a.download="fuel-km-report.csv";a.click();
 }
-
-function esc(v){
- return String(v??"").replace(/[&<>"']/g,m=>({
- "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
- }[m]));
-}
-
-function num(v){
- return v==null||v===""?"":Number(v).toFixed(2);
-}
+function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function num(v){return v==null||v===""?"":Number(v).toFixed(2)}
 
 window.addEventListener("load",async()=>{
+ loadNormalPettyEntries();
  if(!initSupabase())return;
-
  const {data}=await db.auth.getSession();
-
- if(data?.session){
-   currentUser=data.session.user;
-   await startApp();
- }
-
+ if(data?.session){currentUser=data.session.user;await startApp();}
  db.auth.onAuthStateChange(async(_event,session)=>{
-   if(session&&!currentUser){
-     currentUser=session.user;
-     await startApp();
-   }
+   if(session&&!currentUser){currentUser=session.user;await startApp();}
  });
 });
 </script>
