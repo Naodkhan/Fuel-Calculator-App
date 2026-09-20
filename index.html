@@ -810,24 +810,12 @@ async function saveFuel(){
 }
 
 function renderHistory(){
- const ordered=[...fuelRows].sort((a,b)=>{
-   const va=String(a.vehicle_id), vb=String(b.vehicle_id);
-   if(va!==vb)return va.localeCompare(vb);
-   return String(a.fuel_date||"").localeCompare(String(b.fuel_date||""));
- });
- const previousByVehicle={};
-
- document.getElementById("historyTable").innerHTML=[...fuelRows]
- .map(x=>{
+ // Fuel History displays only the most recently saved refill.
+ // Older records remain safely stored in Supabase and are not deleted.
+ const latest=fuelRows.length ? [fuelRows[0]] : [];
+ document.getElementById("historyTable").innerHTML=latest.map(x=>{
    const v=vehicles.find(z=>String(z.id)===String(x.vehicle_id));
    const entityName=v?.plate||(x.vehicle_id==null?x.driver:"");
-   const key=String(x.vehicle_id)+"|"+String(x.driver||"");
-   const prev=previousByVehicle[key];
-   let days="";
-   if(prev?.fuel_date && x.fuel_date){
-     days=Math.max(0,Math.round((new Date(x.fuel_date+"T00:00:00")-new Date(prev.fuel_date+"T00:00:00"))/86400000));
-   }
-   previousByVehicle[key]=x;
    return `<tr>
    <td>${x.fuel_date||""}</td>
    <td>${esc(entityName||"")}</td>
@@ -836,7 +824,7 @@ function renderHistory(){
    <td>${num(x.liters)}</td>
    <td>${num(x.distance)}</td>
    <td>${num(x.current_km)}</td>
-   <td>${days}</td>
+   <td>-</td>
    </tr>`;
  }).join("");
 }
