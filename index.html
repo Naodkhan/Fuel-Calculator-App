@@ -129,29 +129,6 @@ th,td{padding:9px;border-bottom:1px solid #e6e9ee;text-align:left}
 .petty-summary-table th{font-weight:bold;background:#f3f6fa}
 .petty-summary-table td.amount{text-align:right;font-weight:bold;white-space:nowrap}
 </style>
-
-<style>
-.normal-petty-entry{margin:18px 0;padding:18px;border:1px solid #cfd8e3;border-radius:12px;background:#f8fafc}
-.normal-petty-entry h3{margin:0 0 14px;color:#17324d}
-.normal-entry-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
-.normal-entry-grid label{display:block;font-weight:700;font-size:13px;margin-bottom:5px}
-.normal-entry-grid input{width:100%;box-sizing:border-box;padding:10px;border:1px solid #b8c4d1;border-radius:7px;background:#fff}
-.normal-entry-grid .wide{grid-column:span 2}
-.normal-entry-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
-.normal-history{margin-top:18px;overflow-x:auto}
-.normal-history table{width:100%;border-collapse:collapse;min-width:900px;background:#fff}
-.normal-history th,.normal-history td{border:1px solid #222;padding:8px;text-align:center}
-.normal-history th{background:#eaf0f6;font-weight:700}
-.normal-history td.desc{text-align:left}
-.normal-history .money{text-align:right}
-.normal-summary{margin-top:14px}
-.normal-summary table{width:100%;border-collapse:collapse}
-.normal-summary th,.normal-summary td{border:1px solid #222;padding:9px}
-.normal-summary th{text-align:left;background:#f3f6fa}
-.normal-summary td{text-align:right;font-weight:700}
-@media(max-width:800px){.normal-entry-grid{grid-template-columns:1fr 1fr}.normal-entry-grid .wide{grid-column:span 2}}
-@media(max-width:500px){.normal-entry-grid{grid-template-columns:1fr}.normal-entry-grid .wide{grid-column:span 1}}
-</style>
 </head>
 
 <body>
@@ -163,6 +140,10 @@ th,td{padding:9px;border-bottom:1px solid #e6e9ee;text-align:left}
     <div id="loginMsg" class="msg"></div>
     <label>Email</label>
     <input id="loginEmail" type="email" placeholder="name@example.com">
+    <br>
+    <label>Organization ID Number (Create Account)</label>
+    <input id="registerIdNumber" type="text" inputmode="numeric" maxlength="6" minlength="5" pattern="[0-9]{5,6}" placeholder="5–6 digit ID number" oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,6)">
+    <div class="small">ID Number must contain 5–6 digits (0–9 only).</div>
     <br>
     <label>Password</label>
     <input id="loginPassword" type="password" placeholder="Minimum 6 characters">
@@ -192,7 +173,6 @@ th,td{padding:9px;border-bottom:1px solid #e6e9ee;text-align:left}
 <button id="navReports" onclick="showPage('reports')">Reports</button>
 <button id="navOfficial" onclick="showPage('official')">Petty Cash Forms</button>
 <button id="navSettings" onclick="showPage('settings')">Settings</button>
-<button id="navContact" onclick="showPage('contact')">Contact Us</button>
 <button onclick="logout()">Logout</button>
 </nav>
 
@@ -339,25 +319,6 @@ th,td{padding:9px;border-bottom:1px solid #e6e9ee;text-align:left}
 <button class="success" onclick="window.print()">Print / Save PDF</button>
 </div>
 
-<div id="normalPettyEntryArea" class="normal-petty-entry no-print" style="display:none">
-  <h3 id="normalEntryTitle">AIRPORT NORMAL PETTY CASH ENTRY</h3>
-  <div class="normal-entry-grid">
-    <div><label>DATE</label><input id="npDate" type="date"></div>
-    <div class="wide"><label>Description</label><input id="npDescription" placeholder="Description / Purpose"></div>
-    <div><label>Amount in Local Currencies</label><input id="npAmount" type="number" step="0.01" min="0" placeholder="0.00"></div>
-    <div><label>Unit</label><input id="npUnit" placeholder="1 Pc"></div>
-    <div><label>Unit Price in ETB</label><input id="npUnitPrice" type="number" step="0.01" min="0" placeholder="0.00"></div>
-    <div><label>Total Price in ETB</label><input id="npTotal" type="number" step="0.01" min="0" placeholder="0.00"></div>
-    <div class="wide"><label>Budget Code / Dept. &amp; Loc.</label><input id="npBudgetCode" placeholder="SEMERA AIRPORT"></div>
-  </div>
-  <div class="normal-entry-actions">
-    <button class="success" onclick="saveNormalPettyEntry()">Save Entry</button>
-    <button onclick="clearNormalPettyEntry()">Clear</button>
-  </div>
-  <div id="normalPettyHistory" class="normal-history"></div>
-  <div id="normalPettySummary" class="normal-summary"></div>
-</div>
-
 <div id="officialReport"></div>
 
 <div id="expressNormalInputs" class="petty-inputs no-print" style="display:none">
@@ -390,18 +351,8 @@ th,td{padding:9px;border-bottom:1px solid #e6e9ee;text-align:left}
 <h2>Settings</h2>
 <p>Logged in as: <b id="settingsEmail"></b></p>
 <p>Role: <b id="settingsRole"></b></p>
+<p>Organization ID Number: <b id="settingsIdNumber">Not registered</b></p>
 <p class="small">Roles: admin, fuel_officer, viewer. Viewer accounts can read records; staff roles can add/update records.</p>
-</div>
-</section>
-
-<section id="contact" class="page">
-<div class="card">
-<h2>Contact Us</h2>
-<div class="grid">
-<div class="stat"><span>Developed By</span><b>Naod Engida</b></div>
-<div class="stat"><span>Email</span><b style="font-size:18px;word-break:break-word"><a href="mailto:Naodengida@gmail.com">Naodengida@gmail.com</a></b></div>
-<div class="stat"><span>Phone</span><b><a href="tel:0967164969">0967164969</a></b></div>
-</div>
 </div>
 </section>
 
@@ -447,23 +398,59 @@ async function signup(){
  if(!initSupabase())return;
  const email=document.getElementById("loginEmail").value.trim();
  const password=document.getElementById("loginPassword").value;
- if(!email||!password){msg("loginMsg","Please enter email and password.","error");return;}
- if(password.length<6){msg("loginMsg","Password must be at least 6 characters.","error");return;}
+ const idNumber=document.getElementById("registerIdNumber").value.trim();
+
+ if(!email||!password||!idNumber){
+   msg("loginMsg","Email, Organization ID Number and password are required.","error");
+   return;
+ }
+
+ if(!/^[0-9]{5,6}$/.test(idNumber)){
+   msg("loginMsg","ID Number must contain only 5–6 digits (0–9).","error");
+   return;
+ }
+
+ if(password.length<6){
+   msg("loginMsg","Password must be at least 6 characters.","error");
+   return;
+ }
+
  msg("loginMsg","Creating account...","ok");
 
  const {data,error}=await db.auth.signUp({
    email,password,
-   options:{data:{full_name:email.split("@")[0]}}
+   options:{data:{full_name:email.split("@")[0],id_number:idNumber}}
  });
 
- if(error){msg("loginMsg",error.message,"error");return;}
+ if(error){
+   if(String(error.message||"").toLowerCase().includes("duplicate") || String(error.message||"").toLowerCase().includes("unique")){
+     msg("loginMsg","This Organization ID Number is already registered.","error");
+   }else{
+     msg("loginMsg",error.message,"error");
+   }
+   return;
+ }
 
  if(data.user){
    if(data.session){
      currentUser=data.user;
+
+     // Save the organization ID to the user's profile.
+     const {error:profileError}=await db.from("profiles").upsert({
+       id:data.user.id,
+       id_number:idNumber,
+       full_name:email.split("@")[0]
+     },{onConflict:"id"});
+
+     if(profileError){
+       console.log("Profile ID save:",profileError.message);
+       msg("loginMsg","Account created, but the ID Number could not be saved to the profile. Check the profiles SQL setup.","error");
+       return;
+     }
+
      await startApp();
    }else{
-     msg("loginMsg","Account created. Check your email, confirm the account, then Login.","ok");
+     msg("loginMsg","Account created. Check your email, confirm the account, then Login. Your 5–6 digit Organization ID will be saved with the profile after confirmation.","ok");
    }
  }else{
    msg("loginMsg","Account could not be created.","error");
@@ -492,6 +479,18 @@ async function loadProfile(){
  if(error)console.log("Profile:",error.message);
  currentRole=data?.role||"viewer";
  document.getElementById("settingsRole").textContent=currentRole;
+ const idEl=document.getElementById("settingsIdNumber");
+ if(idEl)idEl.textContent=data?.id_number || currentUser?.user_metadata?.id_number || "Not registered";
+
+ // If the account was confirmed by email and the profile row was not yet
+ // updated, copy the validated 5–6 digit ID from Auth metadata.
+ const metaId=currentUser?.user_metadata?.id_number;
+ if(/^[0-9]{5,6}$/.test(String(metaId||"")) && data && !data.id_number){
+   const {error:idSaveError}=await db.from("profiles")
+     .update({id_number:String(metaId)})
+     .eq("id",currentUser.id);
+   if(idSaveError)console.log("Profile ID update:",idSaveError.message);
+ }
 }
 
 function allowedWrite(){
@@ -567,22 +566,9 @@ function fillVehicleSelect(){
  const el=document.getElementById("fVehicle");
  if(!el)return;
  let html='<option value="">Select vehicle or generator</option>';
- // Vehicle option value is the actual Supabase BIGINT id.
- // This avoids passing a malformed string such as ".1" to the database.
- if(vehicles.length){
-   html+='<optgroup label="Vehicles">'+vehicles.map(v=>{
-     const id=String(v.id);
-     return `<option value="${esc(id)}">${esc(v.plate)}</option>`;
-   }).join("")+'</optgroup>';
- }
- if(generators.length){
-   html+='<optgroup label="Generators">'+generators.map((g,i)=>
-     `<option value="generator:${i}">${esc(g.name)}${g.location?' — '+esc(g.location):''}</option>`
-   ).join("")+'</optgroup>';
- }
+ if(vehicles.length)html+='<optgroup label="Vehicles">'+vehicles.map(v=>`<option value="vehicle:${v.id}">${esc(v.plate)}</option>`).join("")+'</optgroup>';
+ if(generators.length)html+='<optgroup label="Generators">'+generators.map((g,i)=>`<option value="generator:${i}">${esc(g.name)}${g.location?' — '+esc(g.location):''}</option>`).join("")+'</optgroup>';
  el.innerHTML=html;
- autoFillPreviousRefill();
- updateFuelDifferences();
 }
 function loadGenerators(){
  try{generators=JSON.parse(localStorage.getItem("semara_generators")||"[]");}catch(e){generators=[];}
@@ -648,122 +634,32 @@ if(litersInput) litersInput.addEventListener("input",updateFuelTotal);
 if(priceInput) priceInput.addEventListener("input",updateFuelTotal);
 
 function updateFuelDifferences(){
-  const previousKmRaw=document.getElementById("fPreviousKm")?.value||"";
-  const refillKmRaw=document.getElementById("fRefillKm")?.value||"";
-  const previousKm=Number(previousKmRaw);
-  const refillKm=Number(refillKmRaw);
+  const previousKm=Number(document.getElementById("fPreviousKm")?.value||0);
+  const refillKm=Number(document.getElementById("fRefillKm")?.value||0);
   const previousDate=document.getElementById("fPreviousDate")?.value||"";
   const date=document.getElementById("fDate")?.value||"";
   const distanceEl=document.getElementById("fDistance");
   const daysEl=document.getElementById("fDays");
-
-  if(distanceEl && previousKmRaw!=="" && refillKmRaw!=="" && Number.isFinite(previousKm) && Number.isFinite(refillKm) && refillKm>=previousKm){
-    distanceEl.value=(refillKm-previousKm).toFixed(2);
-  }else if(distanceEl){
-    distanceEl.value="";
-  }
-
+  if(distanceEl) distanceEl.value=(refillKm>=previousKm && (previousKm>0 || refillKm>0)) ? (refillKm-previousKm).toFixed(2) : "";
   if(daysEl && previousDate && date){
-    const previous=new Date(previousDate+"T00:00:00");
-    const current=new Date(date+"T00:00:00");
-    const diff=Math.round((current-previous)/86400000);
-    daysEl.value=Number.isFinite(diff) && diff>=0 ? String(diff) : "";
-  }else if(daysEl){
-    daysEl.value="";
-  }
+    const diff=Math.round((new Date(date+"T00:00:00")-new Date(previousDate+"T00:00:00"))/86400000);
+    daysEl.value=diff>=0 ? diff : "";
+  }else if(daysEl) daysEl.value="";
 }
-
-function autoFillPreviousRefill(){
-  const selection=document.getElementById("fVehicle")?.value||"";
-  const date=document.getElementById("fDate")?.value||"";
-  if(!selection || !date || selection.startsWith("generator:")) return;
-
-  // Current vehicle option values are the actual BIGINT IDs.
-  // Also accept the old "vehicle:123" format for compatibility.
-  let vehicleId=selection;
-  if(selection.startsWith("vehicle:")) vehicleId=selection.slice(8);
-  if(!/^\d+$/.test(String(vehicleId))) return;
-
-  const rows=(fuelRows||[])
-    .filter(x=>String(x.vehicle_id)===String(vehicleId) && x.fuel_date && x.fuel_date < date && x.current_km!=null)
-    .sort((a,b)=>String(b.fuel_date).localeCompare(String(a.fuel_date)));
-
-  const previous=rows[0];
-  const km=document.getElementById("fPreviousKm");
-  const pd=document.getElementById("fPreviousDate");
-
-  if(previous){
-    if(km) km.value=Number(previous.current_km).toString();
-    if(pd) pd.value=previous.fuel_date;
-  }else{
-    if(km) km.value="";
-    if(pd) pd.value="";
-  }
-  updateFuelDifferences();
-}
-
-["fPreviousKm","fRefillKm","fPreviousDate"].forEach(id=>{
+["fPreviousKm","fRefillKm","fPreviousDate","fDate"].forEach(id=>{
   const el=document.getElementById(id);
-  if(el){
-    el.addEventListener("input",updateFuelDifferences);
-    el.addEventListener("change",updateFuelDifferences);
-  }
+  if(el) el.addEventListener("input",updateFuelDifferences);
+  if(el) el.addEventListener("change",updateFuelDifferences);
 });
-
-const fuelVehicleSelect=document.getElementById("fVehicle");
-if(fuelVehicleSelect) fuelVehicleSelect.addEventListener("change",()=>{
-  autoFillPreviousRefill();
-  updateFuelDifferences();
-});
-
-const fuelDateInput=document.getElementById("fDate");
-if(fuelDateInput){
-  fuelDateInput.addEventListener("change",()=>{
-    // Recalculate the previous refill whenever the refill date changes.
-    // This prevents an old later date from remaining in the form.
-    autoFillPreviousRefill();
-    updateFuelDifferences();
-  });
-  fuelDateInput.addEventListener("input",()=>{
-    autoFillPreviousRefill();
-    updateFuelDifferences();
-  });
-}
-
 
 async function saveFuel(){
  if(!allowedWrite())return;
 
  const selection=document.getElementById("fVehicle").value;
  const isGenerator=selection.startsWith("generator:");
- let vehicle_id=null;
- let generatorIndex=-1;
- let selectedGenerator=null;
-
- if(isGenerator){
-   generatorIndex=Number(selection.slice("generator:".length));
-   if(!Number.isInteger(generatorIndex) || !generators[generatorIndex]){
-     msg("fuelMsg","Invalid generator selection. Please select the generator again.","error");
-     return;
-   }
-   selectedGenerator=generators[generatorIndex];
- }else{
-   // Accept the new plain BIGINT ID format and the old vehicle:ID format.
-   const rawId=selection.startsWith("vehicle:") ? selection.slice(8).trim() : selection.trim();
-   if(!/^\d+$/.test(rawId)){
-     msg("fuelMsg","Invalid vehicle selection. Please select the vehicle again.","error");
-     return;
-   }
-   vehicle_id=Number(rawId);
-   if(!Number.isSafeInteger(vehicle_id) || vehicle_id < 1){
-     msg("fuelMsg","Invalid vehicle ID. Please select the vehicle again.","error");
-     return;
-   }
-   if(!vehicles.some(v=>String(v.id)===String(vehicle_id))){
-     msg("fuelMsg","Selected vehicle was not found. Please refresh and select it again.","error");
-     return;
-   }
- }
+ const vehicle_id=isGenerator ? null : (selection.startsWith("vehicle:") ? selection.slice(7) : "");
+ const generatorIndex=isGenerator ? Number(selection.split(":")[1]) : -1;
+ const selectedGenerator=isGenerator ? generators[generatorIndex] : null;
  const date=document.getElementById("fDate").value;
  const receipt=document.getElementById("fReceipt").value.trim();
  const expense=Number(document.getElementById("fExpense").value);
@@ -802,26 +698,24 @@ async function saveFuel(){
    return;
  }
 
- if(!isGenerator){
-   const duplicateCheck=await db.from("fuel_entries")
-     .select("id")
-     .eq("vehicle_id",vehicle_id)
-     .eq("fuel_date",date)
-     .eq("liters",liters)
-     .eq("price",price)
-     .eq("expense",expense)
-     .eq("current_km",refillKm)
-     .eq("distance",distance)
-     .limit(1);
+ const duplicateCheck=await db.from("fuel_entries")
+   .select("id")
+   .eq("vehicle_id",vehicle_id)
+   .eq("fuel_date",date)
+   .eq("liters",liters)
+   .eq("price",price)
+   .eq("expense",expense)
+   .eq("current_km",refillKm)
+   .eq("distance",distance)
+   .limit(1);
 
-   if(duplicateCheck.error){
-     msg("fuelMsg",duplicateCheck.error.message,"error");
-     return;
-   }
-   if((duplicateCheck.data||[]).length){
-     msg("fuelMsg","This fuel entry already exists. It was not added again.","error");
-     return;
-   }
+ if(duplicateCheck.error){
+   msg("fuelMsg",duplicateCheck.error.message,"error");
+   return;
+ }
+ if((duplicateCheck.data||[]).length){
+   msg("fuelMsg","This fuel entry already exists. It was not added again.","error");
+   return;
  }
 
  const {error}=await db.from("fuel_entries").insert({
@@ -993,35 +887,13 @@ function showPettyForm(type){
  const enInputs=document.getElementById("expressNormalInputs");
  const enActions=document.getElementById("expressNormalActions");
 
- if(type==="normal"){
-   if(shared)shared.style.display="grid";
-   if(sharedActions)sharedActions.style.display="grid";
-   if(enInputs)enInputs.style.display="none";
-   if(enActions)enActions.style.display="none";
-   const entry=document.getElementById("normalPettyEntryArea");
-   if(entry)entry.style.display="block";
-   const d=new Date().toISOString().slice(0,10);
-   ["rDate","rFrom","rTo","npDate"].forEach(id=>{const e=document.getElementById(id);if(e&&!e.value)e.value=d;});
-   const title=document.getElementById("normalEntryTitle");
-   if(title)title.textContent="AIRPORT NORMAL PETTY CASH ENTRY";
-   renderNormalPettyHistory();
-   setOfficialDefaults();
-   renderOfficial();
-   return;
- }
-
  if(type==="expressNormal"){
    if(shared)shared.style.display="none";
    if(sharedActions)sharedActions.style.display="none";
    if(enInputs)enInputs.style.display="grid";
    if(enActions)enActions.style.display="grid";
-   const entry=document.getElementById("normalPettyEntryArea");
-   if(entry)entry.style.display="block";
-   const title=document.getElementById("normalEntryTitle");
-   if(title)title.textContent="EXPRESS NORMAL PETTY CASH ENTRY";
    const d=new Date().toISOString().slice(0,10);
-   ["enDate","enFrom","enTo","npDate"].forEach(id=>{const e=document.getElementById(id);if(e&&!e.value)e.value=d;});
-   renderNormalPettyHistory();
+   ["enDate","enFrom","enTo"].forEach(id=>{const e=document.getElementById(id);if(e&&!e.value)e.value=d;});
    renderExpressNormal();
    return;
  }
@@ -1030,8 +902,6 @@ function showPettyForm(type){
  if(sharedActions)sharedActions.style.display="grid";
  if(enInputs)enInputs.style.display="none";
  if(enActions)enActions.style.display="none";
- const entry=document.getElementById("normalPettyEntryArea");
- if(entry)entry.style.display="none";
  setOfficialDefaults();
  renderOfficial();
 }
@@ -1241,81 +1111,6 @@ function renderOfficial(){
  else document.getElementById("officialReport").innerHTML=renderBalanceForm();
 }
 
-
-function normalPettyKey(){
- return pettyFormType==="expressNormal" ? "expressNormalPettyEntries" : "airportNormalPettyEntries";
-}
-function getNormalPettyEntries(){
- try{return JSON.parse(localStorage.getItem(normalPettyKey())||"[]");}catch(e){return [];}
-}
-function setNormalPettyEntries(rows){localStorage.setItem(normalPettyKey(),JSON.stringify(rows));}
-function normalEntryTotal(){
- const amount=Number(document.getElementById("npAmount")?.value||0);
- const unitPrice=Number(document.getElementById("npUnitPrice")?.value||0);
- const total=Number(document.getElementById("npTotal")?.value||0);
- if(document.getElementById("npAmount")?.value && document.getElementById("npUnitPrice")?.value) return amount*unitPrice;
- return total;
-}
-function updateNormalPettyEntryTotal(){
- const a=Number(document.getElementById("npAmount")?.value||0);
- const p=Number(document.getElementById("npUnitPrice")?.value||0);
- const t=document.getElementById("npTotal");
- if(t && a>0 && p>0)t.value=(a*p).toFixed(2);
-}
-function saveNormalPettyEntry(){
- const date=document.getElementById("npDate")?.value||new Date().toISOString().slice(0,10);
- const description=document.getElementById("npDescription")?.value.trim()||"";
- const amount=Number(document.getElementById("npAmount")?.value||0);
- const unit=document.getElementById("npUnit")?.value.trim()||"";
- const unitPrice=Number(document.getElementById("npUnitPrice")?.value||0);
- const total=Number(document.getElementById("npTotal")?.value||0);
- const budgetCode=document.getElementById("npBudgetCode")?.value.trim()||"";
- if(!description){alert("Please enter Description / Purpose.");return;}
- if(total<=0){alert("Please enter Amount and Unit Price, or Total Price.");return;}
- const rows=getNormalPettyEntries();
- rows.push({id:Date.now(),date,description,amount,unit,unitPrice,total,budgetCode});
- setNormalPettyEntries(rows);
- const expense=document.getElementById(pettyFormType==="expressNormal"?"enExpense":"rExpenseDisplay");
- if(expense)expense.value=rows.reduce((a,x)=>a+Number(x.total||0),0).toFixed(2);
- const cash=document.getElementById(pettyFormType==="expressNormal"?"enCash":"rCash");
- const prev=document.getElementById(pettyFormType==="expressNormal"?"enPrevious":"rPrevious");
- const hand=document.getElementById(pettyFormType==="expressNormal"?"enCashOnHand":"rCashOnHand");
- if(hand && (Number(cash?.value||0)+Number(prev?.value||0)-rows.reduce((a,x)=>a+Number(x.total||0),0))>=0){
-   hand.value=(Number(cash?.value||0)+Number(prev?.value||0)-rows.reduce((a,x)=>a+Number(x.total||0),0)).toFixed(2);
- }
- clearNormalPettyEntry(false);
- renderNormalPettyHistory();
- if(pettyFormType==="expressNormal")renderExpressNormal(); else renderOfficial();
-}
-function clearNormalPettyEntry(resetDate=true){
- ["npDescription","npAmount","npUnit","npUnitPrice","npTotal","npBudgetCode"].forEach(id=>{const e=document.getElementById(id);if(e)e.value="";});
- if(resetDate){const e=document.getElementById("npDate");if(e)e.value=new Date().toISOString().slice(0,10);}
-}
-function deleteNormalPettyEntry(id){
- const rows=getNormalPettyEntries().filter(x=>String(x.id)!==String(id));
- setNormalPettyEntries(rows);
- const expense=document.getElementById(pettyFormType==="expressNormal"?"enExpense":"rExpenseDisplay");
- if(expense)expense.value=rows.reduce((a,x)=>a+Number(x.total||0),0).toFixed(2);
- renderNormalPettyHistory();
- if(pettyFormType==="expressNormal")renderExpressNormal(); else renderOfficial();
-}
-function renderNormalPettyHistory(){
- const box=document.getElementById("normalPettyHistory");
- if(!box)return;
- const rows=getNormalPettyEntries();
- const title=pettyFormType==="expressNormal"?"EXPRESS NORMAL PETTY CASH HISTORY":"AIRPORT NORMAL PETTY CASH HISTORY";
- if(!rows.length){
-   box.innerHTML=`<h3>${title}</h3><p class="small">No entries saved yet.</p>`;
-   document.getElementById("normalPettySummary").innerHTML="";
-   return;
- }
- const total=rows.reduce((a,x)=>a+Number(x.total||0),0);
- box.innerHTML=`<h3>${title}</h3><table><thead><tr><th>DATE</th><th>Description</th><th>Amount in Local Currencies</th><th>Unit</th><th>Unit Price in ETB</th><th>Total Price in ETB</th><th>Budget Code / Dept. & Loc.</th><th>Action</th></tr></thead><tbody>${rows.map(x=>`<tr><td>${esc(x.date)}</td><td class="desc">${esc(x.description)}</td><td class="money">${Number(x.amount||0).toFixed(2)} ETB</td><td>${esc(x.unit)}</td><td class="money">${Number(x.unitPrice||0).toFixed(2)}</td><td class="money">${Number(x.total||0).toFixed(2)}</td><td>${esc(x.budgetCode)}</td><td><button onclick="deleteNormalPettyEntry('${esc(x.id)}')">Delete</button></td></tr>`).join("")}</tbody></table>`;
- const vat=total*0.15;
- document.getElementById("normalPettySummary").innerHTML=`<table><tbody><tr><th>Total</th><td>${total.toFixed(2)} ETB</td></tr><tr><th>VAT (15%)</th><td>${vat.toFixed(2)} ETB</td></tr><tr><th>Total (Including VAT)</th><td>${(total+vat).toFixed(2)} ETB</td></tr></tbody></table>`;
-}
-
-['npAmount','npUnitPrice'].forEach(id=>document.addEventListener('input',e=>{if(e.target&&e.target.id===id)updateNormalPettyEntryTotal();}));
 
 function renderExpressNormal(){
  const v=id=>document.getElementById(id)?.value||"";
