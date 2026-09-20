@@ -1,31 +1,31 @@
-<!DOCTYPE html>  <html lang="en">      <head>      
-<meta charset="UTF-8">      
-<meta name="viewport" content="width=device-width,initial-scale=1.0">      
-<title>SEMERA AIRPORT FUEL MANAGEMENT SYSTEM</title>      
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>  <style>      
-*{box-sizing:border-box}      
-body{margin:0;font-family:Arial,sans-serif;background:#f3f6fa;color:#172033}      
-header{background:#0b5ed7;color:white;padding:14px 18px;position:sticky;top:0;z-index:10}      
-header h1{margin:0;font-size:20px}      
-.wrap{max-width:1100px;margin:auto;padding:18px}      
-.card{background:white;border-radius:14px;padding:18px;margin-bottom:16px;box-shadow:0 3px 14px #00000012}      
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}      
-input,select,button{width:100%;padding:11px;border:1px solid #ccd4df;border-radius:8px;font-size:15px}      
-button{border:0;background:#0b5ed7;color:white;font-weight:bold;cursor:pointer}      
-button.secondary{background:#667085}.danger{background:#dc3545}.success{background:#198754}      
-label{font-weight:bold;font-size:13px;display:block;margin-bottom:5px}      
-nav{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:16px}      
-nav button{font-size:12px;padding:10px;background:#e7eef8;color:#174ea6}      
-nav button.active{background:#0b5ed7;color:white}      
-.page{display:none}.page.active{display:block}      
-.stat{padding:15px;border-radius:12px;background:#eef5ff}.stat b{display:block;font-size:23px;margin-top:5px}      
-table{width:100%;border-collapse:collapse;font-size:13px}      
-th,td{padding:9px;border-bottom:1px solid #e6e9ee;text-align:left}      
-.tablebox{overflow:auto}      
-.msg{padding:10px;border-radius:8px;margin:10px 0;display:none}      
-.msg.show{display:block}.ok{background:#d1e7dd;color:#0f5132}.err{background:#f8d7da;color:#842029}      
-.login{max-width:430px;margin:60px auto}      
-.small{font-size:12px;color:#667085}.right{text-align:right}      /* Exact Airport petty-cash form */
+<!DOCTYPE html>  <html lang="en">    <head>    
+<meta charset="UTF-8">    
+<meta name="viewport" content="width=device-width,initial-scale=1.0">    
+<title>SEMERA AIRPORT FUEL MANAGEMENT SYSTEM</title>    
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>  <style>    
+*{box-sizing:border-box}    
+body{margin:0;font-family:Arial,sans-serif;background:#f3f6fa;color:#172033}    
+header{background:#0b5ed7;color:white;padding:14px 18px;position:sticky;top:0;z-index:10}    
+header h1{margin:0;font-size:20px}    
+.wrap{max-width:1100px;margin:auto;padding:18px}    
+.card{background:white;border-radius:14px;padding:18px;margin-bottom:16px;box-shadow:0 3px 14px #00000012}    
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}    
+input,select,button{width:100%;padding:11px;border:1px solid #ccd4df;border-radius:8px;font-size:15px}    
+button{border:0;background:#0b5ed7;color:white;font-weight:bold;cursor:pointer}    
+button.secondary{background:#667085}.danger{background:#dc3545}.success{background:#198754}    
+label{font-weight:bold;font-size:13px;display:block;margin-bottom:5px}    
+nav{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:16px}    
+nav button{font-size:12px;padding:10px;background:#e7eef8;color:#174ea6}    
+nav button.active{background:#0b5ed7;color:white}    
+.page{display:none}.page.active{display:block}    
+.stat{padding:15px;border-radius:12px;background:#eef5ff}.stat b{display:block;font-size:23px;margin-top:5px}    
+table{width:100%;border-collapse:collapse;font-size:13px}    
+th,td{padding:9px;border-bottom:1px solid #e6e9ee;text-align:left}    
+.tablebox{overflow:auto}    
+.msg{padding:10px;border-radius:8px;margin:10px 0;display:none}    
+.msg.show{display:block}.ok{background:#d1e7dd;color:#0f5132}.err{background:#f8d7da;color:#842029}    
+.login{max-width:430px;margin:60px auto}    
+.small{font-size:12px;color:#667085}.right{text-align:right}    /* Exact Airport petty-cash form */
 .report-form{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px}
 .report-form .wide{grid-column:span 2}
 .report-input{border:1px solid #aaa;border-radius:5px;padding:6px;width:100%;font-size:13px}
@@ -127,199 +127,199 @@ header,nav,#loginPage,.no-print,.petty-inputs,.petty-actions,.petty-tabs{display
 .petty-report .petty-summary-table + .duplicate-summary,.petty-report .duplicate-summary{display:none!important}
 </style>  </head>  <body>  <div id="loginPage">
 
-  <div class="login card">      
-    <h2>SEMERA AIRPORT FUEL MANAGEMENT SYSTEM</h2>      
-    <p class="small">Secure staff login</p>      
-    <div id="loginMsg" class="msg"></div>      
-    <label>Email</label>      
-    <input id="loginEmail" type="email" placeholder="name@example.com">      
-    <br>      
-    <label>Password</label>      
-    <input id="loginPassword" type="password" placeholder="Minimum 6 characters">      
-    <br>      
-    <button onclick="login()">Login</button>      
-    <br><br>      
-    <button class="secondary" onclick="signup()">Create Account</button>      
-  </div>      
-</div>  <div id="app" style="display:none">      
-<header>      
-  <div class="wrap" style="padding:0">      
-    <h1>SEMERA AIRPORT FUEL MANAGEMENT SYSTEM</h1>      
-    <div id="userInfo" class="small" style="color:#e7efff;margin-top:4px"></div>      
-  </div>      
-</header>  <div class="wrap">  <nav>      
-<button id="navDashboard" onclick="showPage('dashboard')">Dashboard</button>      
-<button id="navVehicles" onclick="showPage('vehicles')">Vehicles</button>      
-<button id="navGenerators" onclick="showPage('generators')">Generators</button>      
-<button id="navFuel" onclick="showPage('fuel')">Fuel Entry</button>      
-<button id="navHistory" onclick="showPage('history')">History</button>      
-<button id="navReports" onclick="showPage('reports')">Reports</button>      
-<button id="navOfficial" onclick="showPage('official')">Petty Cash Forms</button>      
-<button id="navSettings" onclick="showPage('settings')">Settings</button>      
-<button id="navContact" onclick="showPage('contact')">Contact Us</button>      
-<button onclick="logout()">Logout</button>      
-</nav>  <section id="dashboard" class="page">      
-<div class="card">      
-<h2>Dashboard</h2>      
-<div class="grid">      
-<div class="stat">15-Day Budget<b id="dBudget">0.00</b></div>      
-<div class="stat">Fuel Expense<b id="dExpense">0.00</b></div>      
-<div class="stat">Remaining<b id="dRemaining">0.00</b></div>      
-<div class="stat">Total KM<b id="dKm">0.00</b></div>      
-<div class="stat">Liters<b id="dLiters">0.00</b></div>      
-</div>      
-</div>  <div class="card">      
-<h3>Current 15-Day Period</h3>      
-<div class="grid">      
-<div><label>Start Date</label><input id="periodStart" type="date"></div>      
-<div><label>End Date</label><input id="periodEnd" type="date"></div>      
-<div style="display:flex;align-items:end"><button onclick="savePeriod()">Save Period</button></div>      
-</div>      
-<p id="periodMsg" class="msg"></p>      
-</div>      
-</section>  <section id="vehicles" class="page">      
-<div class="card">      
-<h2>Vehicles</h2>      
-<div class="grid">      
-<div><label>Plate Number</label><input id="vPlate" placeholder="e.g. 3-12345"></div>      
-<div><label>Driver</label><input id="vDriver" placeholder="Driver name"></div>      
-<div style="display:flex;align-items:end"><button onclick="addVehicle()">Add Vehicle</button></div>      
-</div>      
-<p id="vehicleMsg" class="msg"></p>      
-</div>      
-<div class="card">      
-<div class="tablebox">      
-<table>      
-<thead><tr><th>Plate</th><th>Driver</th><th>Action</th></tr></thead>      
-<tbody id="vehicleTable"></tbody>      
-</table>      
-</div>      
-</div>      
-</section>  <section id="generators" class="page">      
-<div class="card">      
-<h2>Generators</h2>      
-<div class="grid">      
-<div><label>Generator Name</label><input id="gName" placeholder="e.g. Main Generator"></div>      
-<div><label>Location</label><input id="gLocation" placeholder="e.g. Terminal / ARFF"></div>      
-<div style="display:flex;align-items:end"><button onclick="addGenerator()">Add Generator</button></div>      
-</div>      
-<p id="generatorMsg" class="msg"></p>      
-</div>      
-<div class="card"><div class="tablebox">      
-<table><thead><tr><th>Generator</th><th>Location</th><th>Action</th></tr></thead>      
-<tbody id="generatorTable"></tbody></table>      
-</div></div>      
-</section>  <section id="fuel" class="page">      
-<div class="card">      
-<h2>Fuel Entry</h2>      
-<div id="fuelMsg" class="msg"></div>      
-<div class="grid">      
-<div><label>Vehicle and Generator</label><select id="fVehicle"></select></div>      
-<div><label>Date Filled</label><input id="fDate" type="date"></div>      
-<div><label>Description</label><input id="fDescription" type="text" placeholder="Enter fuel refill description"></div>      
-<div><label>Receipt No.</label><input id="fReceipt"></div>      
-<div><label>Fuel Refilled (Liters)</label><input id="fLiters" type="number" step="0.01" min="0" placeholder="e.g. 80"></div>      
-<div><label>Fuel Price per Liter (Birr)</label><input id="fPrice" type="number" step="0.01" min="0" placeholder="e.g. 120"></div>      
-<div><label>Total Amount of Price (Birr)</label><input id="fExpense" type="number" step="0.01" min="0" placeholder="e.g. 9600"></div>      
-<div><label>Previous KM Reading</label><input id="fPreviousKm" type="number" step="0.01" min="0" placeholder="Previous refill KM"></div>      
-<div><label>KM Reading at Refill</label><input id="fRefillKm" type="number" step="0.01" min="0" placeholder="Current refill KM"></div>      
-<div><label>KM Difference at Refill</label><input id="fDistance" type="number" step="0.01" readonly placeholder="Calculated automatically"></div>      
-<div><label>Previous Refill Date</label><input id="fPreviousDate" type="date"></div>      
-<div><label>Days Difference at Refill</label><input id="fDays" type="number" step="1" readonly placeholder="Calculated automatically"></div>      
-</div>      
-<br>      
-<button onclick="saveFuel()">Save Fuel Entry</button>      
-</div>      
-</section>  <section id="history" class="page">      
-<div class="card">      
-<h2>Fuel History</h2>      
-<button onclick="exportCSV()">Export CSV</button>      
-</div>      
-<div class="card">      
-<div class="tablebox">      
-<table>      
-<thead><tr><th>Date</th><th>Vehicle / Generator</th><th>Receipt</th><th>Fuel Amount (Birr)</th><th>Fuel Consumption (L)</th><th>KM Traveled</th><th>KM Reading at Refill</th><th>Days Before Refill</th></tr></thead>      
-<tbody id="historyTable"></tbody>      
-</table>      
-</div>      
-</div>      
-</section>  <section id="reports" class="page">      
-<div class="card">      
-<h2>15-Day Fuel Management Report</h2>      
-<div id="reportText"></div>      
-<br>      
-<button onclick="window.print()">Print / Save PDF</button>      
-</div>      
-</section>  <section id="official" class="page">      
-<div class="card">      
-<h2 class="no-print">Petty Cash Forms</h2>  <div class="petty-tabs no-print">      
-<button id="tabAirport" onclick="showPettyForm('airport')">AIRPORT FUEL PETTY CASH REPORT FORM</button>      
-<button id="tabNormal" onclick="showPettyForm('normal')">AIRPORT NORMAL PETTY CASH REPORT FORM</button>      
-<button id="tabExpress" onclick="showPettyForm('express')">EXPRESS FUEL PETTY CASH REPORT FORM</button>      
-<button id="tabExpressNormal" onclick="showPettyForm('expressNormal')">EXPRESS NORMAL PETTY CASH REPORT FORM</button>      
-<button id="tabBalance" onclick="showPettyForm('balance')">Petty Cash Balance</button>      
-</div>  <div class="petty-inputs no-print">      
-<div><label>Report No.</label><input id="rNo" class="report-input"></div>      
-<div><label>Date</label><input id="rDate" type="date" class="report-input"></div>      
-<div><label>Petty Cash Holder Name</label><input id="rName" class="report-input"></div>      
-<div><label>Bank Account</label><input id="rBank" class="report-input"></div>      
-<div><label>Department</label><input id="rDept" class="report-input" value="Fuel Management"></div>      
-<div><label>Location</label><input id="rLoc" class="report-input" value="SEMERA AIRPORT"></div>      
-<div><label>From</label><input id="rFrom" type="date" class="report-input"></div>      
-<div><label>To</label><input id="rTo" type="date" class="report-input"></div>      
-<div><label>ID Number</label><input id="rSignature" class="report-input"></div>      
-<div><label>Budget Code / Dept. &amp; Loc.</label><input id="rBudgetCode" class="report-input" value="SEMERA AIRPORT"></div>      
-<div><label>Cash Received This Period</label><input id="rCash" type="number" step="0.01" class="report-input" value="0"></div>      
-<div><label>Cash Due From Previous Period</label><input id="rPrevious" type="number" step="0.01" class="report-input" value="0"></div>      
-<div><label>Total Expense This Period</label><input id="rExpenseDisplay" type="number" step="0.01" class="report-input" value="0"></div>      
-<div><label>Cash On Hand This Period</label><input id="rCashOnHand" type="number" step="0.01" class="report-input" value="0"></div>      
-<div><label>Total Petty Cash Amount</label><input id="rFund" type="number" step="0.01" class="report-input" value="0"></div>      
-<div><label>Approved By</label><input id="rApproved" class="report-input"></div>      
-<div><label>Approval Date</label><input id="rApprovedDate" type="date" class="report-input"></div>      
-</div>  <div class="petty-actions no-print">      
-<button onclick="updateOfficialReport()">Update Form</button>      
-<button class="success" onclick="window.print()">Print / Save PDF</button>      
-</div>  <div id="officialReport"></div>  <div id="expressNormalInputs" class="petty-inputs no-print" style="display:none">      
-<div><label>Report No.</label><input id="enReportNo" class="report-input"></div>      
-<div><label>Date</label><input id="enDate" type="date" class="report-input"></div>      
-<div><label>Petty Cash Holder Name</label><input id="enName" class="report-input"></div>      
-<div><label>ID Number</label><input id="enId" class="report-input"></div>      
-<div><label>Department</label><input id="enDept" class="report-input" value="SEMERA AIRPORT"></div>      
-<div><label>Location</label><input id="enLoc" class="report-input" value="SEMERA AIRPORT"></div>      
-<div><label>From</label><input id="enFrom" type="date" class="report-input"></div>      
-<div><label>To</label><input id="enTo" type="date" class="report-input"></div>      
-<div><label>Cash Received This Period</label><input id="enCash" type="number" step="0.01" class="report-input" value="0"></div>      
-<div><label>Cash Due From Previous Period</label><input id="enPrevious" type="number" step="0.01" class="report-input" value="0"></div>      
-<div><label>Total Expense This Period</label><input id="enExpense" type="number" step="0.01" class="report-input" value="0"></div>      
-<div><label>Cash On Hand This Period</label><input id="enCashOnHand" type="number" step="0.01" class="report-input" value="0"></div>      
-<div><label>Total Petty Cash Amount</label><input id="enFund" type="number" step="0.01" class="report-input" value="0"></div>      
-<div><label>Approved By</label><input id="enApproved" class="report-input"></div>      
-<div><label>Approval Date</label><input id="enApprovedDate" type="date" class="report-input"></div>      
-</div>  <div id="expressNormalActions" class="petty-actions no-print" style="display:none">      
-<button onclick="renderExpressNormal()">Update Form</button>      
-<button class="success" onclick="window.print()">Print / Save PDF</button>      
-</div>      
-</div>      
-</section>  <section id="settings" class="page">      
-<div class="card">      
-<h2>Settings</h2>      
-<p>Logged in as: <b id="settingsEmail"></b></p>      
-<p>Role: <b id="settingsRole"></b></p>      
-<p class="small">Roles: admin, fuel_officer, viewer. Viewer accounts can read records; staff roles can add/update records.</p>      
-</div>      
-</section>  <section id="contact" class="page">      
-<div class="card">      
-<h2>Contact Us</h2>      
-<div class="grid">      
-<div class="stat"><span>Developed By</span><b>Naod Engida</b></div>      
-<div class="stat"><span>Email</span><b style="font-size:18px;word-break:break-word"><a href="mailto:Naodengida@gmail.com">Naodengida@gmail.com</a></b></div>      
-<div class="stat"><span>Phone</span><b><a href="tel:0967164969">0967164969</a></b></div>      
-</div>      
-</div>      
-</section>  </div>      
-</div>  <script>      
-const SUPABASE_URL="https://cxoowkryvdjqesymqicu.supabase.co";      
-const SUPABASE_KEY="sb_publishable_ef9QG0gURhqWHNJ4WTdNsA_TR4DsJ2u";      let db=null,currentUser=null,currentRole="viewer";
+  <div class="login card">    
+    <h2>SEMERA AIRPORT FUEL MANAGEMENT SYSTEM</h2>    
+    <p class="small">Secure staff login</p>    
+    <div id="loginMsg" class="msg"></div>    
+    <label>Email</label>    
+    <input id="loginEmail" type="email" placeholder="name@example.com">    
+    <br>    
+    <label>Password</label>    
+    <input id="loginPassword" type="password" placeholder="Minimum 6 characters">    
+    <br>    
+    <button onclick="login()">Login</button>    
+    <br><br>    
+    <button class="secondary" onclick="signup()">Create Account</button>    
+  </div>    
+</div>  <div id="app" style="display:none">    
+<header>    
+  <div class="wrap" style="padding:0">    
+    <h1>SEMERA AIRPORT FUEL MANAGEMENT SYSTEM</h1>    
+    <div id="userInfo" class="small" style="color:#e7efff;margin-top:4px"></div>    
+  </div>    
+</header>  <div class="wrap">  <nav>    
+<button id="navDashboard" onclick="showPage('dashboard')">Dashboard</button>    
+<button id="navVehicles" onclick="showPage('vehicles')">Vehicles</button>    
+<button id="navGenerators" onclick="showPage('generators')">Generators</button>    
+<button id="navFuel" onclick="showPage('fuel')">Fuel Entry</button>    
+<button id="navHistory" onclick="showPage('history')">History</button>    
+<button id="navReports" onclick="showPage('reports')">Reports</button>    
+<button id="navOfficial" onclick="showPage('official')">Petty Cash Forms</button>    
+<button id="navSettings" onclick="showPage('settings')">Settings</button>    
+<button id="navContact" onclick="showPage('contact')">Contact Us</button>    
+<button onclick="logout()">Logout</button>    
+</nav>  <section id="dashboard" class="page">    
+<div class="card">    
+<h2>Dashboard</h2>    
+<div class="grid">    
+<div class="stat">15-Day Budget<b id="dBudget">0.00</b></div>    
+<div class="stat">Fuel Expense<b id="dExpense">0.00</b></div>    
+<div class="stat">Remaining<b id="dRemaining">0.00</b></div>    
+<div class="stat">Total KM<b id="dKm">0.00</b></div>    
+<div class="stat">Liters<b id="dLiters">0.00</b></div>    
+</div>    
+</div>  <div class="card">    
+<h3>Current 15-Day Period</h3>    
+<div class="grid">    
+<div><label>Start Date</label><input id="periodStart" type="date"></div>    
+<div><label>End Date</label><input id="periodEnd" type="date"></div>    
+<div style="display:flex;align-items:end"><button onclick="savePeriod()">Save Period</button></div>    
+</div>    
+<p id="periodMsg" class="msg"></p>    
+</div>    
+</section>  <section id="vehicles" class="page">    
+<div class="card">    
+<h2>Vehicles</h2>    
+<div class="grid">    
+<div><label>Plate Number</label><input id="vPlate" placeholder="e.g. 3-12345"></div>    
+<div><label>Driver</label><input id="vDriver" placeholder="Driver name"></div>    
+<div style="display:flex;align-items:end"><button onclick="addVehicle()">Add Vehicle</button></div>    
+</div>    
+<p id="vehicleMsg" class="msg"></p>    
+</div>    
+<div class="card">    
+<div class="tablebox">    
+<table>    
+<thead><tr><th>Plate</th><th>Driver</th><th>Action</th></tr></thead>    
+<tbody id="vehicleTable"></tbody>    
+</table>    
+</div>    
+</div>    
+</section>  <section id="generators" class="page">    
+<div class="card">    
+<h2>Generators</h2>    
+<div class="grid">    
+<div><label>Generator Name</label><input id="gName" placeholder="e.g. Main Generator"></div>    
+<div><label>Location</label><input id="gLocation" placeholder="e.g. Terminal / ARFF"></div>    
+<div style="display:flex;align-items:end"><button onclick="addGenerator()">Add Generator</button></div>    
+</div>    
+<p id="generatorMsg" class="msg"></p>    
+</div>    
+<div class="card"><div class="tablebox">    
+<table><thead><tr><th>Generator</th><th>Location</th><th>Action</th></tr></thead>    
+<tbody id="generatorTable"></tbody></table>    
+</div></div>    
+</section>  <section id="fuel" class="page">    
+<div class="card">    
+<h2>Fuel Entry</h2>    
+<div id="fuelMsg" class="msg"></div>    
+<div class="grid">    
+<div><label>Vehicle and Generator</label><select id="fVehicle"></select></div>    
+<div><label>Date Filled</label><input id="fDate" type="date"></div>    
+<div><label>Description</label><input id="fDescription" type="text" placeholder="Enter fuel refill description"></div>    
+<div><label>Receipt No.</label><input id="fReceipt"></div>    
+<div><label>Fuel Refilled (Liters)</label><input id="fLiters" type="number" step="0.01" min="0" placeholder="e.g. 80"></div>    
+<div><label>Fuel Price per Liter (Birr)</label><input id="fPrice" type="number" step="0.01" min="0" placeholder="e.g. 120"></div>    
+<div><label>Total Amount of Price (Birr)</label><input id="fExpense" type="number" step="0.01" min="0" placeholder="e.g. 9600"></div>    
+<div><label>Previous KM Reading</label><input id="fPreviousKm" type="number" step="0.01" min="0" placeholder="Previous refill KM"></div>    
+<div><label>KM Reading at Refill</label><input id="fRefillKm" type="number" step="0.01" min="0" placeholder="Current refill KM"></div>    
+<div><label>KM Difference at Refill</label><input id="fDistance" type="number" step="0.01" readonly placeholder="Calculated automatically"></div>    
+<div><label>Previous Refill Date</label><input id="fPreviousDate" type="date"></div>    
+<div><label>Days Difference at Refill</label><input id="fDays" type="number" step="1" readonly placeholder="Calculated automatically"></div>    
+</div>    
+<br>    
+<button onclick="saveFuel()">Save Fuel Entry</button>    
+</div>    
+</section>  <section id="history" class="page">    
+<div class="card">    
+<h2>Fuel History</h2>    
+<button onclick="exportCSV()">Export CSV</button>    
+</div>    
+<div class="card">    
+<div class="tablebox">    
+<table>    
+<thead><tr><th>Date</th><th>Vehicle / Generator</th><th>Receipt</th><th>Fuel Amount (Birr)</th><th>Fuel Consumption (L)</th><th>KM Traveled</th><th>KM Reading at Refill</th><th>Days Before Refill</th></tr></thead>    
+<tbody id="historyTable"></tbody>    
+</table>    
+</div>    
+</div>    
+</section>  <section id="reports" class="page">    
+<div class="card">    
+<h2>15-Day Fuel Management Report</h2>    
+<div id="reportText"></div>    
+<br>    
+<button onclick="window.print()">Print / Save PDF</button>    
+</div>    
+</section>  <section id="official" class="page">    
+<div class="card">    
+<h2 class="no-print">Petty Cash Forms</h2>  <div class="petty-tabs no-print">    
+<button id="tabAirport" onclick="showPettyForm('airport')">AIRPORT FUEL PETTY CASH REPORT FORM</button>    
+<button id="tabNormal" onclick="showPettyForm('normal')">AIRPORT NORMAL PETTY CASH REPORT FORM</button>    
+<button id="tabExpress" onclick="showPettyForm('express')">EXPRESS FUEL PETTY CASH REPORT FORM</button>    
+<button id="tabExpressNormal" onclick="showPettyForm('expressNormal')">EXPRESS NORMAL PETTY CASH REPORT FORM</button>    
+<button id="tabBalance" onclick="showPettyForm('balance')">Petty Cash Balance</button>    
+</div>  <div class="petty-inputs no-print">    
+<div><label>Report No.</label><input id="rNo" class="report-input"></div>    
+<div><label>Date</label><input id="rDate" type="date" class="report-input"></div>    
+<div><label>Petty Cash Holder Name</label><input id="rName" class="report-input"></div>    
+<div><label>Bank Account</label><input id="rBank" class="report-input"></div>    
+<div><label>Department</label><input id="rDept" class="report-input" value="Fuel Management"></div>    
+<div><label>Location</label><input id="rLoc" class="report-input" value="SEMERA AIRPORT"></div>    
+<div><label>From</label><input id="rFrom" type="date" class="report-input"></div>    
+<div><label>To</label><input id="rTo" type="date" class="report-input"></div>    
+<div><label>ID Number</label><input id="rSignature" class="report-input"></div>    
+<div><label>Budget Code / Dept. &amp; Loc.</label><input id="rBudgetCode" class="report-input" value="SEMERA AIRPORT"></div>    
+<div><label>Cash Received This Period</label><input id="rCash" type="number" step="0.01" class="report-input" value="0"></div>    
+<div><label>Cash Due From Previous Period</label><input id="rPrevious" type="number" step="0.01" class="report-input" value="0"></div>    
+<div><label>Total Expense This Period</label><input id="rExpenseDisplay" type="number" step="0.01" class="report-input" value="0"></div>    
+<div><label>Cash On Hand This Period</label><input id="rCashOnHand" type="number" step="0.01" class="report-input" value="0"></div>    
+<div><label>Total Petty Cash Amount</label><input id="rFund" type="number" step="0.01" class="report-input" value="0"></div>    
+<div><label>Approved By</label><input id="rApproved" class="report-input"></div>    
+<div><label>Approval Date</label><input id="rApprovedDate" type="date" class="report-input"></div>    
+</div>  <div class="petty-actions no-print">    
+<button onclick="updateOfficialReport()">Update Form</button>    
+<button class="success" onclick="window.print()">Print / Save PDF</button>    
+</div>  <div id="officialReport"></div>  <div id="expressNormalInputs" class="petty-inputs no-print" style="display:none">    
+<div><label>Report No.</label><input id="enReportNo" class="report-input"></div>    
+<div><label>Date</label><input id="enDate" type="date" class="report-input"></div>    
+<div><label>Petty Cash Holder Name</label><input id="enName" class="report-input"></div>    
+<div><label>ID Number</label><input id="enId" class="report-input"></div>    
+<div><label>Department</label><input id="enDept" class="report-input" value="SEMERA AIRPORT"></div>    
+<div><label>Location</label><input id="enLoc" class="report-input" value="SEMERA AIRPORT"></div>    
+<div><label>From</label><input id="enFrom" type="date" class="report-input"></div>    
+<div><label>To</label><input id="enTo" type="date" class="report-input"></div>    
+<div><label>Cash Received This Period</label><input id="enCash" type="number" step="0.01" class="report-input" value="0"></div>    
+<div><label>Cash Due From Previous Period</label><input id="enPrevious" type="number" step="0.01" class="report-input" value="0"></div>    
+<div><label>Total Expense This Period</label><input id="enExpense" type="number" step="0.01" class="report-input" value="0"></div>    
+<div><label>Cash On Hand This Period</label><input id="enCashOnHand" type="number" step="0.01" class="report-input" value="0"></div>    
+<div><label>Total Petty Cash Amount</label><input id="enFund" type="number" step="0.01" class="report-input" value="0"></div>    
+<div><label>Approved By</label><input id="enApproved" class="report-input"></div>    
+<div><label>Approval Date</label><input id="enApprovedDate" type="date" class="report-input"></div>    
+</div>  <div id="expressNormalActions" class="petty-actions no-print" style="display:none">    
+<button onclick="renderExpressNormal()">Update Form</button>    
+<button class="success" onclick="window.print()">Print / Save PDF</button>    
+</div>    
+</div>    
+</section>  <section id="settings" class="page">    
+<div class="card">    
+<h2>Settings</h2>    
+<p>Logged in as: <b id="settingsEmail"></b></p>    
+<p>Role: <b id="settingsRole"></b></p>    
+<p class="small">Roles: admin, fuel_officer, viewer. Viewer accounts can read records; staff roles can add/update records.</p>    
+</div>    
+</section>  <section id="contact" class="page">    
+<div class="card">    
+<h2>Contact Us</h2>    
+<div class="grid">    
+<div class="stat"><span>Developed By</span><b>Naod Engida</b></div>    
+<div class="stat"><span>Email</span><b style="font-size:18px;word-break:break-word"><a href="mailto:Naodengida@gmail.com">Naodengida@gmail.com</a></b></div>    
+<div class="stat"><span>Phone</span><b><a href="tel:0967164969">0967164969</a></b></div>    
+</div>    
+</div>    
+</section>  </div>    
+</div>  <script>    
+const SUPABASE_URL="https://cxoowkryvdjqesymqicu.supabase.co";    
+const SUPABASE_KEY="sb_publishable_ef9QG0gURhqWHNJ4WTdNsA_TR4DsJ2u";    let db=null,currentUser=null,currentRole="viewer";
 let vehicles=[],fuelRows=[],currentPeriod=null,currentBudget=0;
 
 function msg(id,text,type){
@@ -463,13 +463,13 @@ function renderVehicles(){
 document.getElementById("vehicleTable").innerHTML=vehicles.map(v=>
 `<tr>
 
- <td>${esc(v.plate)}</td>      
- <td>${esc(v.driver||"")}</td>      
- <td>${currentRole==="admin"      
- ?`<button class="danger" onclick="deleteVehicle(${v.id})">Delete</button>`      
- :"View only"}</td>      
- </tr>`).join("");      
-}      function fillVehicleSelect(){
+ <td>${esc(v.plate)}</td>    
+ <td>${esc(v.driver||"")}</td>    
+ <td>${currentRole==="admin"    
+ ?`<button class="danger" onclick="deleteVehicle(${v.id})">Delete</button>`    
+ :"View only"}</td>    
+ </tr>`).join("");    
+}    function fillVehicleSelect(){
 const el=document.getElementById("fVehicle");
 if(!el)return;
 let html='<option value="">Select vehicle or generator</option>';
@@ -761,17 +761,17 @@ const v=vehicles.find(z=>String(z.id)===String(x.vehicle_id));
 const entityName=v?.plate||(x.vehicle_id==null?x.driver:"");
 return `<tr>
 
-   <td>${x.fuel_date||""}</td>      
-   <td>${esc(entityName||"")}</td>      
-   <td>${esc(x.receipt||"")}</td>      
-   <td>${num(x.expense)}</td>      
-   <td>${num(x.liters)}</td>      
-   <td>${num(x.distance)}</td>      
-   <td>${num(x.current_km)}</td>      
-   <td>-</td>      
-   </tr>`;      
- }).join("");      
-}      function periodRows(){
+   <td>${x.fuel_date||""}</td>    
+   <td>${esc(entityName||"")}</td>    
+   <td>${esc(x.receipt||"")}</td>    
+   <td>${num(x.expense)}</td>    
+   <td>${num(x.liters)}</td>    
+   <td>${num(x.distance)}</td>    
+   <td>${num(x.current_km)}</td>    
+   <td>-</td>    
+   </tr>`;    
+ }).join("");    
+}    function periodRows(){
 if(!currentPeriod)return fuelRows;
 return fuelRows.filter(x=>x.fuel_date>=currentPeriod.start_date&&x.fuel_date<=currentPeriod.end_date);
 }
@@ -841,14 +841,14 @@ document.getElementById("reportText").innerHTML=
 currentPeriod?currentPeriod.start_date+" to "+currentPeriod.end_date:"Not set"
 }</p>
 
- <div class="grid">      
- <div class="stat">Budget<b>${t.budget.toFixed(2)}</b></div>      
- <div class="stat">Expense<b>${t.expense.toFixed(2)}</b></div>      
- <div class="stat">Remaining<b>${t.remaining.toFixed(2)}</b></div>      
- <div class="stat">KM<b>${t.km.toFixed(2)}</b></div>      
- <div class="stat">Liters<b>${t.liters.toFixed(2)}</b></div>      
- </div>`;      
-}      /* ---------- PETTY CASH REPORT ---------- */
+ <div class="grid">    
+ <div class="stat">Budget<b>${t.budget.toFixed(2)}</b></div>    
+ <div class="stat">Expense<b>${t.expense.toFixed(2)}</b></div>    
+ <div class="stat">Remaining<b>${t.remaining.toFixed(2)}</b></div>    
+ <div class="stat">KM<b>${t.km.toFixed(2)}</b></div>    
+ <div class="stat">Liters<b>${t.liters.toFixed(2)}</b></div>    
+ </div>`;    
+}    /* ---------- PETTY CASH REPORT ---------- */
 
 function todayString(){
 const d=new Date();
@@ -911,8 +911,8 @@ function pettyHeader(title,cols,content){
 return `<div class="form-sheet"><div class="form-grid ${cols}">
 ${content}
 
- </div></div>`;      
-}      function field(id,fallback=""){
+ </div></div>`;    
+}    function field(id,fallback=""){
 const e=document.getElementById(id);
 return esc(e?.value||fallback);
 }
@@ -961,121 +961,121 @@ while(rows.length<5)rows.push({date:"",description:"",amount:"",liter:"",unit:""
 
 let cells=`
 
- <div class="fcell title" style="grid-column:span 9">AIRPORT FUEL PETTY CASH REPORT FORM</div>      
- <div class="fcell left" style="grid-column:span 2">Report No.</div><div class="fcell">${field("rNo","SEMERA-"+todayString().replaceAll("-",""))}</div>      
- <div class="fcell" style="grid-column:span 9"></div><div class="fcell left" style="grid-column:span 2">DATE:</div><div class="fcell">${field("rDate")}</div>      
- <div class="fcell left" style="grid-column:span 2">Petty Cash Holder Name</div><div class="fcell" style="grid-column:span 3">${field("rName")}</div>      
- <div class="fcell" style="grid-column:span 4">Department: ${field("rDept","Fuel Management")}</div><div class="fcell left">Loc.</div><div class="fcell" style="grid-column:span 2">${field("rLoc","SEMERA AIRPORT")}</div>      
- <div class="fcell left" style="grid-column:span 2">Bank Account</div><div class="fcell" style="grid-column:span 3">${field("rBank")}</div><div class="fcell" style="grid-column:span 4"></div><div class="fcell" style="grid-column:span 3"></div>      
- <div class="fcell left" style="grid-column:span 2">ID Number</div><div class="fcell" style="grid-column:span 3">${field("rSignature","-----------------------")}</div>      
- <div class="fcell" style="grid-column:span 4"><b>From:</b>&nbsp; ${field("rFrom")}</div><div class="fcell left">To</div><div class="fcell" style="grid-column:span 2">${field("rTo")}</div>      
- <div class="fcell head">DATE</div><div class="fcell head" style="grid-column:span 4">Description</div>      
- <div class="fcell head">Amount in<br>Local Currencies</div><div class="fcell head">Liter</div><div class="fcell head">Unit<br>Price/Lt</div><div class="fcell head">Total Price</div>      
- <div class="fcell head" style="grid-column:span 3">Budget Code/Dept. &amp; Loc.</div>`;      rows.forEach(r=>{
+ <div class="fcell title" style="grid-column:span 9">AIRPORT FUEL PETTY CASH REPORT FORM</div>    
+ <div class="fcell left" style="grid-column:span 2">Report No.</div><div class="fcell">${field("rNo","SEMERA-"+todayString().replaceAll("-",""))}</div>    
+ <div class="fcell" style="grid-column:span 9"></div><div class="fcell left" style="grid-column:span 2">DATE:</div><div class="fcell">${field("rDate")}</div>    
+ <div class="fcell left" style="grid-column:span 2">Petty Cash Holder Name</div><div class="fcell" style="grid-column:span 3">${field("rName")}</div>    
+ <div class="fcell" style="grid-column:span 4">Department: ${field("rDept","Fuel Management")}</div><div class="fcell left">Loc.</div><div class="fcell" style="grid-column:span 2">${field("rLoc","SEMERA AIRPORT")}</div>    
+ <div class="fcell left" style="grid-column:span 2">Bank Account</div><div class="fcell" style="grid-column:span 3">${field("rBank")}</div><div class="fcell" style="grid-column:span 4"></div><div class="fcell" style="grid-column:span 3"></div>    
+ <div class="fcell left" style="grid-column:span 2">ID Number</div><div class="fcell" style="grid-column:span 3">${field("rSignature","-----------------------")}</div>    
+ <div class="fcell" style="grid-column:span 4"><b>From:</b>&nbsp; ${field("rFrom")}</div><div class="fcell left">To</div><div class="fcell" style="grid-column:span 2">${field("rTo")}</div>    
+ <div class="fcell head">DATE</div><div class="fcell head" style="grid-column:span 4">Description</div>    
+ <div class="fcell head">Amount in<br>Local Currencies</div><div class="fcell head">Liter</div><div class="fcell head">Unit<br>Price/Lt</div><div class="fcell head">Total Price</div>    
+ <div class="fcell head" style="grid-column:span 3">Budget Code/Dept. &amp; Loc.</div>`;    rows.forEach(r=>{
 cells+=`<div class="fcell row">${esc(r.date)}</div>
 
-  <div class="fcell row" style="grid-column:span 4;text-align:left;justify-content:flex-start">${esc(r.description)}</div>      
-  <div class="fcell row">${r.amount===""?"":Number(r.amount).toFixed(2)}</div>      
-  <div class="fcell row">${r.liter===""?"":Number(r.liter).toFixed(2)}</div>      
-  <div class="fcell row">${r.unit===""?"":Number(r.unit).toFixed(2)}</div>      
-  <div class="fcell row">${r.total===""?"":Number(r.total).toFixed(2)}</div>      
-  <div class="fcell row" style="grid-column:span 3">${esc(r.code)}</div>`;      
- });      cells+=`
+  <div class="fcell row" style="grid-column:span 4;text-align:left;justify-content:flex-start">${esc(r.description)}</div>    
+  <div class="fcell row">${r.amount===""?"":Number(r.amount).toFixed(2)}</div>    
+  <div class="fcell row">${r.liter===""?"":Number(r.liter).toFixed(2)}</div>    
+  <div class="fcell row">${r.unit===""?"":Number(r.unit).toFixed(2)}</div>    
+  <div class="fcell row">${r.total===""?"":Number(r.total).toFixed(2)}</div>    
+  <div class="fcell row" style="grid-column:span 3">${esc(r.code)}</div>`;    
+ });    cells+=`
 
- <div class="fcell total" style="grid-column:span 5;text-align:right;justify-content:flex-end">Total</div>      
- <div class="fcell total">ETB ${t.expense.toFixed(2)}</div><div class="fcell total">${t.liters.toFixed(2)}</div>      
- <div class="fcell total">-</div><div class="fcell total">${t.expense.toFixed(2)}</div>      
- <div class="fcell total" style="grid-column:span 3">${field("rBudgetCode","SEMERA AIRPORT")}</div>      
- <div class="fcell big petty-summary-block" style="grid-column:span 12">      
- <table class="petty-summary-table">      
-  <tbody>      
-   <tr><th>Cash Received This Period</th><td class="amount">${Number(document.getElementById("rCash")?.value||0).toFixed(2)} ETB</td></tr>      
-   <tr><th>Cash Due From Previous Period</th><td class="amount">${Number(document.getElementById("rPrevious")?.value||0).toFixed(2)} ETB</td></tr>      
-   <tr><th>Total Expense This Period</th><td class="amount">${enteredExpense.toFixed(2)} ETB</td></tr>      
-   <tr><th>Cash On Hand This Period</th><td class="amount">${enteredCashOnHand.toFixed(2)} ETB</td></tr>      
-   <tr><th>Total Petty Cash Amount</th><td class="amount">${(Number(document.getElementById("rFund")?.value||0) || (Number(document.getElementById("rCash")?.value||0)+Number(document.getElementById("rPrevious")?.value||0))).toFixed(2)} ETB</td></tr>      
-  </tbody>      
- </table>      
- </div>      
- <div class="fcell big left petty-approval-block" style="grid-column:span 12">      
-   <b>Approved By:</b> ${field("rApproved")}<br><br>      
-   <b>Approval Date:</b> ${field("rApprovedDate")}      
- </div>`;      
- return pettyHeader("AIRPORT FUEL PETTY CASH REPORT FORM","airport",cells);      
-}      function renderNormalForm(){
+ <div class="fcell total" style="grid-column:span 5;text-align:right;justify-content:flex-end">Total</div>    
+ <div class="fcell total">ETB ${t.expense.toFixed(2)}</div><div class="fcell total">${t.liters.toFixed(2)}</div>    
+ <div class="fcell total">-</div><div class="fcell total">${t.expense.toFixed(2)}</div>    
+ <div class="fcell total" style="grid-column:span 3">${field("rBudgetCode","SEMERA AIRPORT")}</div>    
+ <div class="fcell big petty-summary-block" style="grid-column:span 12">    
+ <table class="petty-summary-table">    
+  <tbody>    
+   <tr><th>Cash Received This Period</th><td class="amount">${Number(document.getElementById("rCash")?.value||0).toFixed(2)} ETB</td></tr>    
+   <tr><th>Cash Due From Previous Period</th><td class="amount">${Number(document.getElementById("rPrevious")?.value||0).toFixed(2)} ETB</td></tr>    
+   <tr><th>Total Expense This Period</th><td class="amount">${enteredExpense.toFixed(2)} ETB</td></tr>    
+   <tr><th>Cash On Hand This Period</th><td class="amount">${enteredCashOnHand.toFixed(2)} ETB</td></tr>    
+   <tr><th>Total Petty Cash Amount</th><td class="amount">${(Number(document.getElementById("rFund")?.value||0) || (Number(document.getElementById("rCash")?.value||0)+Number(document.getElementById("rPrevious")?.value||0))).toFixed(2)} ETB</td></tr>    
+  </tbody>    
+ </table>    
+ </div>    
+ <div class="fcell big left petty-approval-block" style="grid-column:span 12">    
+   <b>Approved By:</b> ${field("rApproved")}<br><br>    
+   <b>Approval Date:</b> ${field("rApprovedDate")}    
+ </div>`;    
+ return pettyHeader("AIRPORT FUEL PETTY CASH REPORT FORM","airport",cells);    
+}    function renderNormalForm(){
 const t=totals();
 const enteredExpense=reportExpense();
 const enteredCashOnHand=reportCashOnHand();
 const rows=Array.from({length:10},(_,i)=>`<div class="fcell row">${i===0?field("rFrom"): ""}</div>
 
- <div class="fcell row" style="grid-column:span 4;text-align:left"></div>      
- <div class="fcell row">ETB</div><div class="fcell row">1 Pc</div><div class="fcell row"></div><div class="fcell row"></div><div class="fcell row" style="grid-column:span 3"></div>`).join("");      
- const totalId="normalTotal";      
- let cells=`      
- <div class="fcell title" style="grid-column:span 9">AIRPORT NORMAL PETTY CASH REPORT FORM</div>      
- <div class="fcell left" style="grid-column:span 2">Report No.</div><div class="fcell">${field("rNo","NORMAL-"+todayString().replaceAll("-",""))}</div>      
- <div class="fcell" style="grid-column:span 9"></div><div class="fcell left" style="grid-column:span 2">DATE:</div><div class="fcell">${field("rDate")}</div>      
- <div class="fcell left" style="grid-column:span 2">Petty Cash Holder Name</div><div class="fcell" style="grid-column:span 3">${field("rName")}</div>      
- <div class="fcell" style="grid-column:span 4">Department: ${field("rDept","Finance")}</div><div class="fcell left">Loc.</div><div class="fcell" style="grid-column:span 2">${field("rLoc","SEMERA AIRPORT")}</div>      
- <div class="fcell left" style="grid-column:span 2">Bank Account</div><div class="fcell" style="grid-column:span 3">${field("rBank")}</div><div class="fcell" style="grid-column:span 4"></div><div class="fcell" style="grid-column:span 3"></div>      
- <div class="fcell left" style="grid-column:span 2">ID Number</div><div class="fcell" style="grid-column:span 3">${field("rSignature","-----------------------")}</div>      
- <div class="fcell" style="grid-column:span 4"><b>From:</b>&nbsp; ${field("rFrom")}</div><div class="fcell left">To</div><div class="fcell" style="grid-column:span 2">${field("rTo")}</div>      
- <div class="fcell head">DATE</div><div class="fcell head" style="grid-column:span 4">Description</div><div class="fcell head">Amount in<br>Local Currencies</div>      
- <div class="fcell head">Unit</div><div class="fcell head">Unit Price<br>in ETB</div><div class="fcell head">Total Price<br>in ETB</div><div class="fcell head" style="grid-column:span 3">Budget Code/Dept. &amp; Loc.</div>      
- ${rows}      
- <div class="fcell total" style="grid-column:span 7;text-align:right">Total</div>      
- <div class="fcell total">ETB</div><div class="fcell total">1 Pc</div><div class="fcell total">-</div><div class="fcell total">0.00</div><div class="fcell total" style="grid-column:span 3">${field("rBudgetCode","SEMERA AIRPORT")}</div>      
- <div class="fcell" style="grid-column:span 12">Total &nbsp; 0.00 &nbsp;&nbsp; VAT (15%) &nbsp; 0.00 &nbsp;&nbsp; Total (Including VAT) &nbsp; 0.00</div>      
- <div class="fcell big petty-summary-block" style="grid-column:span 12">      
- <table class="petty-summary-table">      
-  <tbody>      
-   <tr><th>Cash Received This Period</th><td class="amount">${Number(document.getElementById("rCash")?.value||0).toFixed(2)} ETB</td></tr>      
-   <tr><th>Cash Due From Previous Period</th><td class="amount">${Number(document.getElementById("rPrevious")?.value||0).toFixed(2)} ETB</td></tr>      
-   <tr><th>Total Expense This Period</th><td class="amount">${enteredExpense.toFixed(2)} ETB</td></tr>      
-   <tr><th>Cash On Hand This Period</th><td class="amount">${enteredCashOnHand.toFixed(2)} ETB</td></tr>      
-   <tr><th>Total Petty Cash Amount</th><td class="amount">${(Number(document.getElementById("rFund")?.value||0) || (Number(document.getElementById("rCash")?.value||0)+Number(document.getElementById("rPrevious")?.value||0))).toFixed(2)} ETB</td></tr>      
-  </tbody>      
- </table>      
- </div>      
- <div class="fcell big left petty-approval-block" style="grid-column:span 12">      
-   <b>Approved By:</b> ${field("rApproved")}<br><br>      
-   <b>Approval Date:</b> ${field("rApprovedDate")}      
- </div>`;      
- return pettyHeader("AIRPORT NORMAL PETTY CASH REPORT FORM","normal",cells);      
-}      function renderExpressForm(){
+ <div class="fcell row" style="grid-column:span 4;text-align:left"></div>    
+ <div class="fcell row">ETB</div><div class="fcell row">1 Pc</div><div class="fcell row"></div><div class="fcell row"></div><div class="fcell row" style="grid-column:span 3"></div>`).join("");    
+ const totalId="normalTotal";    
+ let cells=`    
+ <div class="fcell title" style="grid-column:span 9">AIRPORT NORMAL PETTY CASH REPORT FORM</div>    
+ <div class="fcell left" style="grid-column:span 2">Report No.</div><div class="fcell">${field("rNo","NORMAL-"+todayString().replaceAll("-",""))}</div>    
+ <div class="fcell" style="grid-column:span 9"></div><div class="fcell left" style="grid-column:span 2">DATE:</div><div class="fcell">${field("rDate")}</div>    
+ <div class="fcell left" style="grid-column:span 2">Petty Cash Holder Name</div><div class="fcell" style="grid-column:span 3">${field("rName")}</div>    
+ <div class="fcell" style="grid-column:span 4">Department: ${field("rDept","Finance")}</div><div class="fcell left">Loc.</div><div class="fcell" style="grid-column:span 2">${field("rLoc","SEMERA AIRPORT")}</div>    
+ <div class="fcell left" style="grid-column:span 2">Bank Account</div><div class="fcell" style="grid-column:span 3">${field("rBank")}</div><div class="fcell" style="grid-column:span 4"></div><div class="fcell" style="grid-column:span 3"></div>    
+ <div class="fcell left" style="grid-column:span 2">ID Number</div><div class="fcell" style="grid-column:span 3">${field("rSignature","-----------------------")}</div>    
+ <div class="fcell" style="grid-column:span 4"><b>From:</b>&nbsp; ${field("rFrom")}</div><div class="fcell left">To</div><div class="fcell" style="grid-column:span 2">${field("rTo")}</div>    
+ <div class="fcell head">DATE</div><div class="fcell head" style="grid-column:span 4">Description</div><div class="fcell head">Amount in<br>Local Currencies</div>    
+ <div class="fcell head">Unit</div><div class="fcell head">Unit Price<br>in ETB</div><div class="fcell head">Total Price<br>in ETB</div><div class="fcell head" style="grid-column:span 3">Budget Code/Dept. &amp; Loc.</div>    
+ ${rows}    
+ <div class="fcell total" style="grid-column:span 7;text-align:right">Total</div>    
+ <div class="fcell total">ETB</div><div class="fcell total">1 Pc</div><div class="fcell total">-</div><div class="fcell total">0.00</div><div class="fcell total" style="grid-column:span 3">${field("rBudgetCode","SEMERA AIRPORT")}</div>    
+ <div class="fcell" style="grid-column:span 12">Total &nbsp; 0.00 &nbsp;&nbsp; VAT (15%) &nbsp; 0.00 &nbsp;&nbsp; Total (Including VAT) &nbsp; 0.00</div>    
+ <div class="fcell big petty-summary-block" style="grid-column:span 12">    
+ <table class="petty-summary-table">    
+  <tbody>    
+   <tr><th>Cash Received This Period</th><td class="amount">${Number(document.getElementById("rCash")?.value||0).toFixed(2)} ETB</td></tr>    
+   <tr><th>Cash Due From Previous Period</th><td class="amount">${Number(document.getElementById("rPrevious")?.value||0).toFixed(2)} ETB</td></tr>    
+   <tr><th>Total Expense This Period</th><td class="amount">${enteredExpense.toFixed(2)} ETB</td></tr>    
+   <tr><th>Cash On Hand This Period</th><td class="amount">${enteredCashOnHand.toFixed(2)} ETB</td></tr>    
+   <tr><th>Total Petty Cash Amount</th><td class="amount">${(Number(document.getElementById("rFund")?.value||0) || (Number(document.getElementById("rCash")?.value||0)+Number(document.getElementById("rPrevious")?.value||0))).toFixed(2)} ETB</td></tr>    
+  </tbody>    
+ </table>    
+ </div>    
+ <div class="fcell big left petty-approval-block" style="grid-column:span 12">    
+   <b>Approved By:</b> ${field("rApproved")}<br><br>    
+   <b>Approval Date:</b> ${field("rApprovedDate")}    
+ </div>`;    
+ return pettyHeader("AIRPORT NORMAL PETTY CASH REPORT FORM","normal",cells);    
+}    function renderExpressForm(){
 const cash=Number(document.getElementById("rCash")?.value||0);
 const previous=Number(document.getElementById("rPrevious")?.value||0);
 const enteredExpense=reportExpense();
 const enteredCashOnHand=reportCashOnHand();
 const cells=`
 
- <div class="fcell title" style="grid-column:span 7">EXPRESS FUEL PETTY CASH REPORT FORM</div>      
- <div class="fcell left" style="grid-column:span 2">Report No.</div><div class="fcell">${field("rNo","EXPRESS-"+todayString().replaceAll("-",""))}</div><div class="fcell" style="grid-column:span 2"></div>      
- <div class="fcell" style="grid-column:span 7"></div><div class="fcell left">DATE:</div><div class="fcell" style="grid-column:span 2">${field("rDate")}</div>      
- <div class="fcell left" style="grid-column:span 2">Petty Cash Holder Name</div><div class="fcell" style="grid-column:span 3">${field("rName")}</div><div class="fcell" style="grid-column:span 2">Department: ${field("rDept")}</div><div class="fcell left">Loc.</div><div class="fcell" style="grid-column:span 2">${field("rLoc")}</div>      
- <div class="fcell left" style="grid-column:span 2">Bank Account</div><div class="fcell" style="grid-column:span 3">${field("rBank")}</div><div class="fcell" style="grid-column:span 2"><b>From:</b> ${field("rFrom")}</div><div class="fcell left">To</div><div class="fcell" style="grid-column:span 2">${field("rTo")}</div>      
- <div class="fcell left" style="grid-column:span 2">ID Number</div><div class="fcell" style="grid-column:span 3">${field("rSignature","-----------------------")}</div>      
- <div class="fcell head">DATE</div><div class="fcell head" style="grid-column:span 4">Description</div><div class="fcell head">Amount in Local Currencies</div><div class="fcell head">Amount in ETB</div><div class="fcell head" style="grid-column:span 2">Budget Code/Dept. &amp; Loc.</div>      
- <div class="fcell row"></div><div class="fcell row" style="grid-column:span 4"></div><div class="fcell row">ETB</div><div class="fcell row"></div><div class="fcell row" style="grid-column:span 2">${field("rBudgetCode","SEMERA AIRPORT")}</div>      
- <div class="fcell total" style="grid-column:span 6;text-align:right">Total</div><div class="fcell total">ETB</div><div class="fcell total">0.00</div><div class="fcell total" style="grid-column:span 2"></div>      
- <div class="fcell" style="grid-column:span 10">Foreign Currency</div>      
- <div class="fcell big petty-summary-block" style="grid-column:span 10">      
- <table class="petty-summary-table">      
-  <tbody>      
-   <tr><th>Cash Received This Period</th><td class="amount">${cash.toFixed(2)} ETB</td></tr>      
-   <tr><th>Cash Due From Previous Period</th><td class="amount">${previous.toFixed(2)} ETB</td></tr>      
-   <tr><th>Total Expense This Period</th><td class="amount">${enteredExpense.toFixed(2)} ETB</td></tr>      
-   <tr><th>Cash On Hand This Period</th><td class="amount">${enteredCashOnHand.toFixed(2)} ETB</td></tr>      
-   <tr><th>Total Petty Cash Amount</th><td class="amount">${(Number(document.getElementById("rFund")?.value||0) || (cash+previous)).toFixed(2)} ETB</td></tr>      
-  </tbody>      
- </table>      
- </div>      
- <div class="fcell big left petty-approval-block" style="grid-column:span 10">      
-   <b>Approved By:</b> ${field("rApproved")}<br><br>      
-   <b>Approval Date:</b> ${field("rApprovedDate")}      
- </div>`;      
- return pettyHeader("EXPRESS FUEL PETTY CASH REPORT FORM","express",cells);      
-}      function renderBalanceForm(){
+ <div class="fcell title" style="grid-column:span 7">EXPRESS FUEL PETTY CASH REPORT FORM</div>    
+ <div class="fcell left" style="grid-column:span 2">Report No.</div><div class="fcell">${field("rNo","EXPRESS-"+todayString().replaceAll("-",""))}</div><div class="fcell" style="grid-column:span 2"></div>    
+ <div class="fcell" style="grid-column:span 7"></div><div class="fcell left">DATE:</div><div class="fcell" style="grid-column:span 2">${field("rDate")}</div>    
+ <div class="fcell left" style="grid-column:span 2">Petty Cash Holder Name</div><div class="fcell" style="grid-column:span 3">${field("rName")}</div><div class="fcell" style="grid-column:span 2">Department: ${field("rDept")}</div><div class="fcell left">Loc.</div><div class="fcell" style="grid-column:span 2">${field("rLoc")}</div>    
+ <div class="fcell left" style="grid-column:span 2">Bank Account</div><div class="fcell" style="grid-column:span 3">${field("rBank")}</div><div class="fcell" style="grid-column:span 2"><b>From:</b> ${field("rFrom")}</div><div class="fcell left">To</div><div class="fcell" style="grid-column:span 2">${field("rTo")}</div>    
+ <div class="fcell left" style="grid-column:span 2">ID Number</div><div class="fcell" style="grid-column:span 3">${field("rSignature","-----------------------")}</div>    
+ <div class="fcell head">DATE</div><div class="fcell head" style="grid-column:span 4">Description</div><div class="fcell head">Amount in Local Currencies</div><div class="fcell head">Amount in ETB</div><div class="fcell head" style="grid-column:span 2">Budget Code/Dept. &amp; Loc.</div>    
+ <div class="fcell row"></div><div class="fcell row" style="grid-column:span 4"></div><div class="fcell row">ETB</div><div class="fcell row"></div><div class="fcell row" style="grid-column:span 2">${field("rBudgetCode","SEMERA AIRPORT")}</div>    
+ <div class="fcell total" style="grid-column:span 6;text-align:right">Total</div><div class="fcell total">ETB</div><div class="fcell total">0.00</div><div class="fcell total" style="grid-column:span 2"></div>    
+ <div class="fcell" style="grid-column:span 10">Foreign Currency</div>    
+ <div class="fcell big petty-summary-block" style="grid-column:span 10">    
+ <table class="petty-summary-table">    
+  <tbody>    
+   <tr><th>Cash Received This Period</th><td class="amount">${cash.toFixed(2)} ETB</td></tr>    
+   <tr><th>Cash Due From Previous Period</th><td class="amount">${previous.toFixed(2)} ETB</td></tr>    
+   <tr><th>Total Expense This Period</th><td class="amount">${enteredExpense.toFixed(2)} ETB</td></tr>    
+   <tr><th>Cash On Hand This Period</th><td class="amount">${enteredCashOnHand.toFixed(2)} ETB</td></tr>    
+   <tr><th>Total Petty Cash Amount</th><td class="amount">${(Number(document.getElementById("rFund")?.value||0) || (cash+previous)).toFixed(2)} ETB</td></tr>    
+  </tbody>    
+ </table>    
+ </div>    
+ <div class="fcell big left petty-approval-block" style="grid-column:span 10">    
+   <b>Approved By:</b> ${field("rApproved")}<br><br>    
+   <b>Approval Date:</b> ${field("rApprovedDate")}    
+ </div>`;    
+ return pettyHeader("EXPRESS FUEL PETTY CASH REPORT FORM","express",cells);    
+}    function renderBalanceForm(){
 const t=totals();
 const cash=Number(document.getElementById("rCash")?.value||0);
 const previous=Number(document.getElementById("rPrevious")?.value||0);
@@ -1090,12 +1090,12 @@ const rows=[
 const total=rows.reduce((a,r)=>a+r[1],0);
 return `<div class="balance-sheet">
 
- <table class="balance-table">      
- <thead><tr><th>Fund Type</th><th>Total Amount Petty Cash Fund</th><th>Cash on Hand</th><th>Expenses from Fund</th></tr></thead>      
- <tbody>${rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1].toFixed(2)}</td><td>${r[2].toFixed(2)}</td><td>${r[3].toFixed(2)}</td></tr>`).join("")}      
- <tr><th>Total</th><th>${total.toFixed(2)}</th><th>${rows.reduce((a,r)=>a+r[2],0).toFixed(2)}</th><th>${rows.reduce((a,r)=>a+r[3],0).toFixed(2)}</th></tr></tbody>      
- </table></div>`;      
-}      function renderOfficial(){
+ <table class="balance-table">    
+ <thead><tr><th>Fund Type</th><th>Total Amount Petty Cash Fund</th><th>Cash on Hand</th><th>Expenses from Fund</th></tr></thead>    
+ <tbody>${rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1].toFixed(2)}</td><td>${r[2].toFixed(2)}</td><td>${r[3].toFixed(2)}</td></tr>`).join("")}    
+ <tr><th>Total</th><th>${total.toFixed(2)}</th><th>${rows.reduce((a,r)=>a+r[2],0).toFixed(2)}</th><th>${rows.reduce((a,r)=>a+r[3],0).toFixed(2)}</th></tr></tbody>    
+ </table></div>`;    
+}    function renderOfficial(){
 if(pettyFormType==="airport")document.getElementById("officialReport").innerHTML=renderAirportForm();
 else if(pettyFormType==="normal")document.getElementById("officialReport").innerHTML=renderNormalForm();
 else if(pettyFormType==="express")document.getElementById("officialReport").innerHTML=renderExpressForm();
@@ -1122,46 +1122,46 @@ const approvedDate=v("enApprovedDate");
 
 document.getElementById("officialReport").innerHTML=`
 
- <div class="form-sheet">      
-   <div class="form-grid airport">      
-     <div class="fcell title" style="grid-column:span 9">EXPRESS NORMAL PETTY CASH REPORT FORM</div>      
-     <div class="fcell left" style="grid-column:span 2">Report No.</div><div class="fcell">${esc(no)}</div>      
-     <div class="fcell" style="grid-column:span 2">DATE</div><div class="fcell">${esc(date)}</div>      
-     <div class="fcell left" style="grid-column:span 2">Petty Cash Holder Name</div><div class="fcell" style="grid-column:span 2">${esc(name)}</div>      
-     <div class="fcell left" style="grid-column:span 2">ID Number</div><div class="fcell" style="grid-column:span 2">${esc(idNo)}</div>      
-     <div class="fcell left" style="grid-column:span 2">Department</div><div class="fcell" style="grid-column:span 2">${esc(dept)}</div>      
-     <div class="fcell left" style="grid-column:span 2">Location</div><div class="fcell" style="grid-column:span 2">${esc(loc)}</div>      
-     <div class="fcell left" style="grid-column:span 2">Period From</div><div class="fcell">${esc(from)}</div>      
-     <div class="fcell left" style="grid-column:span 2">Period To</div><div class="fcell">${esc(to)}</div>      <div class="fcell head" style="grid-column:span 9">PETTY CASH EXPENDITURE</div>      
- <div class="fcell head">Date</div><div class="fcell head" style="grid-column:span 4">Description / Purpose</div>      
- <div class="fcell head">Amount</div><div class="fcell head">Receipt / Ref.</div><div class="fcell head">Code</div>      
- ${Array.from({length:8},()=>`      
-   <div class="fcell row"></div>      
-   <div class="fcell row" style="grid-column:span 4"></div>      
-   <div class="fcell row"></div><div class="fcell row"></div><div class="fcell row"></div>      
- `).join("")}      
-  
- <div class="fcell big petty-summary-block" style="grid-column:span 9">      
-   <table class="petty-summary-table">      
-    <tbody>      
-     <tr><th>Cash Received This Period</th><td class="amount">${cash.toFixed(2)} ETB</td></tr>      
-     <tr><th>Cash Due From Previous Period</th><td class="amount">${previous.toFixed(2)} ETB</td></tr>      
-     <tr><th>Total Expense This Period</th><td class="amount">${expense.toFixed(2)} ETB</td></tr>      
-     <tr><th>Cash On Hand This Period</th><td class="amount">${balance.toFixed(2)} ETB</td></tr>      
-     <tr><th>Total Petty Cash Amount</th><td class="amount">${fund.toFixed(2)} ETB</td></tr>      
-    </tbody>      
-   </table>      
- </div>      
-  
- <div class="fcell big left petty-approval-block" style="grid-column:span 9">      
-   <b>Approved By:</b> ${esc(approved)}<br><br>      
-   <b>Approval Date:</b> ${esc(approvedDate)}<br><br>      
-   <b>Prepared By:</b> ${esc(name)} &nbsp;&nbsp; <b>ID Number:</b> ${esc(idNo)}      
+ <div class="form-sheet">    
+   <div class="form-grid airport">    
+     <div class="fcell title" style="grid-column:span 9">EXPRESS NORMAL PETTY CASH REPORT FORM</div>    
+     <div class="fcell left" style="grid-column:span 2">Report No.</div><div class="fcell">${esc(no)}</div>    
+     <div class="fcell" style="grid-column:span 2">DATE</div><div class="fcell">${esc(date)}</div>    
+     <div class="fcell left" style="grid-column:span 2">Petty Cash Holder Name</div><div class="fcell" style="grid-column:span 2">${esc(name)}</div>    
+     <div class="fcell left" style="grid-column:span 2">ID Number</div><div class="fcell" style="grid-column:span 2">${esc(idNo)}</div>    
+     <div class="fcell left" style="grid-column:span 2">Department</div><div class="fcell" style="grid-column:span 2">${esc(dept)}</div>    
+     <div class="fcell left" style="grid-column:span 2">Location</div><div class="fcell" style="grid-column:span 2">${esc(loc)}</div>    
+     <div class="fcell left" style="grid-column:span 2">Period From</div><div class="fcell">${esc(from)}</div>    
+     <div class="fcell left" style="grid-column:span 2">Period To</div><div class="fcell">${esc(to)}</div>    <div class="fcell head" style="grid-column:span 9">PETTY CASH EXPENDITURE</div>    
+ <div class="fcell head">Date</div><div class="fcell head" style="grid-column:span 4">Description / Purpose</div>    
+ <div class="fcell head">Amount</div><div class="fcell head">Receipt / Ref.</div><div class="fcell head">Code</div>    
+ ${Array.from({length:8},()=>`    
+   <div class="fcell row"></div>    
+   <div class="fcell row" style="grid-column:span 4"></div>    
+   <div class="fcell row"></div><div class="fcell row"></div><div class="fcell row"></div>    
+ `).join("")}    
+
+ <div class="fcell big petty-summary-block" style="grid-column:span 9">    
+   <table class="petty-summary-table">    
+    <tbody>    
+     <tr><th>Cash Received This Period</th><td class="amount">${cash.toFixed(2)} ETB</td></tr>    
+     <tr><th>Cash Due From Previous Period</th><td class="amount">${previous.toFixed(2)} ETB</td></tr>    
+     <tr><th>Total Expense This Period</th><td class="amount">${expense.toFixed(2)} ETB</td></tr>    
+     <tr><th>Cash On Hand This Period</th><td class="amount">${balance.toFixed(2)} ETB</td></tr>    
+     <tr><th>Total Petty Cash Amount</th><td class="amount">${fund.toFixed(2)} ETB</td></tr>    
+    </tbody>    
+   </table>    
+ </div>    
+
+ <div class="fcell big left petty-approval-block" style="grid-column:span 9">    
+   <b>Approved By:</b> ${esc(approved)}<br><br>    
+   <b>Approval Date:</b> ${esc(approvedDate)}<br><br>    
+   <b>Prepared By:</b> ${esc(name)} &nbsp;&nbsp; <b>ID Number:</b> ${esc(idNo)}    
  </div>
 
-   </div>      
- </div>`;      
-}      function exportCSV(){
+   </div>    
+ </div>`;    
+}    function exportCSV(){
 const head=["Date","Vehicle","Receipt","Fuel Amount (Birr)","Fuel Consumption (Liters)","KM Traveled","KM Reading at Refill","Days Before Refill"];
 
 const rows=fuelRows.map((x,i)=>{
@@ -1214,4 +1214,4 @@ await startApp();
 });
 </script>  </body>
 
-</html>      
+</html>  
